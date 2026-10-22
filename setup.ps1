@@ -30,7 +30,7 @@ if (Test-Path "$dir\.git") {
 
 # Setup steps
 & "$dir\scripts\activate-win10-iot.ps1" -NoPause
-& "$dir\scripts\setup-zoomit.ps1"
+# & "$dir\scripts\setup-zoomit.ps1"  # PowerToys includes ZoomIt
 & "$dir\scripts\setup-powertoys.ps1"
 & "$dir\scripts\setup-pcmanager.ps1"
 & "$dir\scripts\setup-performance.ps1"

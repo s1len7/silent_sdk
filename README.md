@@ -34,14 +34,16 @@ irm https://get.activated.win | iex
 ```
 
 
-### ZoomIt
-
-- Setup: [scripts/setup-zoomit.ps1](scripts/setup-zoomit.ps1)
-
-
 ### PowerToys
 
 - Setup: [scripts/setup-powertoys.ps1](scripts/setup-powertoys.ps1) (최신 버전)
+
+
+<!-- 
+### ZoomIt
+
+- Setup: [scripts/setup-zoomit.ps1](scripts/setup-zoomit.ps1)
+ -->
 
 
 ### Microsoft PC Manager
@@ -60,5 +62,8 @@ irm https://get.activated.win | iex
   6. 최대 절전 끄기 (hiberfil.sys 삭제)
 
 
+### Windows 설정
+
+- TODO:작업표시줄 > 시스템 아이콘 > 터치 키보드 켬
 
 
