@@ -4,6 +4,16 @@
 - 모델명: [TITAN-S260](https://www.sam4s.com/kor/products/KCA03-3)
   - [매뉴얼, 드라이버, 유틸리티](https://www.sam4s.com/kor/support/download)
 
+| 항목 | 사양 |
+| --- | --- |
+| CPU | Intel Celeron N3160 (4코어, 1.60GHz / 최대 2.24GHz) |
+| RAM | DDR3L SODIMM 1슬롯 (최대 8GB) |
+| SSD | 2.5" SATA SSD/HDD, M.2 SSD (64/128/256GB) |
+| 디스플레이 | 15" LED LCD 1024 x 768 |
+| 터치 | PCAP 또는 5선 저항막 |
+| 포트 | USB 2.0 x4, USB 3.0 x2, COM x4, LAN 1Gb, VGA, 금전함, Line-out |
+| 전원 | DC 12V 5A (60W) |
+
 
 ## 기능
 
