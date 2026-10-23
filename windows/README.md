@@ -17,12 +17,12 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/windows/setup.ps1 |
 
 
 
-### 원격 데스크톱 켬
+### 컴퓨터 이름
 
-- Setup: [scripts/setup-rdp.ps1](scripts/setup-rdp.ps1) (원격 데스크톱 켬, NLA 사용, 방화벽 3389 허용)
-  - 다시 실행 시: 원격 데스크톱 허용, NLA, 방화벽 규칙이 모두 켜져 있으면 건너뜀
-  - Windows Home 에디션은 원격 데스크톱 호스트를 지원하지 않아 건너뜀
-  - 접속하려면 로그인 계정에 비밀번호가 있어야 함
+- Setup: [scripts/setup-hostname.ps1](scripts/setup-hostname.ps1) (새 이름을 물어봄, 엔터를 누르면 기본값 `silent-desktop`, 적용 후 재부팅)
+  - 전체 Setup 맨 처음에 물어보므로 이후 단계는 입력 없이 진행됨
+  - 이름 규칙: 1~15자 영문·숫자·하이픈, 숫자만은 안 됨, 하이픈으로 시작·끝나면 안 됨
+  - 다시 실행 시: 고른 이름이 지금 이름과 같거나, 변경 후 재부팅 대기 중이면 건너뜀
 
 
 ### Windows 업데이트
@@ -31,6 +31,14 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/windows/setup.ps1 |
   - 기능 업데이트(Windows 버전 변경)와 사용자 입력이 필요한 업데이트는 제외
   - 자동으로 재부팅하지 않음. 재부팅이 필요하면 재부팅 후 전체 Setup을 다시 실행해 남은 업데이트 설치
   - 다시 실행 시: 설치할 업데이트가 없거나, 이전 업데이트의 재부팅이 대기 중이면 건너뜀
+
+
+### 원격 데스크톱 켬
+
+- Setup: [scripts/setup-rdp.ps1](scripts/setup-rdp.ps1) (원격 데스크톱 켬, NLA 사용, 방화벽 3389 허용)
+  - 다시 실행 시: 원격 데스크톱 허용, NLA, 방화벽 규칙이 모두 켜져 있으면 건너뜀
+  - Windows Home 에디션은 원격 데스크톱 호스트를 지원하지 않아 건너뜀
+  - 접속하려면 로그인 계정에 비밀번호가 있어야 함
 
 
 ### Google Chrome

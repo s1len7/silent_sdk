@@ -29,6 +29,9 @@ function Start-SetupLog([string]$Repo, [string]$Platform, [string]$Stamp, [strin
     Write-Host "Platform:   $Platform"
     Write-Host "Computer:   $env:COMPUTERNAME / User: $env:USERNAME"
     Write-Host "OS:         $($os.Caption) ($edition, $($os.Version))"
+    $system = Get-CimInstance Win32_ComputerSystem
+    $board = Get-CimInstance Win32_BaseBoard
+    Write-Host "Hardware:   $($system.Manufacturer) $($system.Model) / board: $($board.Manufacturer) $($board.Product)"
     Write-Host "PowerShell: $($PSVersionTable.PSVersion)"
     Write-Host "Repo:       $Repo @ $commit"
     Write-Host "Logs:       $logDir"

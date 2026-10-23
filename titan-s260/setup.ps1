@@ -57,9 +57,9 @@ $results += Invoke-Step 'activation' {
     & "$t\activate-win10-iot.ps1" -NoPause
     if ($LASTEXITCODE -ne 0) { throw "Activation failed: exit code $LASTEXITCODE" }
 }
+$results += Invoke-Step 'hostname'       { & "$w\setup-hostname.ps1" -Default 'titan-s260' }
 # Windows updates early, so the following installers run on an up-to-date system
 $results += Invoke-Step 'windows-update' { & "$w\setup-windows-update.ps1" }
-$results += Invoke-Step 'hostname'       { & "$t\setup-hostname.ps1" }
 # $results += Invoke-Step 'zoomit'       { & "$w\setup-zoomit.ps1" }  # PowerToys includes ZoomIt
 $results += Invoke-Step 'powertoys'      { & "$w\setup-powertoys.ps1" }
 $results += Invoke-Step 'winget'         { & "$w\setup-winget.ps1" }

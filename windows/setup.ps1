@@ -51,10 +51,12 @@ $logDir = Start-SetupLog $dir 'windows' $stamp $bootstrapLog
 # Setup steps: a failed step is logged and the next one still runs
 $s = "$dir\windows\scripts"
 $results = @()
-# RDP first: no download, so remote access is available as early as possible
-$results += Invoke-Step 'rdp'          { & "$s\setup-rdp.ps1" }
+# Hostname first: it asks for the new name, so the rest runs without waiting for input
+$results += Invoke-Step 'hostname'     { & "$s\setup-hostname.ps1" -Default 'silent-desktop' }
 # Windows updates early, so the following installers run on an up-to-date system
 $results += Invoke-Step 'windows-update' { & "$s\setup-windows-update.ps1" }
+# RDP right after: no download, so remote access is available early
+$results += Invoke-Step 'rdp'          { & "$s\setup-rdp.ps1" }
 $results += Invoke-Step 'chrome'       { & "$s\setup-chrome.ps1" }
 # $results += Invoke-Step 'zoomit'     { & "$s\setup-zoomit.ps1" }  # PowerToys includes ZoomIt
 $results += Invoke-Step 'powertoys'    { & "$s\setup-powertoys.ps1" }
@@ -68,4 +70,4 @@ $results += Invoke-Step 'docker'       { & "$s\setup-docker.ps1" }
 
 Write-SetupSummary $results $logDir
 Stop-Transcript | Out-Null
-Read-Host 'Done. Reboot to finish the updates and Docker setup, then run the setup again if any step failed. Press Enter to exit'
+Read-Host 'Done. Reboot to apply the computer name, updates and Docker setup, then run the setup again if any step failed. Press Enter to exit'

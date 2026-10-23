@@ -32,7 +32,7 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/titan-s260/setup.ps
 
 ### Windows 10 IoT LTSC
 
-- 정품 키 인증: [scripts/activate-win10-iot.cmd](scripts/activate-win10-iot.cmd) (펌웨어 OEM 키 자동 사용, 없으면 입력)
+- 제품키 인증: [scripts/activate-win10-iot.cmd](scripts/activate-win10-iot.cmd) (펌웨어 OEM 키 자동 사용, 없으면 입력)
   - 다시 실행 시: 이미 정품 인증돼 있으면 건너뜀
 
 - https://massgrave.dev/ 참고해서 인증 스크립트 실행
@@ -41,18 +41,18 @@ irm https://get.activated.win | iex
 ```
 
 
+### 컴퓨터 이름
+
+- Setup: [windows/scripts/setup-hostname.ps1](../windows/scripts/setup-hostname.ps1) (windows 공통 스크립트, 새 이름을 물어봄, 엔터를 누르면 기본값 `titan-s260`, 적용 후 재부팅)
+  - 다시 실행 시: 고른 이름이 지금 이름과 같거나, 변경 후 재부팅 대기 중이면 건너뜀
+
+
 ### Windows 업데이트
 
 - Setup: [windows/scripts/setup-windows-update.ps1](../windows/scripts/setup-windows-update.ps1) (드라이버 포함 모든 업데이트 설치, Windows 내장 업데이트 API 사용)
   - 기능 업데이트(Windows 버전 변경)와 사용자 입력이 필요한 업데이트는 제외
   - 자동으로 재부팅하지 않음. 재부팅이 필요하면 재부팅 후 전체 Setup을 다시 실행해 남은 업데이트 설치
   - 다시 실행 시: 설치할 업데이트가 없거나, 이전 업데이트의 재부팅이 대기 중이면 건너뜀
-
-
-### 컴퓨터 이름
-
-- Setup: [scripts/setup-hostname.ps1](scripts/setup-hostname.ps1) (컴퓨터 이름이 `titan-s260`이 아니면 변경, 적용 후 재부팅)
-  - 다시 실행 시: 이름이 이미 `titan-s260`이거나 변경 후 재부팅 대기 중이면 건너뜀
 
 
 ### PowerToys
