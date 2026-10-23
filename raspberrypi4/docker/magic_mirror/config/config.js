@@ -1,5 +1,12 @@
 const os = require("os");
 
+// 날씨 위치는 docker/magic_mirror/.env의 MM_LAT, MM_LON에서 읽음 (저장소에 좌표를 남기지 않기 위함)
+const weatherLat = parseFloat(process.env.MM_LAT);
+const weatherLon = parseFloat(process.env.MM_LON);
+if (!Number.isFinite(weatherLat) || !Number.isFinite(weatherLon)) {
+    throw new Error("MM_LAT and MM_LON must be set in docker/magic_mirror/.env");
+}
+
 function getLocalIpAddress() {
     const interfaces = os.networkInterfaces();
     
@@ -188,8 +195,8 @@ let config = {
 			config: {
 				weatherProvider: "openmeteo",
 				type: "current",
-				lat: 0,
-				lon: 0,
+				lat: weatherLat,
+				lon: weatherLon,
 				degreeLabel: true,
 				showHumidity: "temp",
 				showUVIndex: true,
@@ -212,8 +219,8 @@ let config = {
 			config: {
 				weatherProvider: "openmeteo",
 				type: "hourly",
-				lat: 0,
-				lon: 0,
+				lat: weatherLat,
+				lon: weatherLon,
 			}
 		},
 
@@ -232,8 +239,8 @@ let config = {
 			config: {
 				weatherProvider: "openmeteo",
 				type: "forecast",
-				lat: 0,
-				lon: 0,
+				lat: weatherLat,
+				lon: weatherLon,
 				colored: true,
 				tableClass: "small",
 			}
