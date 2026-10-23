@@ -4,7 +4,7 @@
 # 공식 스크립트는 Node·git·빌드 도구가 없으면 내부에서 sudo로 설치하는데, 터미널 없이 비밀번호를 물으면 멈추므로
 # 이 스크립트가 root로 먼저 설치함 (공식 스크립트와 같은 패키지, Node는 같은 NodeSource 24.x)
 # 온보딩(모델 제공자, API 키)은 대화형이라 설치 후 사용자가 직접 실행
-# 사용법: sudo bash scripts/setup_openclaw.sh
+# 사용법: sudo bash scripts/vm/setup_openclaw.sh
 set -euo pipefail
 
 if [[ $EUID -ne 0 ]]; then
@@ -12,7 +12,7 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
-source "$(dirname "$0")/lib.sh"
+source "$(dirname "$0")/../lib.sh"
 
 if command -v pveversion >/dev/null; then
     echo "This is the Proxmox host. Run this script inside the Ubuntu VM." >&2

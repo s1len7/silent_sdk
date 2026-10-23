@@ -10,14 +10,17 @@
   - 설치와 실행 방식은 [OpenClaw 공식 문서](https://docs.openclaw.ai/install)를 따르고, 서드파티 가이드보다 공식 문서를 우선할 것
   - Gateway는 공식 기본값(loopback)을 유지하고, 외부에 열 때는 인증(token 또는 password)을 반드시 설정할 것
   - API 키, 토큰은 `.env`(git 무시)에 둘 것
-- 기능 하나당 `scripts/setup_<기능>.sh` 모듈 하나로 만들고, README.md `## 기능` 아래에 `### <기능>` 섹션과 `- Setup: [scripts/setup_<기능>.sh](...)` 줄을 추가할 것
-  - `setup.sh`가 `scripts/setup_*.sh`를 모두 실행하므로 전체 설치에 따로 등록할 필요 없음
+- 기능 하나당 모듈 하나로 만들고, 호스트용은 `scripts/host/setup_<기능>.sh`, VM용은 `scripts/vm/setup_<기능>.sh`에 둘 것
+  - README.md `## 기능` 아래에 `### <기능> (호스트|VM)` 섹션과 `- Setup: [scripts/<host|vm>/setup_<기능>.sh](...)` 줄을 추가할 것
+  - `setup.sh`가 실행 위치(Proxmox 호스트는 `pveversion` 유무)로 `scripts/host/` 또는 `scripts/vm/`의 `setup_*.sh`를 모두 실행하므로 전체 설치에 따로 등록할 필요 없음
+  - 공통 함수는 `scripts/lib.sh`에 두고 모듈에서 `source "$(dirname "$0")/../lib.sh"`로 불러올 것
+  - Proxmox 호스트는 sudo 없이 root로 실행하므로, 호스트 모듈은 `$SUDO_USER`나 sudo에 의존하지 말 것
 - 스크립트 공통 형식
   - `#!/usr/bin/env bash`, `set -euo pipefail`
   - 맨 앞에서 root 권한을 확인하고, 아니면 `sudo bash $0` 안내 후 종료
   - 사용자 파일은 `$SUDO_USER`의 홈에 만들고 `chown`할 것
   - 여러 번 실행해도 결과가 같게 만들 것
-  - `source "$(dirname "$0")/lib.sh"` 후, 맨 앞에서 이미 설정돼 있는지 확인하고 그렇다면 `skip_done "<메시지>"` (종료 코드 3, setup.sh가 SKIP으로 표시)
+  - lib.sh를 불러온 후, 맨 앞에서 이미 설정돼 있는지 확인하고 그렇다면 `skip_done "<메시지>"` (종료 코드 3, setup.sh가 SKIP으로 표시)
     - 일부만 돼 있으면 빠진 부분만 처리할 것
     - README 해당 기능에 `다시 실행 시:` 줄로 확인 기준을 적을 것
   - 패키지는 `apt-get`으로 설치하고 대화형 질문이 뜨지 않게 할 것 (`DEBIAN_FRONTEND=noninteractive`)

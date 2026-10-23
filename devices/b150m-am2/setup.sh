@@ -1,19 +1,27 @@
 #!/usr/bin/env bash
-# 전체 설치 스크립트: scripts/setup_*.sh 모듈을 모두 실행
+# 전체 설치 스크립트: Proxmox 호스트면 scripts/host/, VM이면 scripts/vm/의 setup_*.sh 모듈을 모두 실행
 # 실패한 모듈이 있어도 다음 모듈을 계속 실행하고, 끝에 모듈별 결과(OK / SKIP / FAIL)를 요약함
 # 모듈은 이미 설정돼 있으면 종료 코드 3으로 끝나며 SKIP으로 표시됨 (다시 실행하면 실패한 모듈만 다시 설치됨)
-# 로그: 저장소 logs/b150m-am2-<시각>/setup.log
-# 사용법: sudo bash setup.sh
+# 로그: 저장소 logs/b150m-am2-<host|vm>-<시각>/setup.log
+# 사용법: 호스트는 root로 bash setup.sh, VM은 sudo bash setup.sh
+# 호스트는 저장소 설정 전에는 apt-get update가 실패해 git을 설치할 수 없으므로, README의 한 줄 명령은 저장소를 curl로 압축 파일로 받음
 set -uo pipefail
 
 if [[ $EUID -ne 0 ]]; then
-    echo "Root privileges required. Run with sudo: sudo bash $0" >&2
+    echo "Root privileges required. Run as root or with sudo: sudo bash $0" >&2
     exit 1
+fi
+
+# 호스트와 VM은 설정할 내용이 달라서 실행 위치로 모듈 폴더를 고름
+if command -v pveversion >/dev/null; then
+    role=host
+else
+    role=vm
 fi
 
 device_dir="$(cd "$(dirname "$0")" && pwd)"
 repo="$(cd "$device_dir/../.." && pwd)"
-log_dir="$repo/logs/b150m-am2-$(date +%Y%m%d-%H%M%S)"
+log_dir="$repo/logs/b150m-am2-$role-$(date +%Y%m%d-%H%M%S)"
 mkdir -p "$log_dir"
 # 저장소 소유자가 로그를 읽고 지울 수 있게 함
 chown -R "${SUDO_USER:-root}:" "$repo/logs"
@@ -24,11 +32,12 @@ exec > >(tee -a "$log_dir/setup.log") 2>&1
 echo "Computer: $(hostname) / User: ${SUDO_USER:-root}"
 echo "OS:       $(. /etc/os-release && echo "$PRETTY_NAME") ($(uname -m))"
 echo "Repo:     $repo @ $(git -C "$repo" rev-parse --short HEAD 2>/dev/null || echo unknown)"
+echo "Role:     $role (modules: scripts/$role/)"
 echo "Logs:     $log_dir"
 
 summary=()
 failed=0
-for module in "$device_dir"/scripts/setup_*.sh; do
+for module in "$device_dir/scripts/$role"/setup_*.sh; do
     name="$(basename "$module" .sh)"
     echo
     echo "=== [$name] started $(date +%H:%M:%S)"
