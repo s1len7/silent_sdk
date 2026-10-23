@@ -35,7 +35,7 @@ vm_memory="${VM_MEMORY_MB:-2048}"
 vm_disk="${VM_DISK_GB:-32}"
 vm_storage="${VM_STORAGE:-local-lvm}"
 vm_bridge="${VM_BRIDGE:-vmbr0}"
-vm_user="${VM_USER:-ubuntu}"
+vm_user="${VM_USER:-silent}"
 ssh_keys_file="${VM_SSH_KEYS_FILE:-/root/.ssh/authorized_keys}"
 auto_openclaw="${VM_AUTO_OPENCLAW:-yes}"
 

@@ -67,12 +67,12 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150
 | VM 번호, 이름 | 100, ubuntu-server | `VM_ID`, `VM_NAME` |
 | 사양 | 2코어, 2048MB, 32GB | `VM_CORES`, `VM_MEMORY_MB`, `VM_DISK_GB` |
 | 저장소, 브리지 | local-lvm, vmbr0 | `VM_STORAGE`, `VM_BRIDGE` |
-| 계정 | ubuntu (비밀번호 없이 sudo) | `VM_USER` |
+| 계정 | silent (비밀번호 없이 sudo) | `VM_USER` |
 | SSH 키 | 호스트의 `/root/.ssh/authorized_keys` | `VM_SSH_KEYS_FILE` |
 | IP | DHCP | `VM_IP` (CIDR), `VM_GATEWAY`, `VM_DNS` |
 | OpenClaw 자동 설치 | yes | `VM_AUTO_OPENCLAW` |
 
-- 비밀번호 로그인은 없고 SSH 키로만 접속함. 기본값이면 Proxmox 호스트 셸에서 `ssh ubuntu@<VM IP>`로 접속
+- 비밀번호 로그인은 없고 SSH 키로만 접속함. 기본값이면 Proxmox 호스트 셸에서 `ssh silent@<VM IP>`로 접속
   - DHCP일 때 VM IP는 첫 부팅 후 웹 화면의 VM → 요약(guest agent가 알려 줌)에서 확인
 - 첫 부팅 때 guest agent와 git을 설치하고, 저장소를 클론해 VM의 `setup.sh`(OpenClaw 설치)를 실행함 (몇 분 걸림)
   - 진행 확인: 호스트에서 `qm terminal 100` (나가기: Ctrl+O), VM에서 `cloud-init status --wait`
