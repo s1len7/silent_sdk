@@ -152,7 +152,7 @@ compose 파일: `docker/dozzle/docker-compose.yml`
 #### Magic Mirror & MMPM
 
 - Setup: [scripts/setup_magic_mirror.sh](scripts/setup_magic_mirror.sh)
-  - 먼저 `docker/magic_mirror/.env.example`을 `.env`로 복사하고 날씨 위치(`MM_LAT`, `MM_LON`)를 채울 것. 없으면 건너뜀
+  - 날씨 위치(`MM_LAT`, `MM_LON`)는 `docker/magic_mirror/.env`에서 읽음. 없으면 실행 중에 1) 공인 IP로 위치 추정(기본값, [ipinfo.io](https://ipinfo.io) 사용) 2) 좌표 직접 입력 3) 건너뛰기 중에서 선택 (직접 만들려면 `.env.example`을 `.env`로 복사해 채움)
 
 한글 폰트: `sudo apt install fonts-nanum fonts-nanum-extra`
 <!-- portainer > docker-compose.yml -->
