@@ -4,6 +4,7 @@
 # ifupdown2에는 Wi-Fi 인증 기능이 없고 dhcp에 route metric도 없어 Wi-Fi 기본 경로가 유선과 겹치므로,
 # 인증은 wpa_supplicant@<인터페이스>, DHCP는 Wi-Fi 인터페이스만 맡긴 systemd-networkd(metric 600, 유선이 우선)로 함
 # 값은 devices/b150m-am2/.env의 WIFI_SSID, WIFI_PASSWORD에서 읽고, WIFI_SSID가 비어 있으면 건너뜀
+# WIFI_IP(고정 IP)를 넣으면 유선이 끊겨도 Wi-Fi 주소로 호스트에 접속되도록 정책 라우팅을 추가함
 # 사용법: bash scripts/host/setup_wifi.sh
 set -euo pipefail
 
@@ -31,9 +32,18 @@ fi
 ssid="${WIFI_SSID:-}"
 password="${WIFI_PASSWORD:-}"
 country="${WIFI_COUNTRY:-}"
+wifi_ip="${WIFI_IP:-}"
+wifi_gateway="${WIFI_GATEWAY:-}"
+# Wi-Fi 주소에서 나가는 패킷용 경로 테이블 번호 (고정 IP일 때만 사용)
+route_table=100
 
 if [[ -z "$ssid" ]]; then
     skip_done "WIFI_SSID is empty in $env_file (set it to connect Wi-Fi)"
+fi
+if [[ -n "$wifi_ip" ]]; then
+    [[ "$wifi_ip" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/[0-9]+$ && ${wifi_ip#*/} -le 32 ]] \
+        || { echo "WIFI_IP must be CIDR (e.g. 192.168.0.25/24): $wifi_ip" >&2; exit 1; }
+    [[ -n "$wifi_gateway" ]] || { echo "WIFI_GATEWAY is required with WIFI_IP" >&2; exit 1; }
 fi
 
 # Wi-Fi 인터페이스: .env의 WIFI_INTERFACE, 없으면 첫 번째 무선 인터페이스
@@ -76,7 +86,16 @@ build_wpa_conf() {
     fi
 }
 
-cat > "$work/network" <<EOF
+# CIDR(예: 192.168.0.25/24)의 네트워크 주소 (예: 192.168.0.0/24)
+network_of() {
+    local a b c d len="${1#*/}" n
+    IFS=. read -r a b c d <<< "${1%/*}"
+    n=$(( ((a << 24) | (b << 16) | (c << 8) | d) & ((0xFFFFFFFF << (32 - len)) & 0xFFFFFFFF) ))
+    echo "$(( n >> 24 & 255 )).$(( n >> 16 & 255 )).$(( n >> 8 & 255 )).$(( n & 255 ))/$len"
+}
+
+if [[ -z "$wifi_ip" ]]; then
+    cat > "$work/network" <<EOF
 [Match]
 Name=$iface
 
@@ -86,6 +105,34 @@ DHCP=ipv4
 [DHCPv4]
 RouteMetric=600
 EOF
+else
+    # 고정 IP: 케이블이 빠져도 VM 포트(tap) 때문에 vmbr0이 살아 있는 것으로 보여
+    # Wi-Fi 주소로 들어온 접속의 응답이 vmbr0으로 나가므로, Wi-Fi 주소에서 나가는 패킷은 별도 경로 테이블로 보냄
+    cat > "$work/network" <<EOF
+[Match]
+Name=$iface
+
+[Address]
+Address=$wifi_ip
+RouteMetric=600
+
+[Route]
+Gateway=$wifi_gateway
+Metric=600
+
+[Route]
+Destination=$(network_of "$wifi_ip")
+Table=$route_table
+
+[Route]
+Gateway=$wifi_gateway
+Table=$route_table
+
+[RoutingPolicyRule]
+From=${wifi_ip%/*}
+Table=$route_table
+EOF
+fi
 
 # networkd가 ifupdown2가 만든 경로·규칙(vmbr0 등)을 지우지 않게 함
 cat > "$work/networkd.conf" <<'EOF'

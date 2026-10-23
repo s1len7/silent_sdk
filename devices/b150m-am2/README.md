@@ -65,6 +65,9 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150
   - 비밀번호는 해시(psk)로 `/etc/wpa_supplicant/wpa_supplicant-<인터페이스>.conf`(root만 읽기)에 저장
   - DHCP는 `systemd-networkd`가 Wi-Fi 인터페이스만 맡음 (`/etc/systemd/network/50-wifi-<인터페이스>.network`, 기본 경로 metric 600이라 유선이 우선)
 - Wi-Fi는 Linux 브리지에 넣을 수 없어 VM은 계속 유선(`vmbr0`)으로 연결됨. 호스트는 유선 IP와 Wi-Fi IP 양쪽으로 접속 가능
+- 유선이 끊겼을 때도 Wi-Fi IP로 접속하려면 `.env`에 `WIFI_IP`(고정 IP, CIDR)와 `WIFI_GATEWAY`를 넣고 다시 실행
+  - 고정 IP일 때는 Wi-Fi IP에서 나가는 패킷을 경로 테이블 100으로 Wi-Fi로 보냄 (`ip rule`, `ip route show table 100`으로 확인)
+  - 고정 IP는 공유기 DHCP 범위 밖 주소나 DHCP 예약 주소를 쓸 것
 - 상태 확인: `ip -br addr show`, `journalctl -u wpa_supplicant@wlp3s0`
 
 
