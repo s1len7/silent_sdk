@@ -62,5 +62,5 @@ ssh -N -L 18790:127.0.0.1:18789 silent@192.168.0.22
   3. pairing 요청이 뜨면 VM에서 `openclaw devices list` → `openclaw devices approve <id>`
 - 다시 생각해볼 것
   - Gateway를 랜(`192.168.0.22:18789`)에 바로 열지, 지금처럼 SSH 터널로 쓸지
-  - 유선이 끊겼을 때 호스트 Wi-Fi(192.168.0.25)로 SSH 접속: 지금은 안 될 가능성이 높음 → Wi-Fi 고정 IP + 정책 라우팅 추가 후 테스트
+  - 유선이 끊겼을 때 호스트 Wi-Fi(192.168.0.25)로 SSH 접속: 지금(DHCP)은 안 됨 → `setup_wifi.sh`의 `WIFI_IP`(고정 IP) 옵션을 적용할지 ([장비 README](../../README.md#wi-fi-호스트) 참고, 테스트 VM에서 검증됨)
   - 유선이 끊겨도 VM이 인터넷 쓰기: Wi-Fi는 브리지 불가 → VM을 NAT 브리지(`vmbr1`)로 옮길지 (VM 랜 IP는 없어짐)

@@ -66,10 +66,11 @@ summary=()
 failed=0
 # 실행할 모듈 (위에서부터 순서대로 실행, 새 모듈은 여기에 한 줄 추가)
 modules=(
-    # 저장소 설정과 패치를 먼저 한 뒤 (Wi-Fi 패키지 설치에 필요) Wi-Fi 연결, VM 생성
+    # 저장소 설정과 패치를 먼저 한 뒤 (Wi-Fi 패키지 설치에 필요) Wi-Fi 연결, VM 생성, VM 백업 job 등록
     setup_pve_repo
     setup_wifi
     setup_vm_ubuntu_server
+    setup_vm_backup
 )
 for name in "${modules[@]}"; do
     module="$device_dir/scripts/host/$name.sh"
