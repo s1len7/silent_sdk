@@ -1,0 +1,4 @@
+.env
+docker/magic_mirror/config/mmpm/log/
+docker/magic_mirror/config/*.bak
+docker/magic_mirror/modules/

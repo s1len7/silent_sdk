@@ -1,0 +1,44 @@
+services:
+  duplicati:
+    image: lscr.io/linuxserver/duplicati:latest
+    container_name: duplicati
+    hostname: raspberrypi-duplicati
+    restart: unless-stopped
+    network_mode: bridge
+
+    ports:
+      - "8200:8200"
+
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Seoul
+      - SETTINGS_ENCRYPTION_KEY=${DUPLICATI_SETTINGS_ENCRYPTION_KEY:?set in .env}
+      - DUPLICATI__WEBSERVICE_PASSWORD=${DUPLICATI_WEBSERVICE_PASSWORD:?set in .env}
+
+    volumes:
+      # Duplicati 설정
+      - /home/silent/docker/duplicati/config:/config
+
+      # 임시 작업 공간
+      - /home/silent/docker/duplicati/backups:/backups
+
+      # ===== 백업 대상 =====
+
+      # 사용자 홈
+      - /home:/source/home:ro
+
+      # # 시스템 설정
+      # - /etc:/source/etc:ro
+
+      # # 부트 영역
+      # - /boot:/source/boot:ro
+
+      # Docker 볼륨
+      - /var/lib/docker/volumes:/source/docker-volumes:ro
+
+      # # Docker Compose 파일 등이 있다면
+      # - /opt:/source/opt:ro
+
+      # # 필요하면 루트 전체(선택)
+      # - /:/source/root:ro

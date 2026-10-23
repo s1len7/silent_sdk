@@ -1,0 +1,26 @@
+services:
+  theengsgateway:
+    image: theengs/gateway:latest
+    container_name: theengsgateway
+    restart: unless-stopped
+    network_mode: host
+    privileged: true
+    volumes:
+      - /var/run/dbus:/var/run/dbus
+      # - /home/silent/docker/theengs-gateway/config:/opt/theengs_gateway/config
+    environment:
+      - MQTT_HOST=192.168.0.2
+      - MQTT_PORT=1883
+      # - LOG_LEVEL=DEBUG
+      - LOG_LEVEL=INFO
+      - PUBLISH_TOPIC=home/TheengsGateway/BTtoMQTT
+      - DISCOVERY_TOPIC=homeassistant
+      - DISCOVERY=true
+      - HASS_DISCOVERY=true
+      - PUBLISH_ADVDATA=true
+      # - DISCOVERY_FILTER=*
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
