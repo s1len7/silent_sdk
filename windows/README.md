@@ -51,6 +51,7 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/windows/setup.ps1 |
 ### Git
 
 - Setup: [scripts/setup-git.ps1](scripts/setup-git.ps1) (Git for Windows 최신 64-bit, 기본 옵션 무인 설치)
+  - 전역 `user.name`, `user.email` 설정 (이메일은 GitHub noreply 주소로 비식별화)
 
 
 ### Visual Studio Code
