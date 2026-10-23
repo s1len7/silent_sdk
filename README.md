@@ -6,17 +6,15 @@
 
 ## 작성 원칙
 
-- README.md를 포함해 불필요한 수정은 최대한 피함
-- 모든 구현은 오캄의 면도날(Occam's razor)에 따라 가능한 한 간단하게 함
-- 주석은 한글, 콘솔 출력 메시지는 모두 영어로 작성함
-- 스크립트는 기능별 모듈로 나누고, 모듈 전체를 한 번에 설치할 수도 있게 함
+- [CLAUDE.md](CLAUDE.md) 참고 (공통 규칙은 [vibecoding](vibecoding) 서브모듈의 CLAUDE.md)
+- 개발 PC에서 클론할 때는 서브모듈도 함께 받음: `git clone --recurse-submodules ...` 또는 클론 후 `git submodule update --init`
 
 
 # 전체 설치
 
 순정 OS 클린설치 직후 한 번에 설치 (git이 없으면 설치 → 저장소 클론 → 전체 설치):
 ```
-(command -v git >/dev/null || (sudo apt-get update && sudo apt-get install -y git)) && git clone https://github.com/<GITHUB_USER>/raspberrypi4.git ~/raspberrypi4 && sudo bash ~/raspberrypi4/scripts/setup.sh
+(command -v git >/dev/null || (sudo apt-get update && sudo apt-get install -y git)) && git clone https://github.com/s1len7/raspberrypi4.git ~/raspberrypi4 && sudo bash ~/raspberrypi4/scripts/setup.sh
 ```
 
 이미 클론되어 있으면: `sudo bash scripts/setup.sh` — scripts/setup_*.sh 모듈을 모두 실행
