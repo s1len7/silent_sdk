@@ -1,7 +1,7 @@
-# Raspberry Pi 4 Model B
+# Raspberry Pi 4 Model B (8GB)
 
 - 제조사: [Raspberry Pi Ltd](https://www.raspberrypi.com/)
-- 모델명: [Raspberry Pi 4 Model B](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/)
+- 모델명: [Raspberry Pi 4 Model B](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/), RAM 8GB 모델
   - [제품 사양서(Product Brief)](https://datasheets.raspberrypi.com/rpi4/raspberry-pi-4-product-brief.pdf)
 - OS 설치 후 기본 셋팅 자동화
 - 지원OS: Raspberry Pi OS Trixie 이상
@@ -10,7 +10,7 @@
 | 항목 | 사양 |
 | --- | --- |
 | SoC | Broadcom BCM2711, Cortex-A72 4코어 64-bit, 1.8GHz |
-| RAM | LPDDR4 1/2/3/4/8GB (모델별) |
+| RAM | LPDDR4 8GB |
 | 저장장치 | microSD |
 | 무선 | Wi-Fi 802.11ac (2.4/5GHz), Bluetooth 5.0 BLE |
 | 포트 | USB 3.0 x2, USB 2.0 x2, 기가비트 LAN, micro HDMI x2 (최대 4Kp60), MIPI DSI, MIPI CSI, 오디오/컴포지트 |
@@ -21,17 +21,17 @@
 
 ## 기능
 
-- 전체 Setup: 순정 OS 클린설치 직후 이 한 줄만 실행 ([scripts/setup.sh](scripts/setup.sh)) (git이 없으면 설치 → 저장소 클론 → 전체 설치):
+- 전체 Setup: 순정 OS 클린설치 직후 이 한 줄만 실행 ([setup.sh](setup.sh)) (git이 없으면 설치 → 저장소 클론 → 전체 설치):
 
 ```bash
-(command -v git >/dev/null || (sudo apt-get update && sudo apt-get install -y git)) && git clone https://github.com/s1len7/silent_sdk.git ~/silent_sdk && sudo bash ~/silent_sdk/devices/raspberrypi4/scripts/setup.sh
+(command -v git >/dev/null || (sudo apt-get update && sudo apt-get install -y git)) && git clone https://github.com/s1len7/silent_sdk.git ~/silent_sdk && sudo bash ~/silent_sdk/devices/raspberrypi4-8gb/setup.sh
 ```
 
-- 이미 클론되어 있으면: `sudo bash ~/silent_sdk/devices/raspberrypi4/scripts/setup.sh` (scripts/setup_*.sh 모듈을 모두 실행)
-- 개별 기능만 설치: 이 폴더(`~/silent_sdk/devices/raspberrypi4`)에서 `sudo bash scripts/setup_<기능>.sh`
+- 이미 클론되어 있으면: `sudo bash ~/silent_sdk/devices/raspberrypi4-8gb/setup.sh` (scripts/setup_*.sh 모듈을 모두 실행)
+- 개별 기능만 설치: 이 폴더(`~/silent_sdk/devices/raspberrypi4-8gb`)에서 `sudo bash scripts/setup_<기능>.sh`
 - 실패한 모듈이 있어도 나머지 모듈은 계속 진행하고, 끝에 모듈별 결과(OK/SKIP/FAIL) 요약을 보여줌
 - 다시 실행: 같은 명령을 다시 실행하면 이미 설정된 모듈은 SKIP하고, 실패했거나 안 된 모듈만 다시 진행함 (모듈별 확인 기준은 아래 각 기능의 "다시 실행 시" 참고)
-- 로그: `~/silent_sdk/logs/raspberrypi4-<시각>/setup.log`
+- 로그: `~/silent_sdk/logs/raspberrypi4-8gb-<시각>/setup.log`
 
 
 ### 전원 끄기 버튼

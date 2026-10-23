@@ -2,8 +2,8 @@
 # 전체 설치 스크립트: scripts/setup_*.sh 모듈을 모두 실행
 # 실패한 모듈이 있어도 다음 모듈을 계속 실행하고, 끝에 모듈별 결과(OK / SKIP / FAIL)를 요약함
 # 모듈은 이미 설정돼 있으면 종료 코드 3으로 끝나며 SKIP으로 표시됨 (다시 실행하면 실패한 모듈만 다시 설치됨)
-# 로그: 저장소 logs/raspberrypi4-<시각>/setup.log
-# 사용법: sudo bash scripts/setup.sh
+# 로그: 저장소 logs/raspberrypi4-8gb-<시각>/setup.log
+# 사용법: sudo bash setup.sh
 set -uo pipefail
 
 if [[ $EUID -ne 0 ]]; then
@@ -11,9 +11,9 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
-script_dir="$(cd "$(dirname "$0")" && pwd)"
-repo="$(cd "$script_dir/../../.." && pwd)"
-log_dir="$repo/logs/raspberrypi4-$(date +%Y%m%d-%H%M%S)"
+device_dir="$(cd "$(dirname "$0")" && pwd)"
+repo="$(cd "$device_dir/../.." && pwd)"
+log_dir="$repo/logs/raspberrypi4-8gb-$(date +%Y%m%d-%H%M%S)"
 mkdir -p "$log_dir"
 # 저장소 소유자가 로그를 읽고 지울 수 있게 함
 chown -R "${SUDO_USER:-root}:" "$repo/logs"
@@ -28,7 +28,7 @@ echo "Logs:     $log_dir"
 
 summary=()
 failed=0
-for module in "$script_dir"/setup_*.sh; do
+for module in "$device_dir"/scripts/setup_*.sh; do
     name="$(basename "$module" .sh)"
     echo
     echo "=== [$name] started $(date +%H:%M:%S)"

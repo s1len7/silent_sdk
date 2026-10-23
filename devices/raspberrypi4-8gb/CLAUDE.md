@@ -1,8 +1,8 @@
-## raspberrypi4 전용
+## raspberrypi4-8gb 전용
 
-- 대상: Raspberry Pi 4, Raspberry Pi OS Trixie 이상 (labwc / Wayland)
+- 대상: Raspberry Pi 4 Model B (RAM 8GB), Raspberry Pi OS Trixie 이상 (labwc / Wayland)
 - 기능 하나당 `scripts/setup_<기능>.sh` 모듈 하나로 만들고, README.md `## 기능` 아래에 `### <기능>` 섹션과 `- Setup: [scripts/setup_<기능>.sh](...)` 줄을 추가할 것
-  - `scripts/setup.sh`가 `setup_*.sh`를 모두 실행하므로 전체 설치에 따로 등록할 필요 없음
+  - `setup.sh`가 `scripts/setup_*.sh`를 모두 실행하므로 전체 설치에 따로 등록할 필요 없음
 - 스크립트 공통 형식
   - `#!/usr/bin/env bash`, `set -euo pipefail`
   - 맨 앞에서 root 권한을 확인하고, 아니면 `sudo bash $0` 안내 후 종료

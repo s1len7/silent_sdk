@@ -5,7 +5,8 @@
 | 장비 | 대상 | 문서 |
 |---|---|---|
 | desktop | Windows 10 이상 데스크탑 | [devices/desktop/README.md](devices/desktop/README.md) |
-| raspberrypi4 | Raspberry Pi 4, Raspberry Pi OS Trixie 이상 | [devices/raspberrypi4/README.md](devices/raspberrypi4/README.md) |
+| raspberrypi4-8gb | Raspberry Pi 4 (RAM 8GB), Raspberry Pi OS Trixie 이상 | [devices/raspberrypi4-8gb/README.md](devices/raspberrypi4-8gb/README.md) |
+| raspberrypi4-2gb | Raspberry Pi 4 (RAM 2GB), Raspberry Pi OS Lite 64-bit (Trixie) | [devices/raspberrypi4-2gb/README.md](devices/raspberrypi4-2gb/README.md) |
 | titan-s260 | SAM4S TITAN-S260 POS, Windows 10 IoT LTSC | [devices/titan-s260/README.md](devices/titan-s260/README.md) |
 | byt-t1 | PEGATRON BYT-T1 Mini-ITX 보드 (Intel Pentium J2900), Ubuntu Server LTS | [devices/byt-t1/README.md](devices/byt-t1/README.md) |
 | jetson-nano-b01 | NVIDIA Jetson Nano Developer Kit B01, JetPack 4.6.6 (Ubuntu 18.04) | [devices/jetson-nano-b01/README.md](devices/jetson-nano-b01/README.md) |
@@ -18,7 +19,8 @@ silent_sdk/
 ├─ devices/          장비별 폴더 (각 폴더에 README.md, CLAUDE.md, 설치 스크립트)
 │  ├─ desktop/       Windows 데스크탑, Windows 공통 스크립트 (titan-s260도 사용)
 │  ├─ titan-s260/
-│  ├─ raspberrypi4/
+│  ├─ raspberrypi4-8gb/
+│  ├─ raspberrypi4-2gb/
 │  ├─ byt-t1/
 │  └─ jetson-nano-b01/
 ├─ logs/             설치 로그 (git에는 올라가지 않음)
@@ -38,9 +40,14 @@ TITAN-S260 (PowerShell):
 irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/titan-s260/setup.ps1 | iex
 ```
 
-Raspberry Pi 4:
+Raspberry Pi 4 (8GB):
 ```bash
-(command -v git >/dev/null || (sudo apt-get update && sudo apt-get install -y git)) && git clone https://github.com/s1len7/silent_sdk.git ~/silent_sdk && sudo bash ~/silent_sdk/devices/raspberrypi4/scripts/setup.sh
+(command -v git >/dev/null || (sudo apt-get update && sudo apt-get install -y git)) && git clone https://github.com/s1len7/silent_sdk.git ~/silent_sdk && sudo bash ~/silent_sdk/devices/raspberrypi4-8gb/setup.sh
+```
+
+Raspberry Pi 4 (2GB):
+```bash
+(command -v git >/dev/null || (sudo apt-get update && sudo apt-get install -y git)) && git clone https://github.com/s1len7/silent_sdk.git ~/silent_sdk && sudo bash ~/silent_sdk/devices/raspberrypi4-2gb/setup.sh
 ```
 
 

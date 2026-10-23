@@ -1,0 +1,86 @@
+# ADS-B 피더 (sdr-enthusiasts 컨테이너)
+# ultrafeeder가 RTL-SDR 동글로 수신·디코딩하고, 나머지 피더가 ultrafeeder의 BEAST 출력(30005)을 받아 각 서비스로 전송
+# 값은 같은 폴더의 .env에서 읽음 (.env.example 참고)
+services:
+  ultrafeeder:
+    image: ghcr.io/sdr-enthusiasts/docker-adsb-ultrafeeder:latest
+    container_name: ultrafeeder
+    hostname: ultrafeeder
+    restart: unless-stopped
+    # USB 장치(major 189) 접근 허용, compose 2.3 이상 필요
+    device_cgroup_rules:
+      - "c 189:* rwm"
+    ports:
+      - 8080:80
+    environment:
+      - TZ=${FEEDER_TZ}
+      - READSB_DEVICE_TYPE=rtlsdr
+      - READSB_GAIN=auto
+      - READSB_LAT=${FEEDER_LAT}
+      - READSB_LON=${FEEDER_LONG}
+      - READSB_ALT=${FEEDER_ALT_M}m
+    volumes:
+      - /opt/adsb/ultrafeeder/globe_history:/var/globe_history
+      - /opt/adsb/ultrafeeder/graphs1090:/var/lib/collectd
+      - /proc/diskstats:/proc/diskstats:ro
+      - /dev/bus/usb:/dev/bus/usb:rw
+    tmpfs:
+      - /run:exec,size=256M
+
+  fr24feed:
+    image: ghcr.io/sdr-enthusiasts/docker-flightradar24:latest
+    container_name: fr24feed
+    restart: unless-stopped
+    ports:
+      - 8754:8754
+    environment:
+      - TZ=${FEEDER_TZ}
+      - BEASTHOST=ultrafeeder
+      - FR24KEY=${FR24KEY}
+    dns_search: .
+
+  piaware:
+    image: ghcr.io/sdr-enthusiasts/docker-piaware:latest
+    container_name: piaware
+    restart: unless-stopped
+    ports:
+      - 8081:80
+    environment:
+      - TZ=${FEEDER_TZ}
+      - RECEIVER_TYPE=relay
+      - BEASTHOST=ultrafeeder
+      - BEASTPORT=30005
+      - FEEDER_ID=${PIAWARE_FEEDER_ID}
+      # MLAT 결과를 ultrafeeder 지도에도 표시
+      - MLAT_RESULTS_BEASTHOST=ultrafeeder
+      - MLAT_RESULTS_BEASTPORT=31004
+    tmpfs:
+      - /run:exec,size=64M
+      - /var/log
+
+  airnavradar:
+    image: ghcr.io/sdr-enthusiasts/docker-airnavradar:latest
+    container_name: airnavradar
+    restart: unless-stopped
+    environment:
+      - TZ=${FEEDER_TZ}
+      - BEASTHOST=ultrafeeder
+      - LAT=${FEEDER_LAT}
+      - LONG=${FEEDER_LONG}
+      - ALT=${FEEDER_ALT_M}
+      - SHARING_KEY=${AIRNAVRADAR_SHARING_KEY}
+      - MLAT_RESULTS_BEASTHOST=ultrafeeder
+      - MLAT_RESULTS_BEASTPORT=31004
+
+  planefinder:
+    image: ghcr.io/sdr-enthusiasts/docker-planefinder:latest
+    container_name: planefinder
+    restart: unless-stopped
+    ports:
+      - 30053:30053
+    environment:
+      - TZ=${FEEDER_TZ}
+      - BEASTHOST=ultrafeeder
+      - LAT=${FEEDER_LAT}
+      - LONG=${FEEDER_LONG}
+      - SHARECODE=${PLANEFINDER_SHARECODE}
