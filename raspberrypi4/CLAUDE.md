@@ -7,5 +7,8 @@
   - `#!/usr/bin/env bash`, `set -euo pipefail`
   - 맨 앞에서 root 권한을 확인하고, 아니면 `sudo bash $0` 안내 후 종료
   - 사용자 파일은 `$SUDO_USER`의 홈에 만들고 `chown`할 것
-  - 여러 번 실행해도 결과가 같게 만들 것 (이미 설정돼 있으면 건너뜀)
+  - 여러 번 실행해도 결과가 같게 만들 것
+  - `source "$(dirname "$0")/lib.sh"` 후, 맨 앞에서 이미 설정돼 있는지 확인하고 그렇다면 `skip_done "<메시지>"` (종료 코드 3, setup.sh가 SKIP으로 표시)
+    - 일부만 돼 있으면 빠진 부분만 처리할 것
+    - README 해당 기능에 `다시 실행 시:` 줄로 확인 기준을 적을 것
   - Windows에서 편집한 파일을 복사할 때는 CR을 제거할 것

@@ -4,6 +4,17 @@ $ErrorActionPreference = 'Stop'
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 $dest = "$env:ProgramFiles\Sysinternals"
+
+# Already installed, in the machine PATH and with the EULA accepted
+$done = (Test-Path "$dest\procexp.exe") -and
+    ([Environment]::GetEnvironmentVariable('Path', 'Machine') -split ';') -contains $dest -and
+    (Get-ItemProperty HKCU:\Software\Sysinternals -ErrorAction SilentlyContinue).EulaAccepted -eq 1
+if ($done) {
+    Write-Host "Sysinternals Suite is already installed, skipped: $dest"
+    $global:SetupStepSkipped = $true
+    return
+}
+
 $zip  = "$env:TEMP\SysinternalsSuite.zip"
 Invoke-WebRequest https://download.sysinternals.com/files/SysinternalsSuite.zip -OutFile $zip -UseBasicParsing
 Expand-Archive $zip $dest -Force

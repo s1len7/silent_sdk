@@ -44,6 +44,7 @@ Write-Host "OS: $($os.Caption) ($($os.Version))"
 $status = Get-ActivationStatus
 if ($status -and $status.LicenseStatus -eq 1) {
     Write-Host "Already activated. ($($status.Name), key ends with $($status.PartialProductKey))" -ForegroundColor Green
+    $global:SetupStepSkipped = $true
     Wait-Exit
     exit 0
 }

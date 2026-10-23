@@ -17,6 +17,15 @@ if (-not (Test-Path $winget)) {
     Add-AppxPackage -Path "$tmp\winget.msixbundle" -DependencyPath $deps.FullName
 }
 
+# Already installed (winget list exits 0 when the package is found)
+& $winget list --id 9PM860492SZD --exact --accept-source-agreements | Out-Null
+if ($LASTEXITCODE -eq 0) {
+    Write-Host 'PC Manager is already installed, skipped'
+    $global:SetupStepSkipped = $true
+    return
+}
+
 & $winget install --id 9PM860492SZD -s msstore --accept-package-agreements --accept-source-agreements
-if ($LASTEXITCODE -ne 0) { throw "PC Manager setup failed: exit code $LASTEXITCODE" }
+# -1978335189 (0x8A15002B): already installed / no newer version, treated as success
+if ($LASTEXITCODE -notin 0, -1978335189) { throw "PC Manager setup failed: exit code $LASTEXITCODE" }
 Write-Host 'PC Manager setup done'

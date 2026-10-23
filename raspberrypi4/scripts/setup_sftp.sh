@@ -8,6 +8,13 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
+source "$(dirname "$0")/lib.sh"
+
+# ssh 서비스가 등록돼 있고 실행 중이면 건너뜀
+if systemctl is-enabled --quiet ssh 2>/dev/null && systemctl is-active --quiet ssh; then
+    skip_done "SSH (SFTP) is already enabled and running"
+fi
+
 # 1. raspi-config 비대화형 모드로 SSH 활성화 (0 = enable)
 echo "[1/3] Enabling SSH via raspi-config"
 raspi-config nonint do_ssh 0

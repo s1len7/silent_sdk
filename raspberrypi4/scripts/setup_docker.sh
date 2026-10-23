@@ -8,13 +8,23 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
+source "$(dirname "$0")/lib.sh"
+
+user_name="${SUDO_USER:-$(whoami)}"
+portainer_image=portainer/agent:2.39.4
+
+# 패키지, docker 그룹, 실행 중인 Portainer Agent(같은 버전)가 모두 있으면 건너뜀
+if pkgs_installed docker.io docker-compose && id -nG "$user_name" | grep -qw docker \
+    && [[ "$(docker ps --filter name=^portainer_agent$ --filter status=running --format '{{.Image}}')" == "$portainer_image" ]]; then
+    skip_done "Docker and Portainer Agent are already set up"
+fi
+
 # 1. Docker 설치
 echo "[1/4] Installing Docker packages"
 apt-get update
 apt-get install -y docker.io docker-compose
 
 # 2. sudo 없이 docker 명령을 쓸 수 있도록 사용자를 docker 그룹에 추가
-user_name="${SUDO_USER:-$(whoami)}"
 echo "[2/4] Adding $user_name to docker group"
 usermod -aG docker "$user_name"
 
@@ -32,6 +42,6 @@ docker run -d \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v /var/lib/docker/volumes:/var/lib/docker/volumes \
   -v /:/host \
-  portainer/agent:2.39.4
+  "$portainer_image"
 
 echo "Docker installed. Log out and back in to use docker without sudo."

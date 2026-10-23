@@ -9,7 +9,14 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
+source "$(dirname "$0")/lib.sh"
+
 repo="$(cd "$(dirname "$0")/.." && pwd)"
-docker compose -f "$repo/docker/dozzle/docker-compose.yml" up -d
+compose="$repo/docker/dozzle/docker-compose.yml"
+
+# 컨테이너가 모두 실행 중이면 건너뜀
+compose_running "$compose" && skip_done "dozzle is already running"
+
+docker compose -f "$compose" up -d
 
 echo "dozzle started on port 38080"

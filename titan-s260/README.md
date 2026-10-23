@@ -25,10 +25,15 @@
 irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/titan-s260/setup.ps1 | iex
 ```
 
+- 실패한 단계가 있어도 나머지 단계는 계속 진행하고, 끝에 단계별 결과(OK/SKIP/FAIL) 요약을 보여줌
+- 다시 실행: 같은 명령을 다시 실행하면 이미 설정된 단계는 SKIP하고, 실패했거나 안 된 단계만 다시 진행함 (단계별 확인 기준은 아래 각 기능의 "다시 실행 시" 참고)
+- 로그: `C:\silent_sdk\logs\titan-s260-<시각>\` (`setup.log` 전체 실행 기록, `*-install.log` 설치 프로그램 로그)
+
 
 ### Windows 10 IoT LTSC
 
 - 정품 키 인증: [scripts/activate-win10-iot.cmd](scripts/activate-win10-iot.cmd) (펌웨어 OEM 키 자동 사용, 없으면 입력)
+  - 다시 실행 시: 이미 정품 인증돼 있으면 건너뜀
 
 - https://massgrave.dev/ 참고해서 인증 스크립트 실행
 ```powershell
@@ -36,9 +41,18 @@ irm https://get.activated.win | iex
 ```
 
 
+### 컴퓨터 이름
+
+- Setup: [scripts/setup-hostname.ps1](scripts/setup-hostname.ps1) (컴퓨터 이름이 `titan-s260`이 아니면 변경, 적용 후 재부팅)
+  - 다시 실행 시: 이름이 이미 `titan-s260`이거나 변경 후 재부팅 대기 중이면 건너뜀
+
+
 ### PowerToys
 
 - Setup: [windows/scripts/setup-powertoys.ps1](../windows/scripts/setup-powertoys.ps1) (최신 버전)
+  - 다시 실행 시: 설치돼 있고 창 억제·ZoomIt 설정이 돼 있으면 건너뜀. 설치만 돼 있으면 설정만 적용
+  - 설치 후 환영 창, 새로운 기능(What's new) 창을 띄우지 않음
+  - ZoomIt 활성화 (정책으로 켜서 PowerToys 설정에서 끌 수 없음)
 
 
 <!-- 
@@ -51,11 +65,13 @@ irm https://get.activated.win | iex
 ### Microsoft PC Manager
 
 - Setup: [windows/scripts/setup-pcmanager.ps1](../windows/scripts/setup-pcmanager.ps1) (winget으로 Store 앱 설치, winget 없으면 먼저 설치)
+  - 다시 실행 시: winget 목록에 PC Manager가 있으면 건너뜀
 
 
 ### 저사양 최적화
 
 - Setup: [scripts/setup-performance.ps1](scripts/setup-performance.ps1) (적용 후 재부팅)
+  - 다시 실행 시: 시각 효과, 서비스, 원격 분석, 전원 계획, 최대 절전이 모두 적용돼 있으면 건너뜀
   1. 시각 효과 최적 성능 (투명·애니메이션 끄기, 단색 배경)
   2. Windows Search 인덱싱 끄기
   3. SysMain(Superfetch) 끄기
@@ -66,6 +82,7 @@ irm https://get.activated.win | iex
 
 ### Windows 설정
 
-- TODO:작업표시줄 > 시스템 아이콘 > 터치 키보드 켬
+- 작업표시줄 터치 키보드 버튼 켬: [scripts/setup-touch-keyboard.ps1](scripts/setup-touch-keyboard.ps1) (현재 사용자, 로그아웃 또는 재부팅 후 적용)
+  - 다시 실행 시: 터치 키보드 버튼이 이미 켜져 있으면 건너뜀
 
 

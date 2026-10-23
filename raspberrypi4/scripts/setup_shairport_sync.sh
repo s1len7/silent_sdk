@@ -9,6 +9,10 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
+source "$(dirname "$0")/lib.sh"
+
+pkgs_installed shairport-sync && skip_done "shairport-sync is already installed"
+
 apt-get update
 apt-get install -y shairport-sync
 

@@ -9,13 +9,11 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
-if ! command -v pinctrl >/dev/null 2>&1; then
-    echo "pinctrl not found. Install with: sudo apt install raspi-utils" >&2
-    exit 1
-fi
+source "$(dirname "$0")/lib.sh"
 
+unit_file=/etc/systemd/system/boot-beep.service
 # Type=idle: 부팅 작업이 모두 끝난 뒤 실행되도록 함
-cat > /etc/systemd/system/boot-beep.service <<'EOF'
+unit="$(cat <<'EOF'
 [Unit]
 Description=Beep when boot is complete
 
@@ -26,7 +24,19 @@ ExecStart=/bin/sh -c 'pinctrl set 24 op dh; sleep 0.2; pinctrl set 24 op dl'
 [Install]
 WantedBy=multi-user.target
 EOF
+)"
 
+# 서비스 파일이 같고 이미 등록돼 있으면 건너뜀 (테스트 비프음도 울리지 않음)
+if [[ -f "$unit_file" && "$(cat "$unit_file")" == "$unit" ]] && systemctl is-enabled --quiet boot-beep.service; then
+    skip_done "boot-beep.service is already enabled"
+fi
+
+if ! command -v pinctrl >/dev/null 2>&1; then
+    echo "pinctrl not found. Install with: sudo apt install raspi-utils" >&2
+    exit 1
+fi
+
+printf '%s\n' "$unit" > "$unit_file"
 systemctl daemon-reload
 systemctl enable boot-beep.service
 echo "boot-beep.service enabled"

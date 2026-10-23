@@ -4,6 +4,20 @@
 $ErrorActionPreference = 'Stop'
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
+# Already installed and the current user can use it: Docker Desktop keeps itself up to date
+$installed = Test-Path "$env:ProgramFiles\Docker\Docker\Docker Desktop.exe"
+$member = Get-LocalGroupMember docker-users -ErrorAction SilentlyContinue | Where-Object Name -like "*\$env:USERNAME"
+if ($installed -and $member) {
+    Write-Host 'Docker Desktop is already installed, skipped'
+    $global:SetupStepSkipped = $true
+    return
+}
+if ($installed) {
+    Add-LocalGroupMember docker-users -Member $env:USERNAME
+    Write-Host "Docker Desktop is already installed, added $env:USERNAME to docker-users"
+    return
+}
+
 # WSL 2 prerequisites
 foreach ($f in 'Microsoft-Windows-Subsystem-Linux', 'VirtualMachinePlatform') {
     dism.exe /online /enable-feature /featurename:$f /all /norestart | Out-Null

@@ -15,6 +15,23 @@ function Set-Reg($path, $name, $value, $type = 'DWord') {
     Set-ItemProperty -Path $path -Name $name -Value $value -Type $type
 }
 
+function Get-RegValue($path, $name) {
+    (Get-ItemProperty $path -ErrorAction SilentlyContinue).$name
+}
+
+# Already applied: one check per step below (the steps run in order and stop on error,
+# so the last step being applied means the earlier ones were applied too)
+$done = (Get-RegValue 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects' VisualFXSetting) -eq 2 -and
+    -not (Get-Service WSearch, SysMain, DiagTrack -ErrorAction SilentlyContinue | Where-Object StartType -ne 'Disabled') -and
+    (Get-RegValue 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection' AllowTelemetry) -eq 0 -and
+    ((powercfg /getactivescheme) -match '8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c') -and
+    (Get-RegValue 'HKLM:\SYSTEM\CurrentControlSet\Control\Power' HibernateEnabled) -eq 0
+if ($done) {
+    Write-Host 'Performance tweaks are already applied, skipped'
+    $global:SetupStepSkipped = $true
+    return
+}
+
 # 1. Visual effects: best performance, no transparency/animations, solid wallpaper
 Set-Reg 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects' VisualFXSetting 2
 Set-Reg 'HKCU:\Control Panel\Desktop' UserPreferencesMask ([byte[]](0x90, 0x12, 0x03, 0x80, 0x10, 0x00, 0x00, 0x00)) Binary

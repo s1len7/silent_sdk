@@ -17,13 +17,21 @@ fi
 user_name="${SUDO_USER:-$(whoami)}"
 user_home="$(getent passwd "$user_name" | cut -d: -f6)"
 autostart="$user_home/.config/labwc/autostart"
+line="swayidle -w timeout $timeout 'wlopm --off \*' resume 'wlopm --on \*' &"
+
+source "$(dirname "$0")/lib.sh"
+
+# 같은 설정의 swayidle 줄 하나만 있으면 건너뜀
+if [[ -f "$autostart" && "$(grep -c swayidle "$autostart")" == 1 ]] && grep -qxF "$line" "$autostart"; then
+    skip_done "Screen blanking is already set to ${timeout}s"
+fi
 
 mkdir -p "$(dirname "$autostart")"
 touch "$autostart"
 
 # 기존 swayidle 줄을 지우고 새로 추가 (여러 번 실행해도 중복 없음)
 sed -i '/swayidle/d' "$autostart"
-echo "swayidle -w timeout $timeout 'wlopm --off \*' resume 'wlopm --on \*' &" >> "$autostart"
+echo "$line" >> "$autostart"
 
 chmod +x "$autostart"
 chown -R "$user_name:" "$user_home/.config/labwc"

@@ -9,13 +9,22 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
+source "$(dirname "$0")/lib.sh"
+
 repo="$(cd "$(dirname "$0")/.." && pwd)"
 env_file="$repo/docker/magic_mirror/.env"
+compose="$repo/docker/magic_mirror/docker-compose.yml"
+fonts=(fonts-nanum fonts-nanum-extra)
+
+# .env, 한글 폰트, 실행 중인 컨테이너가 모두 있으면 건너뜀 (위치를 다시 묻지 않음)
+if [[ -f "$env_file" ]] && pkgs_installed "${fonts[@]}" && compose_running "$compose"; then
+    skip_done "Magic Mirror is already running"
+fi
 
 skip() {
     echo "WARNING: $1, Magic Mirror skipped." >&2
     echo "Run: cp $env_file.example $env_file, fill in MM_LAT and MM_LON, then rerun this script." >&2
-    exit 0
+    exit "$SKIP_EXIT"
 }
 
 # 숫자 형식과 범위(-limit ~ limit)가 맞을 때까지 다시 입력받음

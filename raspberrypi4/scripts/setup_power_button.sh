@@ -9,11 +9,13 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
+source "$(dirname "$0")/lib.sh"
+
 config=/boot/firmware/config.txt
 line="dtoverlay=gpio-shutdown,gpio_pin=26"
 
 if grep -qx "$line" "$config"; then
-    echo "Power button already configured in $config"
+    skip_done "Power button is already configured in $config"
 elif grep -q "^dtoverlay=gpio-shutdown" "$config"; then
     # 다른 설정의 gpio-shutdown이 있으면 GPIO26으로 교체
     sed -i "s|^dtoverlay=gpio-shutdown.*|$line|" "$config"
