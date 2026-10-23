@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=UxPlay
+Exec=uxplay -s 800x480 -v4l2 -bt709 -vs waylandsink
+

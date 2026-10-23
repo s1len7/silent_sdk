@@ -1,0 +1,60 @@
+services:
+  magicmirror: # https://github.com/MagicMirrorOrg/MagicMirror
+    container_name: magicmirror
+    image: karsten13/magicmirror:latest
+    restart: "no"
+    privileged: true
+    network_mode: "host"
+    # ports:
+    #   - "8080:8080"
+    volumes:
+      - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro
+      - /run/user/1000/wayland-0:/run/user/1000/wayland-0:ro
+      - /run/user/1000/bus:/run/user/1000/bus:ro
+      - /usr/share/fonts:/usr/share/fonts:ro
+      - /dev/dri:/dev/dri
+
+      - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
+      - /run/systemd/system:/run/systemd/system
+      - /bin/systemctl:/bin/systemctl
+      
+      - /home/silent/docker/magic_mirror/config:/opt/magic_mirror/config
+      - /home/silent/docker/magic_mirror/modules:/opt/magic_mirror/modules
+      - /home/silent/docker/magic_mirror/css:/opt/magic_mirror/css
+    environment:
+      - TZ=Asia/Seoul
+      - DISPLAY=:0
+      - WAYLAND_DISPLAY=wayland-0
+      - XDG_SESSION_TYPE=wayland
+      - XDG_RUNTIME_DIR=/run/user/1000
+      - ELECTRON_ENABLE_GPU=true
+      - DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
+
+  mmpm:  # https://github.com/bee-mar/mmpm
+    container_name: mmpm
+    image: karsten13/mmpm:latest
+    restart: "no"
+    # command: /bin/sh
+    ports:
+      - "7890:7890"
+      - "7892:7892"
+    environment:
+      - TZ=Asia/Seoul
+      - MMPM_MAGICMIRROR_ROOT=/home/node/MagicMirror
+      - MMPM_MAGICMIRROR_URI=http://magicmirror:8080
+      # - MMPM_MAGICMIRROR_PM2_PROCESS_NAME=
+      # - MMPM_MAGICMIRROR_DOCKER_COMPOSE_FILE=
+      - MMPM_IS_DOCKER_IMAGE=true
+      - MMPM_LOG_LEVEL=DEBUG
+      - MMPM_UI_API_BASE_URL=http://mmpm:7890/api
+      - MMPM_UI_SOCKET_URL=http:/mmpm:7890
+    volumes:
+      - /home/silent/docker/magic_mirror/config:/home/node/MagicMirror/config
+      - /home/silent/docker/magic_mirror/modules:/home/node/MagicMirror/modules
+      
+      - /var/run/docker.sock:/var/run/docker.sock
+
+      # - /home/silent/docker/magic_mirror/config/mmpm/mmpm-env.json:/home/node/.config/mmpm/mmpm-env.json
+      # - /home/silent/docker/magic_mirror/config/mmpm:/home/node/.config/mmpm
+    depends_on:
+      - magicmirror

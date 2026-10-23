@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=Maximize Htop
+Exec=lxterminal --geometry=100x26 -e htop
+Terminal=false
