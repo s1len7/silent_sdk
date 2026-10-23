@@ -29,10 +29,10 @@ if [[ -f "$env_file" ]]; then
 fi
 
 vm_id="${VM_ID:-100}"
-vm_name="${VM_NAME:-openclaw}"
-vm_cores="${VM_CORES:-4}"
-vm_memory="${VM_MEMORY_MB:-8192}"
-vm_disk="${VM_DISK_GB:-64}"
+vm_name="${VM_NAME:-ubuntu-server}"
+vm_cores="${VM_CORES:-2}"
+vm_memory="${VM_MEMORY_MB:-2048}"
+vm_disk="${VM_DISK_GB:-32}"
 vm_storage="${VM_STORAGE:-local-lvm}"
 vm_bridge="${VM_BRIDGE:-vmbr0}"
 vm_user="${VM_USER:-ubuntu}"

@@ -64,8 +64,8 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150
 
 | 항목 | 기본값 | `.env` |
 |---|---|---|
-| VM 번호, 이름 | 100, openclaw | `VM_ID`, `VM_NAME` |
-| 사양 | 4코어, 8192MB, 64GB | `VM_CORES`, `VM_MEMORY_MB`, `VM_DISK_GB` |
+| VM 번호, 이름 | 100, ubuntu-server | `VM_ID`, `VM_NAME` |
+| 사양 | 2코어, 2048MB, 32GB | `VM_CORES`, `VM_MEMORY_MB`, `VM_DISK_GB` |
 | 저장소, 브리지 | local-lvm, vmbr0 | `VM_STORAGE`, `VM_BRIDGE` |
 | 계정 | ubuntu (비밀번호 없이 sudo) | `VM_USER` |
 | SSH 키 | 호스트의 `/root/.ssh/authorized_keys` | `VM_SSH_KEYS_FILE` |
