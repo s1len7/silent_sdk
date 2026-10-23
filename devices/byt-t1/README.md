@@ -2,7 +2,7 @@
 
 - 제조사: [페가트론(PEGATRON)](https://www.pegatroncorp.com/)
   - 국내 유통: 인텍앤컴퍼니
-- 모델명: [BYT-T1](https://prod.danawa.com/info/?pcode=3336855#bookmark_product_information) (Mini-ITX 메인보드, CPU 온보드, 단종)
+- 모델명: [BYT-T1](https://prod.danawa.com/info/?pcode=3336855#bookmark_product_information) (Mini-ITX 메인보드, CPU 온보드)
   - [19V 어댑터 포함 모델](https://prod.danawa.com/info/?pcode=3336831#bookmark_product_information)
 - OS: Ubuntu Server LTS
 

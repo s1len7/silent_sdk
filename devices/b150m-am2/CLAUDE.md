@@ -1,0 +1,23 @@
+## b150m-am2 전용
+
+- 대상: ASUS B150M-A/M.2 (Intel Core i5-7600, RAM 16GB, SSD 256GB, x86_64)
+  - 호스트: Proxmox VE 9 (Debian 13 기반), 게스트: Ubuntu Server 24.04 LTS VM에서 OpenClaw 실행
+  - 에이전트 격리를 위해 OpenClaw는 LXC가 아니라 VM 안에서만 실행할 것
+  - 호스트용과 VM용 스크립트를 섞지 말고, 각 스크립트 주석에 어디서 실행하는지 적을 것
+  - 데스크탑 환경이 없는 서버이므로 GUI나 자동실행(autostart) 대신 systemd 서비스로 구성할 것
+  - 온보드 LAN(Realtek RTL8111H, r8169)은 Proxmox 커널 업데이트 후 끊김 보고가 있으므로 네트워크 관련 변경 시 주의할 것
+- 용도: OpenClaw 서버
+  - 설치와 실행 방식은 [OpenClaw 공식 문서](https://docs.openclaw.ai/install)를 따르고, 서드파티 가이드보다 공식 문서를 우선할 것
+  - Gateway는 공식 기본값(loopback)을 유지하고, 외부에 열 때는 인증(token 또는 password)을 반드시 설정할 것
+  - API 키, 토큰은 `.env`(git 무시)에 둘 것
+- 기능 하나당 `scripts/setup_<기능>.sh` 모듈 하나로 만들고, README.md `## 기능` 아래에 `### <기능>` 섹션과 `- Setup: [scripts/setup_<기능>.sh](...)` 줄을 추가할 것
+  - `setup.sh`가 `scripts/setup_*.sh`를 모두 실행하므로 전체 설치에 따로 등록할 필요 없음
+- 스크립트 공통 형식
+  - `#!/usr/bin/env bash`, `set -euo pipefail`
+  - 맨 앞에서 root 권한을 확인하고, 아니면 `sudo bash $0` 안내 후 종료
+  - 사용자 파일은 `$SUDO_USER`의 홈에 만들고 `chown`할 것
+  - 여러 번 실행해도 결과가 같게 만들 것
+  - `source "$(dirname "$0")/lib.sh"` 후, 맨 앞에서 이미 설정돼 있는지 확인하고 그렇다면 `skip_done "<메시지>"` (종료 코드 3, setup.sh가 SKIP으로 표시)
+    - 일부만 돼 있으면 빠진 부분만 처리할 것
+    - README 해당 기능에 `다시 실행 시:` 줄로 확인 기준을 적을 것
+  - 패키지는 `apt-get`으로 설치하고 대화형 질문이 뜨지 않게 할 것 (`DEBIAN_FRONTEND=noninteractive`)
