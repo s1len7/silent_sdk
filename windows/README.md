@@ -25,6 +25,14 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/windows/setup.ps1 |
   - 접속하려면 로그인 계정에 비밀번호가 있어야 함
 
 
+### Windows 업데이트
+
+- Setup: [scripts/setup-windows-update.ps1](scripts/setup-windows-update.ps1) (드라이버 포함 모든 업데이트 설치, Windows 내장 업데이트 API 사용)
+  - 기능 업데이트(Windows 버전 변경)와 사용자 입력이 필요한 업데이트는 제외
+  - 자동으로 재부팅하지 않음. 재부팅이 필요하면 재부팅 후 전체 Setup을 다시 실행해 남은 업데이트 설치
+  - 다시 실행 시: 설치할 업데이트가 없거나, 이전 업데이트의 재부팅이 대기 중이면 건너뜀
+
+
 ### Google Chrome
 
 - Setup: [scripts/setup-chrome.ps1](scripts/setup-chrome.ps1) (엔터프라이즈 64-bit MSI 최신 버전, 무인 설치)

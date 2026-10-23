@@ -57,6 +57,8 @@ $results += Invoke-Step 'activation' {
     & "$t\activate-win10-iot.ps1" -NoPause
     if ($LASTEXITCODE -ne 0) { throw "Activation failed: exit code $LASTEXITCODE" }
 }
+# Windows updates early, so the following installers run on an up-to-date system
+$results += Invoke-Step 'windows-update' { & "$w\setup-windows-update.ps1" }
 $results += Invoke-Step 'hostname'       { & "$t\setup-hostname.ps1" }
 # $results += Invoke-Step 'zoomit'       { & "$w\setup-zoomit.ps1" }  # PowerToys includes ZoomIt
 $results += Invoke-Step 'powertoys'      { & "$w\setup-powertoys.ps1" }
@@ -67,4 +69,4 @@ $results += Invoke-Step 'touch-keyboard' { & "$t\setup-touch-keyboard.ps1" }
 
 Write-SetupSummary $results $logDir
 Stop-Transcript | Out-Null
-Read-Host 'Done. Reboot to apply the computer name and settings. Press Enter to exit'
+Read-Host 'Done. Reboot to apply the updates, computer name and settings, then run the setup again if any step failed. Press Enter to exit'

@@ -53,6 +53,8 @@ $s = "$dir\windows\scripts"
 $results = @()
 # RDP first: no download, so remote access is available as early as possible
 $results += Invoke-Step 'rdp'          { & "$s\setup-rdp.ps1" }
+# Windows updates early, so the following installers run on an up-to-date system
+$results += Invoke-Step 'windows-update' { & "$s\setup-windows-update.ps1" }
 $results += Invoke-Step 'chrome'       { & "$s\setup-chrome.ps1" }
 # $results += Invoke-Step 'zoomit'     { & "$s\setup-zoomit.ps1" }  # PowerToys includes ZoomIt
 $results += Invoke-Step 'powertoys'    { & "$s\setup-powertoys.ps1" }
@@ -66,4 +68,4 @@ $results += Invoke-Step 'docker'       { & "$s\setup-docker.ps1" }
 
 Write-SetupSummary $results $logDir
 Stop-Transcript | Out-Null
-Read-Host 'Done. Reboot to finish Docker setup. Press Enter to exit'
+Read-Host 'Done. Reboot to finish the updates and Docker setup, then run the setup again if any step failed. Press Enter to exit'

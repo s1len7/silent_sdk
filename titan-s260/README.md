@@ -41,6 +41,14 @@ irm https://get.activated.win | iex
 ```
 
 
+### Windows 업데이트
+
+- Setup: [windows/scripts/setup-windows-update.ps1](../windows/scripts/setup-windows-update.ps1) (드라이버 포함 모든 업데이트 설치, Windows 내장 업데이트 API 사용)
+  - 기능 업데이트(Windows 버전 변경)와 사용자 입력이 필요한 업데이트는 제외
+  - 자동으로 재부팅하지 않음. 재부팅이 필요하면 재부팅 후 전체 Setup을 다시 실행해 남은 업데이트 설치
+  - 다시 실행 시: 설치할 업데이트가 없거나, 이전 업데이트의 재부팅이 대기 중이면 건너뜀
+
+
 ### 컴퓨터 이름
 
 - Setup: [scripts/setup-hostname.ps1](scripts/setup-hostname.ps1) (컴퓨터 이름이 `titan-s260`이 아니면 변경, 적용 후 재부팅)
