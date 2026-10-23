@@ -64,6 +64,7 @@ $results += Invoke-Step 'windows-update' { & "$w\setup-windows-update.ps1" }
 $results += Invoke-Step 'powertoys'      { & "$w\setup-powertoys.ps1" }
 $results += Invoke-Step 'winget'         { & "$w\setup-winget.ps1" }
 $results += Invoke-Step 'pcmanager'      { & "$w\setup-pcmanager.ps1" }
+$results += Invoke-Step 'sysinternals'   { & "$w\setup-sysinternals.ps1" }
 $results += Invoke-Step 'performance'    { & "$t\setup-performance.ps1" }
 $results += Invoke-Step 'touch-keyboard' { & "$t\setup-touch-keyboard.ps1" }
 $results += Invoke-Step 'desktop-icons'  { & "$w\setup-desktop-icons.ps1" }

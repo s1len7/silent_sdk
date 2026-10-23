@@ -88,6 +88,12 @@ irm https://get.activated.win | iex
   - 다시 실행 시: winget 목록에 PC Manager가 있으면 건너뜀
 
 
+### Sysinternals Suite
+
+- Setup: [desktop/scripts/setup-sysinternals.ps1](../desktop/scripts/setup-sysinternals.ps1) (Program Files 설치, PATH 추가, EULA 자동 동의)
+  - 다시 실행 시: 설치 폴더, PATH, EULA 동의가 모두 돼 있으면 건너뜀
+
+
 ### 저사양 최적화
 
 - Setup: [scripts/setup-performance.ps1](scripts/setup-performance.ps1) (적용 후 재부팅)
