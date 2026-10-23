@@ -8,6 +8,7 @@
 | raspberrypi4 | Raspberry Pi 4, Raspberry Pi OS Trixie 이상 | [devices/raspberrypi4/README.md](devices/raspberrypi4/README.md) |
 | titan-s260 | SAM4S TITAN-S260 POS, Windows 10 IoT LTSC | [devices/titan-s260/README.md](devices/titan-s260/README.md) |
 | byt-t1 | PEGATRON BYT-T1 Mini-ITX 보드 (Intel Pentium J2900), Ubuntu Server LTS | [devices/byt-t1/README.md](devices/byt-t1/README.md) |
+| jetson-nano-b01 | NVIDIA Jetson Nano Developer Kit B01, JetPack 4.6.6 (Ubuntu 18.04) | [devices/jetson-nano-b01/README.md](devices/jetson-nano-b01/README.md) |
 
 
 ## 구조
@@ -18,7 +19,8 @@ silent_sdk/
 │  ├─ windows/       Windows 공통 스크립트 (titan-s260도 사용)
 │  ├─ titan-s260/
 │  ├─ raspberrypi4/
-│  └─ byt-t1/
+│  ├─ byt-t1/
+│  └─ jetson-nano-b01/
 ├─ logs/             설치 로그 (git에는 올라가지 않음)
 └─ CLAUDE.md         작성 원칙 (장비 공통)
 ```
