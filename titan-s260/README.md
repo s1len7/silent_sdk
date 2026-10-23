@@ -64,8 +64,9 @@ irm https://get.activated.win | iex
 
 ### WinGet
 
-- Setup: [windows/scripts/setup-winget.ps1](../windows/scripts/setup-winget.ps1) (winget이 없을 때만 설치, LTSC/IoT처럼 Microsoft Store가 없는 환경용)
-  - 공식 방법 사용: `Microsoft.WinGet.Client` 모듈의 `Repair-WinGetPackageManager -AllUsers`
+- Setup: [windows/scripts/setup-winget.ps1](../windows/scripts/setup-winget.ps1) (winget이 없거나 실행되지 않을 때 설치, LTSC/IoT처럼 Microsoft Store가 없는 환경용)
+  - winget GitHub 릴리스의 설치 파일, 의존 패키지, 라이선스 파일로 PC 전체에 등록 (`Add-AppxProvisionedPackage -LicensePath`) 후 현재 사용자에 바로 연결
+  - 라이선스 없이 설치하면 "관련 앱 라이선스를 찾을 수 없습니다" 오류로 winget이 실행되지 않음
   - 다시 실행 시: `winget --version`이 실행되면 건너뜀
 
 
