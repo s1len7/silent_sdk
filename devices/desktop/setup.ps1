@@ -25,15 +25,36 @@ try {
     if (Test-Path "$dir\.git") {
         git -C $dir pull --ff-only | Out-Host
         if ($LASTEXITCODE -ne 0) { throw "git pull failed: exit code $LASTEXITCODE" }
-    } elseif (Get-Command git -ErrorAction SilentlyContinue) {
+    } elseif ((Get-Command git -ErrorAction SilentlyContinue) -and -not (Test-Path $dir)) {
         git clone $repo $dir | Out-Host
         if ($LASTEXITCODE -ne 0) { throw "git clone failed: exit code $LASTEXITCODE" }
     } else {
+        # Zip: replace the folder so files removed from the repo do not linger,
+        # but keep what is not in git (logs, .env) from the old folder
         $zip = "$env:TEMP\silent_sdk.zip"
+        $extract = "$env:TEMP\silent_sdk-extract"
+        $old = "$dir.old"
         Invoke-WebRequest "$repo/archive/refs/heads/main.zip" -OutFile $zip -UseBasicParsing
-        Expand-Archive $zip $env:TEMP -Force
-        New-Item -ItemType Directory -Force $dir | Out-Null
-        Copy-Item "$env:TEMP\silent_sdk-main\*" $dir -Recurse -Force
+        Remove-Item $extract, $old -Recurse -Force -ErrorAction SilentlyContinue
+        Expand-Archive $zip $extract -Force
+        Set-Location $env:TEMP
+        # Rename first: if the folder is in use this fails and the old files stay intact
+        if (Test-Path $dir) { Rename-Item $dir (Split-Path $old -Leaf) }
+        try {
+            Move-Item "$extract\silent_sdk-main" $dir
+        } catch {
+            if (Test-Path $old) { Rename-Item $old (Split-Path $dir -Leaf) }
+            throw
+        }
+        if (Test-Path $old) {
+            if (Test-Path "$old\logs") { Copy-Item "$old\logs\*" "$dir\logs" -Recurse -Force }
+            Get-ChildItem $old -Recurse -Force -File -Filter '.env' | ForEach-Object {
+                $target = Join-Path $dir $_.FullName.Substring($old.Length)
+                New-Item -ItemType Directory -Force (Split-Path $target) | Out-Null
+                Copy-Item $_.FullName $target -Force
+            }
+            try { Remove-Item $old -Recurse -Force } catch { Write-Warning "Could not remove $old`: $($_.Exception.Message)" }
+        }
     }
 } catch {
     Write-Host "ERROR: getting the repo failed: $($_.Exception.Message)" -ForegroundColor Red
