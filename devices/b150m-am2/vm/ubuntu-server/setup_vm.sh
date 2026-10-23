@@ -37,6 +37,7 @@ failed=0
 # 실행할 모듈 (위에서부터 순서대로 실행, 새 모듈은 여기에 한 줄 추가)
 modules=(
     setup_openclaw
+    setup_openclaw_onboard
 )
 for name in "${modules[@]}"; do
     module="$vm_dir/scripts/$name.sh"

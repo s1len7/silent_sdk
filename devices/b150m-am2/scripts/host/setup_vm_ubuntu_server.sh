@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # OpenClaw용 Ubuntu Server 24.04 VM 생성 스크립트 (Proxmox 호스트에서 root로 실행)
 # Proxmox 공식 Cloud-Init 방식: Ubuntu 공식 cloud 이미지를 디스크로 가져오고 cloud-init으로 계정, SSH 키, IP를 설정
-# 첫 부팅 때 vendor-data(snippets)로 저장소를 클론해 VM 안의 vm/ubuntu-server/setup_vm.sh를 실행하므로, 사용자는 온보딩만 하면 됨
+# 첫 부팅 때 vendor-data(snippets)로 저장소를 클론해 VM 안의 vm/ubuntu-server/setup_vm.sh(OpenClaw 설치·온보딩)를 실행함
 # 값은 devices/b150m-am2/.env에서 읽고, 없으면 기본값 사용 (.env.example 참고)
 # 공식 문서: https://pve.proxmox.com/wiki/Cloud-Init_Support
 # 사용법: bash scripts/host/setup_vm_ubuntu_server.sh
@@ -76,6 +76,13 @@ fi
 work="$(mktemp -d)"
 trap 'rm -rf "$work"' EXIT
 
+# SSH2 형식(---- BEGIN SSH2 PUBLIC KEY ----) 등 OpenSSH 한 줄 형식이 아닌 키는 VM에 들어가지 않으므로 공개키 줄만 골라 넘김
+grep -E '^(ssh-|ecdsa-|sk-)' "$ssh_keys_file" > "$work/ssh_keys" || true
+if [[ ! -s "$work/ssh_keys" ]]; then
+    echo "No OpenSSH public key line in $ssh_keys_file (convert SSH2 keys with: ssh-keygen -i -f <file>)" >&2
+    exit 1
+fi
+
 # 1. Ubuntu 공식 cloud 이미지 다운로드와 체크섬 확인
 echo "[1/5] Downloading the Ubuntu 24.04 cloud image"
 curl -fL --retry 3 -o "$work/image.img" "$image_url"
@@ -98,7 +105,7 @@ qm set "$vm_id" --ide2 "$vm_storage:cloudinit" --boot order=scsi0 --serial0 sock
 
 # 3. cloud-init: 계정, SSH 키, IP
 echo "[3/5] Configuring cloud-init ($vm_user, $ipconfig)"
-qm set "$vm_id" --ciuser "$vm_user" --sshkeys "$ssh_keys_file" --ipconfig0 "$ipconfig"
+qm set "$vm_id" --ciuser "$vm_user" --sshkeys "$work/ssh_keys" --ipconfig0 "$ipconfig"
 if [[ -n "${VM_DNS:-}" ]]; then
     qm set "$vm_id" --nameserver "$VM_DNS"
 fi

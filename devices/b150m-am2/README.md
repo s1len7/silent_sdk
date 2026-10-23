@@ -23,7 +23,7 @@
 
 ## 기능
 
-- 순서: Proxmox VE 9 설치 → 호스트 Setup (저장소 설정, Ubuntu Server 24.04 LTS VM 생성, 첫 부팅 때 VM Setup 자동 실행) → VM에서 OpenClaw 온보딩
+- 순서: Proxmox VE 9 설치 → 호스트 Setup (저장소 설정, Wi-Fi 연결(선택), Ubuntu Server 24.04 LTS VM 생성, 첫 부팅 때 VM Setup 자동 실행: OpenClaw 설치·온보딩) → VM에 OpenRouter API 키 등록
 - 전체 셋업 스크립트: 호스트는 [setup_host.sh](setup_host.sh) (`scripts/host/` 모듈), VM은 [vm/ubuntu-server/setup_vm.sh](vm/ubuntu-server/setup_vm.sh) (`vm/ubuntu-server/scripts/` 모듈)
 - 호스트 Setup: Proxmox 셸(root)에서 이 한 줄만 실행 (저장소를 `~/silent_sdk`에 새로 받아 전체 설치):
 
@@ -55,6 +55,18 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150
 - 웹 UI에서 하려면: 노드 → 업데이트 → 리포지토리에서 enterprise 항목을 비활성화하고, 추가 → No-Subscription
 
 
+### Wi-Fi (호스트)
+
+- Setup: [scripts/host/setup_wifi.sh](scripts/host/setup_wifi.sh) (유선은 그대로 두고 Wi-Fi도 연결, 내장 Intel Wireless-AC 3168 확인)
+  - 다시 실행 시: `WIFI_SSID`가 비어 있거나, 설정 파일 내용이 같고 `wpa_supplicant@<인터페이스>`·`systemd-networkd`가 실행 중이면 건너뜀
+- 설정: `.env`의 `WIFI_SSID`, `WIFI_PASSWORD` (선택: `WIFI_COUNTRY`, `WIFI_INTERFACE`, [.env.example](.env.example) 참고)
+- `wpasupplicant`, `iw`, `wireless-regdb`를 설치하고 Wi-Fi 인터페이스(기본: 첫 번째 무선 인터페이스)를 DHCP로 연결함
+  - 비밀번호는 해시(psk)로 `/etc/wpa_supplicant/wpa_supplicant-<인터페이스>.conf`(root만 읽기)에 저장
+  - DHCP는 `systemd-networkd`가 Wi-Fi 인터페이스만 맡음 (`/etc/systemd/network/50-wifi-<인터페이스>.network`, 기본 경로 metric 600이라 유선이 우선)
+- Wi-Fi는 Linux 브리지에 넣을 수 없어 VM은 계속 유선(`vmbr0`)으로 연결됨. 호스트는 유선 IP와 Wi-Fi IP 양쪽으로 접속 가능
+- 상태 확인: `ip -br addr show`, `journalctl -u wpa_supplicant@wlp3s0`
+
+
 ### Ubuntu VM 생성 (호스트)
 
 - Setup: [scripts/host/setup_vm_ubuntu_server.sh](scripts/host/setup_vm_ubuntu_server.sh) ([공식 Cloud-Init 방식](https://pve.proxmox.com/wiki/Cloud-Init_Support))
@@ -75,7 +87,7 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150
 
 - SSH는 키로만 접속함 (`VM_PASSWORD`는 웹 화면 콘솔·`qm terminal` 로그인용). 기본값이면 Proxmox 호스트 셸에서 `ssh silent@<VM IP>`로 접속
   - DHCP일 때 VM IP는 첫 부팅 후 웹 화면의 VM → 요약(guest agent가 알려 줌)에서 확인
-- 첫 부팅 때 guest agent와 git을 설치하고, 저장소를 클론해 VM의 `vm/ubuntu-server/setup_vm.sh`(OpenClaw 설치)를 실행함 (몇 분 걸림)
+- 첫 부팅 때 guest agent와 git을 설치하고, 저장소를 클론해 VM의 `vm/ubuntu-server/setup_vm.sh`(OpenClaw 설치·온보딩)를 실행함 (몇 분 걸림)
   - 진행 확인: 호스트에서 `qm terminal 100` (나가기: Ctrl+O), VM에서 `cloud-init status --wait`
   - 이를 위해 `local` 저장소에 snippets 용도를 추가하고 `/var/lib/vz/snippets/`에 첫 부팅 작업 파일을 만듦
 - 호스트가 Wi-Fi뿐이면 VM이 인터넷에 나가도록 호스트에 Wi-Fi와 NAT를 먼저 설정하고, `.env`에 `VM_IP=10.10.10.2/24`, `VM_GATEWAY=10.10.10.1`, `VM_DNS`를 넣음
@@ -88,11 +100,23 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150
 - [공식 설치 스크립트](https://docs.openclaw.ai/install)를 온보딩 없이(`--no-onboard`) 사용자 권한으로 실행함
   - 공식 스크립트가 쓰는 git, 빌드 도구, Node.js 24(NodeSource)는 먼저 설치함
   - 로그인하지 않아도 Gateway가 부팅 시 실행되도록 `loginctl enable-linger`를 켬
-- 설치 후 사용자 계정에서 직접 온보딩 (모델 제공자, API 키 입력, Gateway 서비스 등록):
+- 온보딩은 아래 OpenClaw 온보딩 모듈이 이어서 자동으로 진행함
+- 업데이트: `npm i -g openclaw@latest` (sudo 없이)
+
+
+### OpenClaw 온보딩 (VM)
+
+- Setup: [vm/ubuntu-server/scripts/setup_openclaw_onboard.sh](vm/ubuntu-server/scripts/setup_openclaw_onboard.sh) (공식 `openclaw onboard`를 비대화형으로 실행)
+  - 다시 실행 시: Gateway 서비스 파일이 있고, 기본 모델이 OpenRouter 무료 라우터이고, `OPENROUTER_API_KEY`가 있으면 OpenRouter 키도 등록돼 있을 때 건너뜀
+- Gateway를 사용자 systemd 서비스(`openclaw-gateway`)로 등록함 (loopback, token 인증, 포트 18789)
+- 기본 모델은 무료인 OpenRouter 무료 라우터 (`openrouter/openrouter/free`)
+- OpenRouter API 키: [openrouter.ai/keys](https://openrouter.ai/keys)에서 무료로 발급해 `vm/ubuntu-server/.env`에 넣고 다시 실행 ([vm/ubuntu-server/.env.example](vm/ubuntu-server/.env.example) 참고, git에 올라가지 않음)
 
 ```bash
-openclaw onboard --install-daemon
+cd ~/silent_sdk/devices/b150m-am2/vm/ubuntu-server && cp .env.example .env && nano .env
+sudo bash scripts/setup_openclaw_onboard.sh
 ```
 
-- Gateway는 기본값(loopback)으로 VM 안에서만 접속됨. 다른 기기에서 접속하려면 SSH 터널이나 Tailscale Serve를 쓰고, `lan`·`tailnet`으로 열 때는 인증(token 또는 password)을 반드시 설정 ([Linux server 문서](https://docs.openclaw.ai/vps))
-- 업데이트: `npm i -g openclaw@latest` (sudo 없이)
+- 채널(텔레그램 등)·스킬은 설정하지 않으므로 필요하면 VM에서 `openclaw configure`로 추가
+- Gateway는 VM 안에서만 접속됨. 다른 기기에서 접속하려면 SSH 터널(`ssh -N -L 18790:127.0.0.1:18789 silent@<VM IP>`)을 쓰고, `lan`·`tailnet`으로 열지 않음 ([Linux server 문서](https://docs.openclaw.ai/vps))
+- Gateway 토큰 확인 (VM에서): `openclaw config get gateway.auth.token`
