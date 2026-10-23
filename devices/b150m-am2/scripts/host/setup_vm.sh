@@ -102,6 +102,10 @@ qm set "$vm_id" --ciuser "$vm_user" --sshkeys "$ssh_keys_file" --ipconfig0 "$ipc
 if [[ -n "${VM_DNS:-}" ]]; then
     qm set "$vm_id" --nameserver "$VM_DNS"
 fi
+# 콘솔 로그인용 비밀번호 (SSH는 키로만 접속, Proxmox가 해시로 저장)
+if [[ -n "${VM_PASSWORD:-}" ]]; then
+    qm set "$vm_id" --cipassword "$VM_PASSWORD"
+fi
 
 # 4. 첫 부팅 작업: guest agent 설치, 저장소 클론 후 VM의 setup.sh 실행 (OpenClaw 설치)
 #    cloud 이미지의 기본 사용자는 비밀번호 없이 sudo가 되므로, 사용자로 sudo를 실행해 SUDO_USER가 그 사용자가 되게 함
