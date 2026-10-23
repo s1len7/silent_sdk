@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# setup_*.sh 모듈 공통 함수 (각 모듈에서 source해서 사용, setup.sh가 모듈로 실행하지 않음)
+# setup_*.sh 모듈 공통 함수 (각 모듈에서 source해서 사용, setup_host.sh가 모듈로 실행하지 않음)
 
-# 이미 설정돼 있을 때의 종료 코드 (setup.sh가 SKIP으로 표시)
+# 이미 설정돼 있을 때의 종료 코드 (setup_host.sh가 SKIP으로 표시)
 SKIP_EXIT=3
 
 # 이미 설정돼 있다는 메시지를 출력하고 SKIP으로 종료

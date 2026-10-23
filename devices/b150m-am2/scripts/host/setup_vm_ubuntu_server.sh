@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # OpenClaw용 Ubuntu Server 24.04 VM 생성 스크립트 (Proxmox 호스트에서 root로 실행)
 # Proxmox 공식 Cloud-Init 방식: Ubuntu 공식 cloud 이미지를 디스크로 가져오고 cloud-init으로 계정, SSH 키, IP를 설정
-# 첫 부팅 때 vendor-data(snippets)로 저장소를 클론해 VM 안의 setup.sh를 실행하므로, 사용자는 온보딩만 하면 됨
+# 첫 부팅 때 vendor-data(snippets)로 저장소를 클론해 VM 안의 vm/ubuntu-server/setup_vm.sh를 실행하므로, 사용자는 온보딩만 하면 됨
 # 값은 devices/b150m-am2/.env에서 읽고, 없으면 기본값 사용 (.env.example 참고)
 # 공식 문서: https://pve.proxmox.com/wiki/Cloud-Init_Support
-# 사용법: bash scripts/host/setup_vm.sh
+# 사용법: bash scripts/host/setup_vm_ubuntu_server.sh
 set -euo pipefail
 
 if [[ $EUID -ne 0 ]]; then
@@ -107,7 +107,7 @@ if [[ -n "${VM_PASSWORD:-}" ]]; then
     qm set "$vm_id" --cipassword "$VM_PASSWORD"
 fi
 
-# 4. 첫 부팅 작업: guest agent 설치, 저장소 클론 후 VM의 setup.sh 실행 (OpenClaw 설치)
+# 4. 첫 부팅 작업: guest agent 설치, 저장소 클론 후 VM의 setup_vm.sh 실행 (OpenClaw 설치)
 #    cloud 이미지의 기본 사용자는 비밀번호 없이 sudo가 되므로, 사용자로 sudo를 실행해 SUDO_USER가 그 사용자가 되게 함
 echo "[4/5] Writing first boot tasks"
 if [[ "$auto_openclaw" == yes ]]; then
@@ -126,7 +126,7 @@ packages:
 runcmd:
   - systemctl enable --now qemu-guest-agent
   - sudo -u $vm_user -H git clone https://github.com/s1len7/silent_sdk.git /home/$vm_user/silent_sdk
-  - sudo -u $vm_user -H sudo bash /home/$vm_user/silent_sdk/devices/b150m-am2/setup.sh
+  - sudo -u $vm_user -H sudo bash /home/$vm_user/silent_sdk/devices/b150m-am2/vm/ubuntu-server/setup_vm.sh
 EOF
     qm set "$vm_id" --cicustom "vendor=$snippet_storage:snippets/$snippet_name"
 else

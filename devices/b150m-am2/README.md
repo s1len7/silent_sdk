@@ -24,11 +24,11 @@
 ## 기능
 
 - 순서: Proxmox VE 9 설치 → 호스트 Setup (저장소 설정, Ubuntu Server 24.04 LTS VM 생성, 첫 부팅 때 VM Setup 자동 실행) → VM에서 OpenClaw 온보딩
-- [setup.sh](setup.sh)는 실행 위치를 판별해 Proxmox 호스트면 `scripts/host/`, VM이면 `scripts/vm/`의 모듈을 모두 실행
+- 전체 셋업 스크립트: 호스트는 [setup_host.sh](setup_host.sh) (`scripts/host/` 모듈), VM은 [vm/ubuntu-server/setup_vm.sh](vm/ubuntu-server/setup_vm.sh) (`vm/ubuntu-server/scripts/` 모듈)
 - 호스트 Setup: Proxmox 셸(root)에서 이 한 줄만 실행 (저장소를 `~/silent_sdk`에 새로 받아 전체 설치):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150m-am2/setup.sh | bash
+curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150m-am2/setup_host.sh | bash
 ```
 
   - 다시 실행하면 `~/silent_sdk`를 지우고 최신 저장소로 새로 받음. `.env`와 `logs/`는 옮겨 와서 유지됨 (`~/silent_sdk`가 git clone이면 지우지 않고 중단)
@@ -36,14 +36,14 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150
 - VM Setup: 호스트 Setup이 만든 VM은 첫 부팅 때 자동으로 실행됨. 직접 만든 VM이면 **VM 안에서** OpenClaw를 쓸 사용자 계정으로 이 한 줄만 실행 (git이 없으면 설치 → 저장소 클론 → 전체 설치):
 
 ```bash
-(command -v git >/dev/null || (sudo apt-get update && sudo apt-get install -y git)) && git clone https://github.com/s1len7/silent_sdk.git ~/silent_sdk && sudo bash ~/silent_sdk/devices/b150m-am2/setup.sh
+(command -v git >/dev/null || (sudo apt-get update && sudo apt-get install -y git)) && git clone https://github.com/s1len7/silent_sdk.git ~/silent_sdk && sudo bash ~/silent_sdk/devices/b150m-am2/vm/ubuntu-server/setup_vm.sh
 ```
 
-- 저장소를 새로 받지 않고 실행: 호스트는 `bash ~/silent_sdk/devices/b150m-am2/setup.sh`, VM은 `sudo bash ~/silent_sdk/devices/b150m-am2/setup.sh`
-- 개별 기능만 설치: 이 폴더(`~/silent_sdk/devices/b150m-am2`)에서 `bash scripts/host/setup_<기능>.sh` (호스트) 또는 `sudo bash scripts/vm/setup_<기능>.sh` (VM)
+- 저장소를 새로 받지 않고 실행: 호스트는 `bash ~/silent_sdk/devices/b150m-am2/setup_host.sh`, VM은 `sudo bash ~/silent_sdk/devices/b150m-am2/vm/ubuntu-server/setup_vm.sh`
+- 개별 기능만 설치: 이 폴더(`~/silent_sdk/devices/b150m-am2`)에서 `bash scripts/host/setup_<기능>.sh` (호스트) 또는 `sudo bash vm/ubuntu-server/scripts/setup_<기능>.sh` (VM)
 - 실패한 모듈이 있어도 나머지 모듈은 계속 진행하고, 끝에 모듈별 결과(OK/SKIP/FAIL) 요약을 보여줌
 - 다시 실행: 같은 명령을 다시 실행하면 이미 설정된 모듈은 SKIP하고, 실패했거나 안 된 모듈만 다시 진행함 (모듈별 확인 기준은 아래 각 기능의 "다시 실행 시" 참고)
-- 로그: `~/silent_sdk/logs/b150m-am2-<host|vm>-<시각>/setup.log`
+- 로그: `~/silent_sdk/logs/b150m-am2-host-<시각>/setup.log` (호스트), `~/silent_sdk/logs/b150m-am2-ubuntu-server-<시각>/setup.log` (VM)
 
 
 ### Proxmox 저장소 (호스트)
@@ -57,7 +57,7 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150
 
 ### Ubuntu VM 생성 (호스트)
 
-- Setup: [scripts/host/setup_vm.sh](scripts/host/setup_vm.sh) ([공식 Cloud-Init 방식](https://pve.proxmox.com/wiki/Cloud-Init_Support))
+- Setup: [scripts/host/setup_vm_ubuntu_server.sh](scripts/host/setup_vm_ubuntu_server.sh) ([공식 Cloud-Init 방식](https://pve.proxmox.com/wiki/Cloud-Init_Support))
   - 다시 실행 시: 같은 번호(`VM_ID`)의 VM이 있으면 건너뜀 (기존 VM은 건드리지 않음)
 - Ubuntu 24.04 공식 cloud 이미지를 받아 체크섬을 확인한 뒤 VM을 만들고 시작함 (Proxmox 부팅 시 자동 시작)
 - 설정: `.env` ([.env.example](.env.example) 참고, git에 올라가지 않음). 비워 두면 아래 기본값
@@ -75,7 +75,7 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150
 
 - SSH는 키로만 접속함 (`VM_PASSWORD`는 웹 화면 콘솔·`qm terminal` 로그인용). 기본값이면 Proxmox 호스트 셸에서 `ssh silent@<VM IP>`로 접속
   - DHCP일 때 VM IP는 첫 부팅 후 웹 화면의 VM → 요약(guest agent가 알려 줌)에서 확인
-- 첫 부팅 때 guest agent와 git을 설치하고, 저장소를 클론해 VM의 `setup.sh`(OpenClaw 설치)를 실행함 (몇 분 걸림)
+- 첫 부팅 때 guest agent와 git을 설치하고, 저장소를 클론해 VM의 `vm/ubuntu-server/setup_vm.sh`(OpenClaw 설치)를 실행함 (몇 분 걸림)
   - 진행 확인: 호스트에서 `qm terminal 100` (나가기: Ctrl+O), VM에서 `cloud-init status --wait`
   - 이를 위해 `local` 저장소에 snippets 용도를 추가하고 `/var/lib/vz/snippets/`에 첫 부팅 작업 파일을 만듦
 - 호스트가 Wi-Fi뿐이면 VM이 인터넷에 나가도록 호스트에 Wi-Fi와 NAT를 먼저 설정하고, `.env`에 `VM_IP=10.10.10.2/24`, `VM_GATEWAY=10.10.10.1`, `VM_DNS`를 넣음
@@ -83,7 +83,7 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150
 
 ### OpenClaw (VM)
 
-- Setup: [scripts/vm/setup_openclaw.sh](scripts/vm/setup_openclaw.sh) (VM 안에서 실행, Proxmox 호스트에서는 실행되지 않음)
+- Setup: [vm/ubuntu-server/scripts/setup_openclaw.sh](vm/ubuntu-server/scripts/setup_openclaw.sh) (VM 안에서 실행, Proxmox 호스트에서는 실행되지 않음)
   - 다시 실행 시: 사용자에게 `openclaw` 명령이 있고 systemd linger가 켜져 있으면 건너뜀
 - [공식 설치 스크립트](https://docs.openclaw.ai/install)를 온보딩 없이(`--no-onboard`) 사용자 권한으로 실행함
   - 공식 스크립트가 쓰는 git, 빌드 도구, Node.js 24(NodeSource)는 먼저 설치함
