@@ -57,6 +57,11 @@ Jetson Nano B01:
 (command -v git >/dev/null || (sudo apt-get update && sudo apt-get install -y git)) && git clone https://github.com/s1len7/silent_sdk.git ~/silent_sdk && sudo bash ~/silent_sdk/devices/jetson-nano-b01/setup.sh
 ```
 
+ASUS B150M-A/M.2 (Proxmox 호스트 셸, root):
+```bash
+curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150m-am2/setup.sh | bash
+```
+
 
 ## 개발
 
