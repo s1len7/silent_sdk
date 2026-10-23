@@ -29,6 +29,8 @@ if (Test-Path "$dir\.git") {
 }
 
 # Setup steps
+# RDP first: no download, so remote access works even if a later step fails
+& "$dir\windows\scripts\setup-rdp.ps1"
 & "$dir\windows\scripts\setup-chrome.ps1"
 # & "$dir\windows\scripts\setup-zoomit.ps1"  # PowerToys includes ZoomIt
 & "$dir\windows\scripts\setup-powertoys.ps1"

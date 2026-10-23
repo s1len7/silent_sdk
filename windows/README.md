@@ -13,6 +13,13 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/windows/setup.ps1 |
 
 
 
+### 원격 데스크톱 켬
+
+- Setup: [scripts/setup-rdp.ps1](scripts/setup-rdp.ps1) (원격 데스크톱 켬, NLA 사용, 방화벽 3389 허용)
+  - Windows Home 에디션은 원격 데스크톱 호스트를 지원하지 않아 건너뜀
+  - 접속하려면 로그인 계정에 비밀번호가 있어야 함
+
+
 ### Google Chrome
 
 - Setup: [scripts/setup-chrome.ps1](scripts/setup-chrome.ps1) (엔터프라이즈 64-bit MSI 최신 버전, 무인 설치)
