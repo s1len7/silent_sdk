@@ -2,7 +2,9 @@
 
 - 제조사: [신흥정밀](https://www.sam4s.com/)
 - 모델명: [TITAN-S260](https://www.sam4s.com/kor/products/KCA03-3)
-  - [매뉴얼, 드라이버, 유틸리티](https://www.sam4s.com/kor/support/download)
+  - [다운로드(드라이버, 유틸리티, 매뉴얼)](https://www.sam4s.com/kor/support/download?model=TITAN-S2xx)
+  - [매뉴얼](https://www.dropbox.com/scl/fi/1iu9m63el71y9zdk1cv3r/TITAN-S-E-Manual.pdf?rlkey=um6f6wkzlw6l77a8am33ak6ho&st=0hsry8z0&dl=0)
+  - [https://www.dropbox.com/scl/fi/8hvsh2klbl20oyw6u9w63/TITAN-S_Series_Leaflet-KOR.pdf?rlkey=nzi4lrko4q5vkhm3akgfb9hnv&st=46cz7d3u&dl=0]
 
 | 항목 | 사양 |
 | --- | --- |
