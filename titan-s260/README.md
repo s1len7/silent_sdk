@@ -62,9 +62,16 @@ irm https://get.activated.win | iex
  -->
 
 
+### WinGet
+
+- Setup: [windows/scripts/setup-winget.ps1](../windows/scripts/setup-winget.ps1) (winget이 없을 때만 설치, LTSC/IoT처럼 Microsoft Store가 없는 환경용)
+  - 공식 방법 사용: `Microsoft.WinGet.Client` 모듈의 `Repair-WinGetPackageManager -AllUsers`
+  - 다시 실행 시: `winget --version`이 실행되면 건너뜀
+
+
 ### Microsoft PC Manager
 
-- Setup: [windows/scripts/setup-pcmanager.ps1](../windows/scripts/setup-pcmanager.ps1) (winget으로 Store 앱 설치, winget 없으면 먼저 설치)
+- Setup: [windows/scripts/setup-pcmanager.ps1](../windows/scripts/setup-pcmanager.ps1) (winget으로 Store 앱 설치, winget은 위 WinGet 단계에서 준비)
   - 다시 실행 시: winget 목록에 PC Manager가 있으면 건너뜀
 
 

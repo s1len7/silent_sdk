@@ -56,6 +56,7 @@ $results += Invoke-Step 'rdp'          { & "$s\setup-rdp.ps1" }
 $results += Invoke-Step 'chrome'       { & "$s\setup-chrome.ps1" }
 # $results += Invoke-Step 'zoomit'     { & "$s\setup-zoomit.ps1" }  # PowerToys includes ZoomIt
 $results += Invoke-Step 'powertoys'    { & "$s\setup-powertoys.ps1" }
+$results += Invoke-Step 'winget'       { & "$s\setup-winget.ps1" }
 $results += Invoke-Step 'pcmanager'    { & "$s\setup-pcmanager.ps1" }
 $results += Invoke-Step 'sysinternals' { & "$s\setup-sysinternals.ps1" }
 $results += Invoke-Step 'git'          { & "$s\setup-git.ps1" }
