@@ -38,6 +38,7 @@ if (Test-Path "$dir\.git") {
 & "$dir\windows\scripts\setup-sysinternals.ps1"
 & "$dir\windows\scripts\setup-git.ps1"
 & "$dir\windows\scripts\setup-vscode.ps1"
+& "$dir\windows\scripts\setup-python.ps1"
 & "$dir\windows\scripts\setup-docker.ps1"
 
 Read-Host 'Done. Reboot to finish Docker setup. Press Enter to exit'
