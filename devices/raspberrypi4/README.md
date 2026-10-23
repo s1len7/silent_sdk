@@ -23,7 +23,7 @@
 
 - 전체 Setup: 순정 OS 클린설치 직후 이 한 줄만 실행 ([scripts/setup.sh](scripts/setup.sh)) (git이 없으면 설치 → 저장소 클론 → 전체 설치):
 
-```
+```bash
 (command -v git >/dev/null || (sudo apt-get update && sudo apt-get install -y git)) && git clone https://github.com/s1len7/silent_sdk.git ~/silent_sdk && sudo bash ~/silent_sdk/devices/raspberrypi4/scripts/setup.sh
 ```
 
@@ -41,7 +41,7 @@
 - 일반 데스크탑 PC처럼 버튼으로 전원을 끔
 - `/boot/firmware/config.txt`에 아래 줄을 추가함. 이미 있으면 추가하지 않음
 - 배선: 37번 핀(GPIO26) - 버튼 - 39번 핀(GND)
-```
+```ini
 dtoverlay=gpio-shutdown,gpio_pin=26
 ```
 
@@ -63,7 +63,7 @@ dtoverlay=gpio-shutdown,gpio_pin=26
 - 메뉴: Interface Options → SSH 선택
 - SSH 서버를 켤지 묻는 질문에 Yes(Enable) 선택 후 종료
 - 서비스 시작:
-```
+```bash
 sudo systemctl enable ssh
 sudo systemctl start ssh
 ```
@@ -99,7 +99,7 @@ sudo systemctl start ssh
 5. 최종 결과물은 Python 프로그램 (테스트는 셸에서 해도 됨)
 
 수동 설치/실행:
-```
+```bash
 sudo apt install wlr-randr
 python3 toggle_rotate/toggle_rotate.py
 ```
@@ -125,7 +125,7 @@ python3 toggle_rotate/toggle_rotate.py
 - Setup: [scripts/setup_docker.sh](scripts/setup_docker.sh)
   - 다시 실행 시: 패키지, docker 그룹, 같은 버전의 Portainer Agent 실행이 모두 확인되면 건너뜀
 
-```
+```bash
 sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
@@ -139,7 +139,7 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 
 - Setup: [scripts/setup_docker.sh](scripts/setup_docker.sh) (docker 설치에 포함)
 
-```
+```bash
 docker run -d \
   -p 9001:9001 \
   --name portainer_agent \

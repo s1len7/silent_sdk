@@ -12,7 +12,7 @@
 
 ## 구조
 
-```
+```text
 silent_sdk/
 ├─ devices/          장비별 폴더 (각 폴더에 README.md, CLAUDE.md, 설치 스크립트)
 │  ├─ windows/       Windows 공통 스크립트 (titan-s260도 사용)
@@ -38,7 +38,7 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/titan-s260/
 ```
 
 Raspberry Pi 4:
-```
+```bash
 (command -v git >/dev/null || (sudo apt-get update && sudo apt-get install -y git)) && git clone https://github.com/s1len7/silent_sdk.git ~/silent_sdk && sudo bash ~/silent_sdk/devices/raspberrypi4/scripts/setup.sh
 ```
 
