@@ -92,6 +92,16 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
   - 다시 실행 시: 설치 폴더, PATH, EULA 동의가 모두 돼 있으면 건너뜀
 
 
+### 자동 로그인
+
+- Setup: [scripts/setup-autologon.ps1](scripts/setup-autologon.ps1) (현재 로그인한 로컬 계정, Sysinternals Autologon 사용, 다음 부팅부터 적용)
+  - 다시 실행 시: 자동 로그인이 현재 계정으로 켜져 있으면 건너뜀
+  - 실행 중 계정 비밀번호를 물음. 비밀번호가 맞는지 확인한 뒤 설정하고, 빈 값으로 Enter를 누르거나 입력할 수 없는 환경이면 건너뜀
+  - 비밀번호는 레지스트리 평문이 아니라 암호화된 LSA secret으로 저장됨 (관리자는 복호화할 수 있음)
+  - 로컬 계정만 지원 (Microsoft 계정, 도메인 계정은 건너뜀)
+  - 부팅할 때 Shift를 누르고 있으면 한 번 건너뛸 수 있음. 끄려면 `Autologon64.exe`를 실행해 Disable
+
+
 
 
 ### Git

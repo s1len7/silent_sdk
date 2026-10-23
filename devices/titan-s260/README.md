@@ -94,6 +94,13 @@ irm https://get.activated.win | iex
   - 다시 실행 시: 설치 폴더, PATH, EULA 동의가 모두 돼 있으면 건너뜀
 
 
+### 자동 로그인
+
+- Setup: [desktop/scripts/setup-autologon.ps1](../desktop/scripts/setup-autologon.ps1) (현재 로그인한 로컬 계정, Sysinternals Autologon 사용, 다음 부팅부터 적용)
+  - 다시 실행 시: 자동 로그인이 현재 계정으로 켜져 있으면 건너뜀
+  - 실행 중 계정 비밀번호를 물음. 비밀번호가 맞는지 확인한 뒤 설정하고, 빈 값으로 Enter를 누르면 건너뜀
+
+
 ### 저사양 최적화
 
 - Setup: [scripts/setup-performance.ps1](scripts/setup-performance.ps1) (적용 후 재부팅)
