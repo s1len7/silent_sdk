@@ -59,7 +59,7 @@ Jetson Nano B01:
 
 ASUS B150M-A/M.2 (Proxmox 호스트 셸, root):
 ```bash
-curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150m-am2/setup.sh | bash
+curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150m-am2/setup_host.sh | bash
 ```
 
 

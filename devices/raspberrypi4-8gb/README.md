@@ -27,7 +27,7 @@
 (command -v git >/dev/null || (sudo apt-get update && sudo apt-get install -y git)) && git clone https://github.com/s1len7/silent_sdk.git ~/silent_sdk && sudo bash ~/silent_sdk/devices/raspberrypi4-8gb/setup.sh
 ```
 
-- 이미 클론되어 있으면: `sudo bash ~/silent_sdk/devices/raspberrypi4-8gb/setup.sh` (scripts/setup_*.sh 모듈을 모두 실행)
+- 이미 클론되어 있으면: `sudo bash ~/silent_sdk/devices/raspberrypi4-8gb/setup.sh` (`setup.sh`의 `modules` 목록 순서대로 실행)
 - 개별 기능만 설치: 이 폴더(`~/silent_sdk/devices/raspberrypi4-8gb`)에서 `sudo bash scripts/setup_<기능>.sh`
 - 실패한 모듈이 있어도 나머지 모듈은 계속 진행하고, 끝에 모듈별 결과(OK/SKIP/FAIL) 요약을 보여줌
 - 다시 실행: 같은 명령을 다시 실행하면 이미 설정된 모듈은 SKIP하고, 실패했거나 안 된 모듈만 다시 진행함 (모듈별 확인 기준은 아래 각 기능의 "다시 실행 시" 참고)

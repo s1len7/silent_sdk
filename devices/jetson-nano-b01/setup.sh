@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 전체 설치 스크립트: scripts/setup_*.sh 모듈을 모두 실행
+# 전체 설치 스크립트: modules 목록의 모듈을 순서대로 실행
 # 실패한 모듈이 있어도 다음 모듈을 계속 실행하고, 끝에 모듈별 결과(OK / SKIP / FAIL)를 요약함
 # 모듈은 이미 설정돼 있으면 종료 코드 3으로 끝나며 SKIP으로 표시됨 (다시 실행하면 실패한 모듈만 다시 설치됨)
 # 로그: 저장소 logs/jetson-nano-b01-<시각>/setup.log
@@ -28,13 +28,24 @@ echo "Logs:     $log_dir"
 
 summary=()
 failed=0
-for module in "$device_dir"/scripts/setup_*.sh; do
-    name="$(basename "$module" .sh)"
+# 실행할 모듈 (위에서부터 순서대로 실행, 새 모듈은 여기에 한 줄 추가)
+modules=(
+    setup_cuda_path
+    setup_jtop
+    setup_swap
+)
+for name in "${modules[@]}"; do
+    module="$device_dir/scripts/$name.sh"
     echo
     echo "=== [$name] started $(date +%H:%M:%S)"
     start=$SECONDS
-    bash "$module"
-    code=$?
+    if [[ -f "$module" ]]; then
+        bash "$module"
+        code=$?
+    else
+        echo "Module not found: $module" >&2
+        code=127
+    fi
     case $code in
         0) result=OK ;;
         3) result=SKIP ;;
