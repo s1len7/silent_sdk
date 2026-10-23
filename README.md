@@ -5,9 +5,9 @@
 | 장비 | 대상 | 문서 |
 |---|---|---|
 | desktop | Windows 10 이상 데스크탑 | [devices/desktop/README.md](devices/desktop/README.md) |
-| raspberrypi4-8gb | Raspberry Pi 4 (RAM 8GB), Raspberry Pi OS Trixie 이상 | [devices/raspberrypi4-8gb/README.md](devices/raspberrypi4-8gb/README.md) |
-| raspberrypi4-2gb | Raspberry Pi 4 (RAM 2GB), Raspberry Pi OS Lite 64-bit (Trixie) | [devices/raspberrypi4-2gb/README.md](devices/raspberrypi4-2gb/README.md) |
-| titan-s260 | SAM4S TITAN-S260 POS, Windows 10 IoT LTSC | [devices/titan-s260/README.md](devices/titan-s260/README.md) |
+| raspberrypi4-8gb | Raspberry Pi 4 (RAM 8GB), Raspberry Pi OS 64-bit (Trixie) | [devices/raspberrypi4-8gb/README.md](devices/raspberrypi4-8gb/README.md) |
+| raspberrypi4-2gb | Raspberry Pi 4 (RAM 2GB), Raspberry Pi OS **Lite** 64-bit (Trixie) | [devices/raspberrypi4-2gb/README.md](devices/raspberrypi4-2gb/README.md) |
+| titan-s260 | SAM4S TITAN-S260 POS, Windows 10 IoT LTSC 2021 | [devices/titan-s260/README.md](devices/titan-s260/README.md) |
 | byt-t1 | PEGATRON BYT-T1 Mini-ITX 보드 (Intel Pentium J2900), Ubuntu Server LTS | [devices/byt-t1/README.md](devices/byt-t1/README.md) |
 | jetson-nano-b01 | NVIDIA Jetson Nano Developer Kit B01, JetPack 4.6.6 (Ubuntu 18.04) | [devices/jetson-nano-b01/README.md](devices/jetson-nano-b01/README.md) |
 
@@ -48,6 +48,11 @@ Raspberry Pi 4 (8GB):
 Raspberry Pi 4 (2GB):
 ```bash
 (command -v git >/dev/null || (sudo apt-get update && sudo apt-get install -y git)) && git clone https://github.com/s1len7/silent_sdk.git ~/silent_sdk && sudo bash ~/silent_sdk/devices/raspberrypi4-2gb/setup.sh
+```
+
+Jetson Nano B01:
+```bash
+(command -v git >/dev/null || (sudo apt-get update && sudo apt-get install -y git)) && git clone https://github.com/s1len7/silent_sdk.git ~/silent_sdk && sudo bash ~/silent_sdk/devices/jetson-nano-b01/setup.sh
 ```
 
 
