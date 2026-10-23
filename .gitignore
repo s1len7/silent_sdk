@@ -217,6 +217,6 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-# Setup logs (windows/setup.ps1, titan-s260/setup.ps1)
+# Setup logs (devices/windows/setup.ps1, devices/titan-s260/setup.ps1, devices/raspberrypi4/scripts/setup.sh)
 logs/*
 !logs/.gitkeep

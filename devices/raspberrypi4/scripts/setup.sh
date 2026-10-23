@@ -12,7 +12,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 script_dir="$(cd "$(dirname "$0")" && pwd)"
-repo="$(cd "$script_dir/../.." && pwd)"
+repo="$(cd "$script_dir/../../.." && pwd)"
 log_dir="$repo/logs/raspberrypi4-$(date +%Y%m%d-%H%M%S)"
 mkdir -p "$log_dir"
 # 저장소 소유자가 로그를 읽고 지울 수 있게 함

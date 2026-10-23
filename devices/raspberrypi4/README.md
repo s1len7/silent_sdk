@@ -5,7 +5,7 @@
   - [제품 사양서(Product Brief)](https://datasheets.raspberrypi.com/rpi4/raspberry-pi-4-product-brief.pdf)
 - OS 설치 후 기본 셋팅 자동화
 - 지원OS: Raspberry Pi OS Trixie 이상
-- 작성 원칙: [CLAUDE.md](CLAUDE.md) 참고 (공통 규칙은 [상위 CLAUDE.md](../CLAUDE.md))
+- 작성 원칙: [CLAUDE.md](CLAUDE.md) 참고 (공통 규칙은 [상위 CLAUDE.md](../../CLAUDE.md))
 
 | 항목 | 사양 |
 | --- | --- |
@@ -24,11 +24,11 @@
 - 전체 Setup: 순정 OS 클린설치 직후 이 한 줄만 실행 ([scripts/setup.sh](scripts/setup.sh)) (git이 없으면 설치 → 저장소 클론 → 전체 설치):
 
 ```
-(command -v git >/dev/null || (sudo apt-get update && sudo apt-get install -y git)) && git clone https://github.com/s1len7/silent_sdk.git ~/silent_sdk && sudo bash ~/silent_sdk/raspberrypi4/scripts/setup.sh
+(command -v git >/dev/null || (sudo apt-get update && sudo apt-get install -y git)) && git clone https://github.com/s1len7/silent_sdk.git ~/silent_sdk && sudo bash ~/silent_sdk/devices/raspberrypi4/scripts/setup.sh
 ```
 
-- 이미 클론되어 있으면: `sudo bash ~/silent_sdk/raspberrypi4/scripts/setup.sh` (scripts/setup_*.sh 모듈을 모두 실행)
-- 개별 기능만 설치: 이 폴더(`~/silent_sdk/raspberrypi4`)에서 `sudo bash scripts/setup_<기능>.sh`
+- 이미 클론되어 있으면: `sudo bash ~/silent_sdk/devices/raspberrypi4/scripts/setup.sh` (scripts/setup_*.sh 모듈을 모두 실행)
+- 개별 기능만 설치: 이 폴더(`~/silent_sdk/devices/raspberrypi4`)에서 `sudo bash scripts/setup_<기능>.sh`
 - 실패한 모듈이 있어도 나머지 모듈은 계속 진행하고, 끝에 모듈별 결과(OK/SKIP/FAIL) 요약을 보여줌
 - 다시 실행: 같은 명령을 다시 실행하면 이미 설정된 모듈은 SKIP하고, 실패했거나 안 된 모듈만 다시 진행함 (모듈별 확인 기준은 아래 각 기능의 "다시 실행 시" 참고)
 - 로그: `~/silent_sdk/logs/raspberrypi4-<시각>/setup.log`

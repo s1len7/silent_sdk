@@ -1,7 +1,7 @@
 # Rename this computer. Run as admin. Reboot to apply.
 # Asks for the new name with -Default as the suggestion; Enter accepts the suggestion.
-#   windows\setup.ps1     -Default silent-desktop
-#   titan-s260\setup.ps1  -Default titan-s260
+#   devices\windows\setup.ps1     -Default silent-desktop
+#   devices\titan-s260\setup.ps1  -Default titan-s260
 
 param(
     [Parameter(Mandatory)]

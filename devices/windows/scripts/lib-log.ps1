@@ -1,4 +1,4 @@
-# Logging helpers for the setup entry points (windows\setup.ps1, titan-s260\setup.ps1).
+# Logging helpers for the setup entry points (devices\windows\setup.ps1, devices\titan-s260\setup.ps1).
 # Dot-source after the repo is available:
 #   Start-SetupLog     move the bootstrap transcript into <repo>\logs\<platform>-<stamp>\ and write an environment header
 #   Invoke-Step        run one setup step, keep going on failure, return its result (OK / SKIP / FAIL)
