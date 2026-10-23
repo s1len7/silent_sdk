@@ -1,4 +1,4 @@
-# silent_sdk
+# windows
 
 - 기본 데스크탑 설정 자동화
 - 지원OS: Windows 10 혹은 그 이상

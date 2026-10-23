@@ -1,5 +1,3 @@
-@vibecoding/CLAUDE.md
-
 ## raspberrypi4 전용
 
 - 대상: Raspberry Pi 4, Raspberry Pi OS Trixie 이상 (labwc / Wayland)

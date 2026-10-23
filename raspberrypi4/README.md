@@ -6,18 +6,19 @@
 
 ## 작성 원칙
 
-- [CLAUDE.md](CLAUDE.md) 참고 (공통 규칙은 [vibecoding](vibecoding) 서브모듈의 CLAUDE.md)
-- 개발 PC에서 클론할 때는 서브모듈도 함께 받음: `git clone --recurse-submodules ...` 또는 클론 후 `git submodule update --init`
+- [CLAUDE.md](CLAUDE.md) 참고 (공통 규칙은 [상위 CLAUDE.md](../CLAUDE.md))
 
 
 # 전체 설치
 
 순정 OS 클린설치 직후 한 번에 설치 (git이 없으면 설치 → 저장소 클론 → 전체 설치):
 ```
-(command -v git >/dev/null || (sudo apt-get update && sudo apt-get install -y git)) && git clone https://github.com/s1len7/raspberrypi4.git ~/raspberrypi4 && sudo bash ~/raspberrypi4/scripts/setup.sh
+(command -v git >/dev/null || (sudo apt-get update && sudo apt-get install -y git)) && git clone https://github.com/s1len7/silent_sdk.git ~/silent_sdk && sudo bash ~/silent_sdk/raspberrypi4/scripts/setup.sh
 ```
 
-이미 클론되어 있으면: `sudo bash scripts/setup.sh` — scripts/setup_*.sh 모듈을 모두 실행
+이미 클론되어 있으면: `sudo bash ~/silent_sdk/raspberrypi4/scripts/setup.sh` — scripts/setup_*.sh 모듈을 모두 실행
+
+아래 `자동화:`의 경로는 이 폴더(`~/silent_sdk/raspberrypi4`) 기준
 
 
 # 기능
