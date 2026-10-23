@@ -29,6 +29,8 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/windows/set
 
 - Setup: [scripts/setup-windows-update.ps1](scripts/setup-windows-update.ps1) (드라이버 포함 모든 업데이트 설치, Windows 내장 업데이트 API 사용)
   - 기능 업데이트(Windows 버전 변경)와 사용자 입력이 필요한 업데이트는 제외
+  - 업데이트를 하나씩 받고 설치하며 진행 막대와 `[3/25]` 같은 진행 줄을 보여줌
+  - 업데이트 하나가 오래 걸려도 1분마다 `still working ... (경과 시간)` 줄을 남겨 멈추지 않았음을 알 수 있음 (로그에도 기록)
   - 자동으로 재부팅하지 않음. 재부팅이 필요하면 재부팅 후 전체 Setup을 다시 실행해 남은 업데이트 설치
   - 다시 실행 시: 설치할 업데이트가 없거나, 이전 업데이트의 재부팅이 대기 중이면 건너뜀
 
