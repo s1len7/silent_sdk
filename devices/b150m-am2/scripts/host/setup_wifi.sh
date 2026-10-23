@@ -175,6 +175,9 @@ install -D -m 644 "$work/networkd.conf" "$networkd_conf"
 echo "[3/4] Starting wpa_supplicant@$iface and systemd-networkd"
 systemctl enable systemd-networkd
 systemctl disable systemd-networkd-wait-online.service 2>/dev/null || true
+# 예전 고정 IP의 정책 규칙·경로는 networkd가 재시작 후 남의 것으로 보고 지우지 않으므로 먼저 지움
+while ip rule del table "$route_table" 2>/dev/null; do :; done
+ip route flush table "$route_table" 2>/dev/null || true
 systemctl restart systemd-networkd
 systemctl enable "wpa_supplicant@$iface"
 systemctl restart "wpa_supplicant@$iface"
