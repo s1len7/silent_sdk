@@ -68,6 +68,7 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150
 - 유선이 끊겼을 때도 Wi-Fi IP로 접속하려면 `.env`에 `WIFI_IP`(고정 IP, CIDR)와 `WIFI_GATEWAY`를 넣고 다시 실행
   - 고정 IP일 때는 Wi-Fi IP에서 나가는 패킷을 경로 테이블 100으로 Wi-Fi로 보냄 (`ip rule`, `ip route show table 100`으로 확인)
   - 고정 IP는 공유기 DHCP 범위 밖 주소나 DHCP 예약 주소를 쓸 것
+  - 유선이 끊겼을 때 살아나는 것은 Wi-Fi IP로 들어오는 접속(SSH, 웹 UI)뿐이고, 호스트가 밖으로 나가는 연결(apt 등)과 VM 네트워크는 끊김
 - 상태 확인: `ip -br addr show`, `journalctl -u wpa_supplicant@wlp3s0`
 
 

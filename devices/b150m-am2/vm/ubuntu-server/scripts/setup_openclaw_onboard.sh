@@ -50,8 +50,9 @@ fi
 gateway_ready() { [[ -f "$service_file" ]]; }
 # openclaw는 모델 이름을 줄여서 저장함 (openrouter/openrouter/free -> openrouter/free)
 model_ready() { [[ "$(as_user 'openclaw config get agents.defaults.model.primary 2>/dev/null')" == openrouter/free ]]; }
+# grep -q로 바로 파이프하면 pipefail에서 SIGPIPE로 실패할 수 있어 출력을 받아서 비교함
 key_ready() {
-    [[ -z "$api_key" ]] || as_user 'openclaw models auth list --provider openrouter --json' | grep -q '"openrouter:'
+    [[ -z "$api_key" ]] || [[ "$(as_user 'openclaw models auth list --provider openrouter --json')" == *'"openrouter:'* ]]
 }
 
 if gateway_ready && model_ready && key_ready; then
