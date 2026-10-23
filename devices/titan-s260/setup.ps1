@@ -66,7 +66,8 @@ $results += Invoke-Step 'winget'         { & "$w\setup-winget.ps1" }
 $results += Invoke-Step 'pcmanager'      { & "$w\setup-pcmanager.ps1" }
 $results += Invoke-Step 'performance'    { & "$t\setup-performance.ps1" }
 $results += Invoke-Step 'touch-keyboard' { & "$t\setup-touch-keyboard.ps1" }
+$results += Invoke-Step 'desktop-icons'  { & "$w\setup-desktop-icons.ps1" }
 
 Write-SetupSummary $results $logDir
 Stop-Transcript | Out-Null
-Read-Host 'Done. Reboot to apply the updates, computer name and settings, then run the setup again if any step failed. Press Enter to exit'
+Read-Host 'Done. Reboot to apply the updates, hostname and settings, then run the setup again if any step failed. Press Enter to exit'

@@ -57,6 +57,7 @@ $results += Invoke-Step 'hostname'     { & "$s\setup-hostname.ps1" -Default 'sil
 $results += Invoke-Step 'windows-update' { & "$s\setup-windows-update.ps1" }
 # RDP right after: no download, so remote access is available early
 $results += Invoke-Step 'rdp'          { & "$s\setup-rdp.ps1" }
+$results += Invoke-Step 'desktop-icons' { & "$s\setup-desktop-icons.ps1" }
 $results += Invoke-Step 'chrome'       { & "$s\setup-chrome.ps1" }
 # $results += Invoke-Step 'zoomit'     { & "$s\setup-zoomit.ps1" }  # PowerToys includes ZoomIt
 $results += Invoke-Step 'powertoys'    { & "$s\setup-powertoys.ps1" }
@@ -70,4 +71,4 @@ $results += Invoke-Step 'docker'       { & "$s\setup-docker.ps1" }
 
 Write-SetupSummary $results $logDir
 Stop-Transcript | Out-Null
-Read-Host 'Done. Reboot to apply the computer name, updates and Docker setup, then run the setup again if any step failed. Press Enter to exit'
+Read-Host 'Done. Reboot to apply the hostname, updates and Docker setup, then run the setup again if any step failed. Press Enter to exit'

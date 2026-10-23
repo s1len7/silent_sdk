@@ -41,10 +41,10 @@ irm https://get.activated.win | iex
 ```
 
 
-### 컴퓨터 이름
+### hostname 설정
 
-- Setup: [windows/scripts/setup-hostname.ps1](../windows/scripts/setup-hostname.ps1) (windows 공통 스크립트, 새 이름을 물어봄, 엔터를 누르면 기본값 `titan-s260`, 적용 후 재부팅)
-  - 다시 실행 시: 고른 이름이 지금 이름과 같거나, 변경 후 재부팅 대기 중이면 건너뜀
+- Setup: [windows/scripts/setup-hostname.ps1](../windows/scripts/setup-hostname.ps1) (windows 공통 스크립트, 새 hostname을 물어봄, 엔터를 누르면 기본값 `titan-s260`, 적용 후 재부팅)
+  - 다시 실행 시: 고른 hostname이 지금 hostname과 같거나, 변경 후 재부팅 대기 중이면 건너뜀
 
 
 ### Windows 업데이트
@@ -94,6 +94,14 @@ irm https://get.activated.win | iex
   4. 원격 분석(DiagTrack) 끄기
   5. 전원: 고성능, 화면 끄기·절전·USB 절전 해제
   6. 최대 절전 끄기 (hiberfil.sys 삭제)
+
+
+### 바탕화면 아이콘
+
+- Setup: [windows/scripts/setup-desktop-icons.ps1](../windows/scripts/setup-desktop-icons.ps1) (내 PC, 사용자 폴더, 네트워크, 제어판, 휴지통 아이콘 표시, 현재 사용자)
+  - 설정 > 개인 설정 > 테마 > 바탕 화면 아이콘 설정과 같은 값
+  - 바탕화면에서 F5(새로 고침)하거나 다시 로그인하면 보임
+  - 다시 실행 시: 다섯 아이콘이 모두 표시로 설정돼 있으면 건너뜀
 
 
 ### Windows 설정

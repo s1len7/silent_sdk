@@ -27,7 +27,7 @@ function Start-SetupLog([string]$Repo, [string]$Platform, [string]$Stamp, [strin
         $commit = 'zip download'
     }
     Write-Host "Platform:   $Platform"
-    Write-Host "Computer:   $env:COMPUTERNAME / User: $env:USERNAME"
+    Write-Host "Hostname:   $env:COMPUTERNAME / User: $env:USERNAME"
     Write-Host "OS:         $($os.Caption) ($edition, $($os.Version))"
     $system = Get-CimInstance Win32_ComputerSystem
     $board = Get-CimInstance Win32_BaseBoard
