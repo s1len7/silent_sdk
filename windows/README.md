@@ -5,10 +5,10 @@
 
 ## 기능
 
-- 전체 Setup: PowerShell에서 이 한 줄만 실행 ([setup.ps1](../setup.ps1)):
+- 전체 Setup: PowerShell에서 이 한 줄만 실행 ([setup.ps1](setup.ps1)):
 
 ```powershell
-irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/setup.ps1 | iex
+irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/windows/setup.ps1 | iex
 ```
 
 
