@@ -29,13 +29,13 @@ if (Test-Path "$dir\.git") {
 }
 
 # Setup steps
-& "$dir\scripts\setup-chrome.ps1"
-# & "$dir\scripts\setup-zoomit.ps1"  # PowerToys includes ZoomIt
-& "$dir\scripts\setup-powertoys.ps1"
-& "$dir\scripts\setup-pcmanager.ps1"
-& "$dir\scripts\setup-sysinternals.ps1"
-& "$dir\scripts\setup-git.ps1"
-& "$dir\scripts\setup-vscode.ps1"
-& "$dir\scripts\setup-docker.ps1"
+& "$dir\windows\scripts\setup-chrome.ps1"
+# & "$dir\windows\scripts\setup-zoomit.ps1"  # PowerToys includes ZoomIt
+& "$dir\windows\scripts\setup-powertoys.ps1"
+& "$dir\windows\scripts\setup-pcmanager.ps1"
+& "$dir\windows\scripts\setup-sysinternals.ps1"
+& "$dir\windows\scripts\setup-git.ps1"
+& "$dir\windows\scripts\setup-vscode.ps1"
+& "$dir\windows\scripts\setup-docker.ps1"
 
 Read-Host 'Done. Reboot to finish Docker setup. Press Enter to exit'
