@@ -4,7 +4,7 @@
   - 국내 유통: 인텍앤컴퍼니
 - 모델명: [BYT-T1](https://prod.danawa.com/info/?pcode=3336855#bookmark_product_information) (Mini-ITX 메인보드, CPU 온보드)
   - [19V 어댑터 포함 모델](https://prod.danawa.com/info/?pcode=3336831#bookmark_product_information)
-- OS: Ubuntu Server LTS
+- 지원OS: Ubuntu Server 24.04 LTS (64-bit)
 
 | 항목 | 사양 |
 | --- | --- |

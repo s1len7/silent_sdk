@@ -8,7 +8,7 @@
 | raspberrypi4-8gb | Raspberry Pi 4 (RAM 8GB), Raspberry Pi OS 64-bit (Trixie) | [devices/raspberrypi4-8gb/README.md](devices/raspberrypi4-8gb/README.md) |
 | raspberrypi4-2gb | Raspberry Pi 4 (RAM 2GB), Raspberry Pi OS **Lite** 64-bit (Trixie) | [devices/raspberrypi4-2gb/README.md](devices/raspberrypi4-2gb/README.md) |
 | titan-s260 | SAM4S TITAN-S260 POS, Windows 10 IoT LTSC 2021 | [devices/titan-s260/README.md](devices/titan-s260/README.md) |
-| byt-t1 | PEGATRON BYT-T1 Mini-ITX 보드 (Intel Pentium J2900), Ubuntu Server LTS | [devices/byt-t1/README.md](devices/byt-t1/README.md) |
+| byt-t1 | PEGATRON BYT-T1 Mini-ITX 보드 (Intel Pentium J2900), Ubuntu Server 24.04 LTS | [devices/byt-t1/README.md](devices/byt-t1/README.md) |
 | jetson-nano-b01 | NVIDIA Jetson Nano Developer Kit B01, JetPack 4.6.6 (Ubuntu 18.04) | [devices/jetson-nano-b01/README.md](devices/jetson-nano-b01/README.md) |
 | b150m-am2 | ASUS B150M-A/M.2 Micro-ATX 보드 (Intel B150), Proxmox VE 9 + Ubuntu Server 24.04 LTS VM, OpenClaw 서버 | [devices/b150m-am2/README.md](devices/b150m-am2/README.md) |
 

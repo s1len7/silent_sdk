@@ -1,6 +1,6 @@
 ## byt-t1 전용
 
-- 대상: PEGATRON BYT-T1 (Intel Pentium J2900, x86_64, RAM 최대 4GB), Ubuntu Server LTS
+- 대상: PEGATRON BYT-T1 (Intel Pentium J2900, x86_64, RAM 최대 4GB), Ubuntu Server 24.04 LTS
   - 데스크탑 환경이 없는 서버이므로 GUI나 자동실행(autostart) 대신 systemd 서비스로 구성할 것
   - 저사양이므로 상주 프로그램과 무거운 설치는 피할 것
 - 기능 하나당 `scripts/setup_<기능>.sh` 모듈 하나로 만들고, README.md `## 기능` 아래에 `### <기능>` 섹션과 `- Setup: [scripts/setup_<기능>.sh](...)` 줄을 추가할 것
