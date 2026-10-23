@@ -23,21 +23,23 @@
 
 ## 기능
 
-- 순서: Proxmox VE 9 설치 → 호스트 Setup → Ubuntu Server 24.04 LTS VM 생성 (수동, Proxmox 웹 화면 `https://<호스트 IP>:8006`) → VM Setup
+- 순서: Proxmox VE 9 설치 → 호스트 Setup (저장소 설정, Ubuntu Server 24.04 LTS VM 생성, 첫 부팅 때 VM Setup 자동 실행) → VM에서 OpenClaw 온보딩
 - [setup.sh](setup.sh)는 실행 위치를 판별해 Proxmox 호스트면 `scripts/host/`, VM이면 `scripts/vm/`의 모듈을 모두 실행
-- 호스트 Setup: Proxmox 셸(root)에서 이 한 줄만 실행 (저장소를 압축 파일로 받아 전체 설치):
+- 호스트 Setup: Proxmox 셸(root)에서 이 한 줄만 실행 (저장소를 `~/silent_sdk`에 새로 받아 전체 설치):
 
 ```bash
-mkdir -p ~/silent_sdk && curl -fsSL https://github.com/s1len7/silent_sdk/archive/refs/heads/main.tar.gz | tar xz --strip-components=1 -C ~/silent_sdk && bash ~/silent_sdk/devices/b150m-am2/setup.sh
+curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150m-am2/setup.sh | bash
 ```
 
-- VM Setup: **VM 안에서** OpenClaw를 쓸 사용자 계정으로 이 한 줄만 실행 (git이 없으면 설치 → 저장소 클론 → 전체 설치):
+  - 다시 실행하면 `~/silent_sdk`를 지우고 최신 저장소로 새로 받음. `.env`와 `logs/`는 옮겨 와서 유지됨 (`~/silent_sdk`가 git clone이면 지우지 않고 중단)
+
+- VM Setup: 호스트 Setup이 만든 VM은 첫 부팅 때 자동으로 실행됨. 직접 만든 VM이면 **VM 안에서** OpenClaw를 쓸 사용자 계정으로 이 한 줄만 실행 (git이 없으면 설치 → 저장소 클론 → 전체 설치):
 
 ```bash
 (command -v git >/dev/null || (sudo apt-get update && sudo apt-get install -y git)) && git clone https://github.com/s1len7/silent_sdk.git ~/silent_sdk && sudo bash ~/silent_sdk/devices/b150m-am2/setup.sh
 ```
 
-- 이미 받아져 있으면: 호스트는 `bash ~/silent_sdk/devices/b150m-am2/setup.sh`, VM은 `sudo bash ~/silent_sdk/devices/b150m-am2/setup.sh`
+- 저장소를 새로 받지 않고 실행: 호스트는 `bash ~/silent_sdk/devices/b150m-am2/setup.sh`, VM은 `sudo bash ~/silent_sdk/devices/b150m-am2/setup.sh`
 - 개별 기능만 설치: 이 폴더(`~/silent_sdk/devices/b150m-am2`)에서 `bash scripts/host/setup_<기능>.sh` (호스트) 또는 `sudo bash scripts/vm/setup_<기능>.sh` (VM)
 - 실패한 모듈이 있어도 나머지 모듈은 계속 진행하고, 끝에 모듈별 결과(OK/SKIP/FAIL) 요약을 보여줌
 - 다시 실행: 같은 명령을 다시 실행하면 이미 설정된 모듈은 SKIP하고, 실패했거나 안 된 모듈만 다시 진행함 (모듈별 확인 기준은 아래 각 기능의 "다시 실행 시" 참고)
@@ -51,6 +53,31 @@ mkdir -p ~/silent_sdk && curl -fsSL https://github.com/s1len7/silent_sdk/archive
 - 구독 키가 없으면 기본으로 켜진 enterprise 저장소 때문에 `apt-get update`가 `exit code 100`으로 실패함
 - [공식 문서](https://pve.proxmox.com/wiki/Package_Repositories)대로 `pve-enterprise.sources`(와 enterprise인 `ceph.sources`)에 `Enabled: no`를 넣고, `proxmox.sources`에 no-subscription 저장소를 추가한 뒤 `apt-get full-upgrade`로 최신 패치를 적용함
 - 웹 UI에서 하려면: 노드 → 업데이트 → 리포지토리에서 enterprise 항목을 비활성화하고, 추가 → No-Subscription
+
+
+### Ubuntu VM 생성 (호스트)
+
+- Setup: [scripts/host/setup_vm.sh](scripts/host/setup_vm.sh) ([공식 Cloud-Init 방식](https://pve.proxmox.com/wiki/Cloud-Init_Support))
+  - 다시 실행 시: 같은 번호(`VM_ID`)의 VM이 있으면 건너뜀 (기존 VM은 건드리지 않음)
+- Ubuntu 24.04 공식 cloud 이미지를 받아 체크섬을 확인한 뒤 VM을 만들고 시작함 (Proxmox 부팅 시 자동 시작)
+- 설정: `.env` ([.env.example](.env.example) 참고, git에 올라가지 않음). 비워 두면 아래 기본값
+
+| 항목 | 기본값 | `.env` |
+|---|---|---|
+| VM 번호, 이름 | 100, openclaw | `VM_ID`, `VM_NAME` |
+| 사양 | 4코어, 8192MB, 64GB | `VM_CORES`, `VM_MEMORY_MB`, `VM_DISK_GB` |
+| 저장소, 브리지 | local-lvm, vmbr0 | `VM_STORAGE`, `VM_BRIDGE` |
+| 계정 | ubuntu (비밀번호 없이 sudo) | `VM_USER` |
+| SSH 키 | 호스트의 `/root/.ssh/authorized_keys` | `VM_SSH_KEYS_FILE` |
+| IP | DHCP | `VM_IP` (CIDR), `VM_GATEWAY`, `VM_DNS` |
+| OpenClaw 자동 설치 | yes | `VM_AUTO_OPENCLAW` |
+
+- 비밀번호 로그인은 없고 SSH 키로만 접속함. 기본값이면 Proxmox 호스트 셸에서 `ssh ubuntu@<VM IP>`로 접속
+  - DHCP일 때 VM IP는 첫 부팅 후 웹 화면의 VM → 요약(guest agent가 알려 줌)에서 확인
+- 첫 부팅 때 guest agent와 git을 설치하고, 저장소를 클론해 VM의 `setup.sh`(OpenClaw 설치)를 실행함 (몇 분 걸림)
+  - 진행 확인: 호스트에서 `qm terminal 100` (나가기: Ctrl+O), VM에서 `cloud-init status --wait`
+  - 이를 위해 `local` 저장소에 snippets 용도를 추가하고 `/var/lib/vz/snippets/`에 첫 부팅 작업 파일을 만듦
+- 호스트가 Wi-Fi뿐이면 VM이 인터넷에 나가도록 호스트에 Wi-Fi와 NAT를 먼저 설정하고, `.env`에 `VM_IP=10.10.10.2/24`, `VM_GATEWAY=10.10.10.1`, `VM_DNS`를 넣음
 
 
 ### OpenClaw (VM)
