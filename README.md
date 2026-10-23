@@ -20,8 +20,7 @@ silent_sdk/
 │  ├─ raspberrypi4/
 │  └─ byt-t1/
 ├─ logs/             설치 로그 (git에는 올라가지 않음)
-├─ vibecoding/       공통 CLAUDE.md 규칙 (서브모듈)
-└─ CLAUDE.md
+└─ CLAUDE.md         작성 원칙 (장비 공통)
 ```
 
 
@@ -45,5 +44,4 @@ Raspberry Pi 4:
 
 ## 개발
 
-- 작성 원칙: [CLAUDE.md](CLAUDE.md) 참고 (공통 규칙은 [vibecoding](vibecoding) 서브모듈의 CLAUDE.md)
-- 개발 PC에서 클론할 때는 서브모듈도 함께 받음: `git clone --recurse-submodules ...` 또는 클론 후 `git submodule update --init`
+- 작성 원칙: [CLAUDE.md](CLAUDE.md) 참고 (장비 전용 규칙은 각 `devices/<장비>/CLAUDE.md`)
