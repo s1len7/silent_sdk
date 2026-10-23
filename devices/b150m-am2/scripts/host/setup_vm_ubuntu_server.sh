@@ -114,7 +114,7 @@ if [[ -n "${VM_PASSWORD:-}" ]]; then
     qm set "$vm_id" --cipassword "$VM_PASSWORD"
 fi
 
-# 4. 첫 부팅 작업: guest agent 설치, 저장소 클론 후 VM의 setup_vm.sh 실행 (OpenClaw 설치)
+# 4. 첫 부팅 작업: guest agent 설치, 저장소 클론 후 VM의 setup_vm.sh 실행 (OpenClaw 설치·온보딩)
 #    cloud 이미지의 기본 사용자는 비밀번호 없이 sudo가 되므로, 사용자로 sudo를 실행해 SUDO_USER가 그 사용자가 되게 함
 echo "[4/5] Writing first boot tasks"
 if [[ "$auto_openclaw" == yes ]]; then
@@ -146,4 +146,4 @@ qm set "$vm_id" --onboot 1
 qm start "$vm_id"
 
 echo "VM $vm_id ($vm_name) started. First boot takes several minutes."
-echo "Console: qm terminal $vm_id (exit with Ctrl+O). After first boot, log in as $vm_user and run: openclaw onboard --install-daemon"
+echo "Console: qm terminal $vm_id (exit with Ctrl+O). After first boot, set OPENROUTER_API_KEY in the VM (see vm/ubuntu-server/README.md)."
