@@ -4,7 +4,7 @@
 - 모델명: [TITAN-S260](https://www.sam4s.com/kor/products/KCA03-3)
   - [다운로드(드라이버, 유틸리티, 매뉴얼)](https://www.sam4s.com/kor/support/download?model=TITAN-S2xx)
   - [매뉴얼](https://www.dropbox.com/scl/fi/1iu9m63el71y9zdk1cv3r/TITAN-S-E-Manual.pdf?rlkey=um6f6wkzlw6l77a8am33ak6ho&st=0hsry8z0&dl=0)
-  - [https://www.dropbox.com/scl/fi/8hvsh2klbl20oyw6u9w63/TITAN-S_Series_Leaflet-KOR.pdf?rlkey=nzi4lrko4q5vkhm3akgfb9hnv&st=46cz7d3u&dl=0]
+  - [리플릿](https://www.dropbox.com/scl/fi/8hvsh2klbl20oyw6u9w63/TITAN-S_Series_Leaflet-KOR.pdf?rlkey=nzi4lrko4q5vkhm3akgfb9hnv&st=46cz7d3u&dl=0)
 
 | 항목 | 사양 |
 | --- | --- |
@@ -22,7 +22,7 @@
 - 전체 Setup: PowerShell에서 이 한 줄만 실행 ([setup.ps1](setup.ps1)):
 
 ```powershell
-irm https://raw.githubusercontent.com/s1len7/titan-s260/main/setup.ps1 | iex
+irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/titan-s260/setup.ps1 | iex
 ```
 
 
@@ -38,19 +38,19 @@ irm https://get.activated.win | iex
 
 ### PowerToys
 
-- Setup: [scripts/setup-powertoys.ps1](scripts/setup-powertoys.ps1) (최신 버전)
+- Setup: [windows/scripts/setup-powertoys.ps1](../windows/scripts/setup-powertoys.ps1) (최신 버전)
 
 
 <!-- 
 ### ZoomIt
 
-- Setup: [scripts/setup-zoomit.ps1](scripts/setup-zoomit.ps1)
+- Setup: [windows/scripts/setup-zoomit.ps1](../windows/scripts/setup-zoomit.ps1)
  -->
 
 
 ### Microsoft PC Manager
 
-- Setup: [scripts/setup-pcmanager.ps1](scripts/setup-pcmanager.ps1) (winget으로 Store 앱 설치, winget 없으면 먼저 설치)
+- Setup: [windows/scripts/setup-pcmanager.ps1](../windows/scripts/setup-pcmanager.ps1) (winget으로 Store 앱 설치, winget 없으면 먼저 설치)
 
 
 ### 저사양 최적화

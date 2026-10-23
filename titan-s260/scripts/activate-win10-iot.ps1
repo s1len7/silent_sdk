@@ -1,11 +1,11 @@
-﻿<#
+<#
 .SYNOPSIS
-    Windows 10 IoT 정품 인증 스크립트 (titan-s260)
+    Windows 10 IoT activation script (titan-s260)
 
 .DESCRIPTION
-    1. 제품 키를 -ProductKey 인자로 받거나, 없으면 펌웨어(BIOS/UEFI)에 내장된 OEM 키(OA3)를 읽는다.
-    2. slmgr 로 키를 설치하고 온라인 인증을 시도한다.
-    3. 인증 결과를 출력한다.
+    1. Use the product key from -ProductKey, or read the OEM key (OA3) embedded in the firmware (BIOS/UEFI).
+    2. Install the key with slmgr and try online activation.
+    3. Print the activation result.
 
 .EXAMPLE
     .\activate-win10-iot.ps1
@@ -13,16 +13,16 @@
 #>
 param(
     [string]$ProductKey,
-    [switch]$NoPause  # 전체 Setup 에서 호출할 때 종료 대기 생략
+    [switch]$NoPause  # Skip the exit prompt when called from the full setup
 )
 
 $ErrorActionPreference = 'Stop'
 
 function Wait-Exit {
-    if (-not $NoPause) { Read-Host '엔터를 누르면 종료합니다' | Out-Null }
+    if (-not $NoPause) { Read-Host 'Press Enter to exit' | Out-Null }
 }
 
-# 관리자 권한 확인 → 없으면 관리자 권한으로 재실행
+# Check admin rights; if missing, re-launch as admin
 $principal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
 if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     $argList = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', "`"$PSCommandPath`"")
@@ -43,7 +43,7 @@ Write-Host "OS: $($os.Caption) ($($os.Version))"
 
 $status = Get-ActivationStatus
 if ($status -and $status.LicenseStatus -eq 1) {
-    Write-Host "이미 인증되어 있습니다. ($($status.Name), 키 끝자리 $($status.PartialProductKey))" -ForegroundColor Green
+    Write-Host "Already activated. ($($status.Name), key ends with $($status.PartialProductKey))" -ForegroundColor Green
     Wait-Exit
     exit 0
 }
@@ -51,30 +51,30 @@ if ($status -and $status.LicenseStatus -eq 1) {
 if (-not $ProductKey) {
     $ProductKey = (Get-CimInstance SoftwareLicensingService).OA3xOriginalProductKey
     if ($ProductKey) {
-        Write-Host '펌웨어에 내장된 OEM 제품 키를 찾았습니다.'
+        Write-Host 'Found the OEM product key embedded in the firmware.'
     } else {
-        $ProductKey = Read-Host '펌웨어에 내장된 키가 없습니다. 제품 키를 입력하세요 (XXXXX-XXXXX-XXXXX-XXXXX-XXXXX)'
+        $ProductKey = Read-Host 'No key embedded in the firmware. Enter a product key (XXXXX-XXXXX-XXXXX-XXXXX-XXXXX)'
     }
 }
 
 if ($ProductKey -notmatch '^[A-Z0-9]{5}(-[A-Z0-9]{5}){4}$') {
-    Write-Host "제품 키 형식이 올바르지 않습니다: $ProductKey" -ForegroundColor Red
+    Write-Host "Invalid product key format: $ProductKey" -ForegroundColor Red
     Wait-Exit
     exit 1
 }
 
-Write-Host '제품 키 설치 중...'
+Write-Host 'Installing product key...'
 cscript.exe //nologo $slmgr /ipk $ProductKey
 
-Write-Host '온라인 인증 중...'
+Write-Host 'Activating online...'
 cscript.exe //nologo $slmgr /ato
 
 $status = Get-ActivationStatus
 if ($status -and $status.LicenseStatus -eq 1) {
-    Write-Host "인증 완료 ($($status.Name))" -ForegroundColor Green
+    Write-Host "Activation completed ($($status.Name))" -ForegroundColor Green
     $code = 0
 } else {
-    Write-Host '인증에 실패했습니다. 인터넷 연결과 제품 키를 확인하세요. 상세: slmgr /dlv' -ForegroundColor Red
+    Write-Host 'Activation failed. Check the internet connection and the product key. Details: slmgr /dlv' -ForegroundColor Red
     $code = 1
 }
 

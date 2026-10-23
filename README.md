@@ -6,6 +6,7 @@
 |---|---|---|
 | windows | Windows 10 이상 데스크탑 | [windows/README.md](windows/README.md) |
 | raspberrypi4 | Raspberry Pi 4, Raspberry Pi OS Trixie 이상 | [raspberrypi4/README.md](raspberrypi4/README.md) |
+| titan-s260 | SAM4S TITAN-S260 POS, Windows 10 IoT LTSC | [titan-s260/README.md](titan-s260/README.md) |
 
 
 ## 전체 설치
@@ -13,6 +14,11 @@
 Windows (PowerShell):
 ```powershell
 irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/setup.ps1 | iex
+```
+
+TITAN-S260 (PowerShell):
+```powershell
+irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/titan-s260/setup.ps1 | iex
 ```
 
 Raspberry Pi 4:
