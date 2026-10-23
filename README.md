@@ -4,7 +4,7 @@
 
 | 장비 | 대상 | 문서 |
 |---|---|---|
-| windows | Windows 10 이상 데스크탑 | [devices/windows/README.md](devices/windows/README.md) |
+| desktop | Windows 10 이상 데스크탑 | [devices/desktop/README.md](devices/desktop/README.md) |
 | raspberrypi4 | Raspberry Pi 4, Raspberry Pi OS Trixie 이상 | [devices/raspberrypi4/README.md](devices/raspberrypi4/README.md) |
 | titan-s260 | SAM4S TITAN-S260 POS, Windows 10 IoT LTSC | [devices/titan-s260/README.md](devices/titan-s260/README.md) |
 | byt-t1 | PEGATRON BYT-T1 Mini-ITX 보드 (Intel Pentium J2900), Ubuntu Server LTS | [devices/byt-t1/README.md](devices/byt-t1/README.md) |
@@ -16,7 +16,7 @@
 ```text
 silent_sdk/
 ├─ devices/          장비별 폴더 (각 폴더에 README.md, CLAUDE.md, 설치 스크립트)
-│  ├─ windows/       Windows 공통 스크립트 (titan-s260도 사용)
+│  ├─ desktop/       Windows 데스크탑, Windows 공통 스크립트 (titan-s260도 사용)
 │  ├─ titan-s260/
 │  ├─ raspberrypi4/
 │  ├─ byt-t1/
@@ -28,9 +28,9 @@ silent_sdk/
 
 ## 전체 설치
 
-Windows (PowerShell):
+desktop (PowerShell):
 ```powershell
-irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/windows/setup.ps1 | iex
+irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/setup.ps1 | iex
 ```
 
 TITAN-S260 (PowerShell):

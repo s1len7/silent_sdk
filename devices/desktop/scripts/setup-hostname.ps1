@@ -1,6 +1,6 @@
 # Change the hostname. Run as admin. Reboot to apply.
 # Asks for the new hostname with -Default as the suggestion; Enter accepts the suggestion.
-#   devices\windows\setup.ps1     -Default silent-desktop
+#   devices\desktop\setup.ps1     -Default silent-desktop
 #   devices\titan-s260\setup.ps1  -Default titan-s260
 
 param(

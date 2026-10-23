@@ -1,5 +1,5 @@
 # silent_sdk full setup: get this repo into C:\silent_sdk, then run every setup step.
-#   irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/windows/setup.ps1 | iex
+#   irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/setup.ps1 | iex
 # ASCII-only so it works both via `irm | iex` and `-File` on Windows PowerShell 5.1.
 
 $ErrorActionPreference = 'Stop'
@@ -9,14 +9,14 @@ $dir  = 'C:\silent_sdk'
 # Re-launch as admin
 $principal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
 if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-    $run = if ($PSCommandPath) { "-File `"$PSCommandPath`"" } else { "-Command irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/windows/setup.ps1 | iex" }
+    $run = if ($PSCommandPath) { "-File `"$PSCommandPath`"" } else { "-Command irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/setup.ps1 | iex" }
     Start-Process powershell.exe -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass $run"
     exit
 }
 
 # Log everything from here; the log moves into <repo>\logs once the repo is available
 $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
-$bootstrapLog = "$env:TEMP\silent_sdk-windows-$stamp.log"
+$bootstrapLog = "$env:TEMP\silent_sdk-desktop-$stamp.log"
 Start-Transcript -Path $bootstrapLog | Out-Null
 
 # Get repo (git if available, otherwise zip)
@@ -37,7 +37,7 @@ try {
     }
 } catch {
     Write-Host "ERROR: getting the repo failed: $($_.Exception.Message)" -ForegroundColor Red
-    if (-not (Test-Path "$dir\devices\windows\scripts\lib-log.ps1")) {
+    if (-not (Test-Path "$dir\devices\desktop\scripts\lib-log.ps1")) {
         Stop-Transcript | Out-Null
         Read-Host "Setup aborted. Log: $bootstrapLog. Press Enter to exit"
         exit 1
@@ -45,11 +45,11 @@ try {
     Write-Warning "Continuing with the existing files in $dir"
 }
 
-. "$dir\devices\windows\scripts\lib-log.ps1"
-$logDir = Start-SetupLog $dir 'windows' $stamp $bootstrapLog
+. "$dir\devices\desktop\scripts\lib-log.ps1"
+$logDir = Start-SetupLog $dir 'desktop' $stamp $bootstrapLog
 
 # Setup steps: a failed step is logged and the next one still runs
-$s = "$dir\devices\windows\scripts"
+$s = "$dir\devices\desktop\scripts"
 $results = @()
 # Hostname first: it asks for the new name, so the rest runs without waiting for input
 $results += Invoke-Step 'hostname'     { & "$s\setup-hostname.ps1" -Default 'silent-desktop' }

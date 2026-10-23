@@ -45,13 +45,13 @@ irm https://get.activated.win | iex
 
 ### hostname 설정
 
-- Setup: [windows/scripts/setup-hostname.ps1](../windows/scripts/setup-hostname.ps1) (windows 공통 스크립트, 새 hostname을 물어봄, 엔터를 누르면 기본값 `titan-s260`, 적용 후 재부팅)
+- Setup: [desktop/scripts/setup-hostname.ps1](../desktop/scripts/setup-hostname.ps1) (desktop 공통 스크립트, 새 hostname을 물어봄, 엔터를 누르면 기본값 `titan-s260`, 적용 후 재부팅)
   - 다시 실행 시: 고른 hostname이 지금 hostname과 같거나, 변경 후 재부팅 대기 중이면 건너뜀
 
 
 ### Windows 업데이트
 
-- Setup: [windows/scripts/setup-windows-update.ps1](../windows/scripts/setup-windows-update.ps1) (드라이버 포함 모든 업데이트 설치, Windows 내장 업데이트 API 사용)
+- Setup: [desktop/scripts/setup-windows-update.ps1](../desktop/scripts/setup-windows-update.ps1) (드라이버 포함 모든 업데이트 설치, Windows 내장 업데이트 API 사용)
   - 기능 업데이트(Windows 버전 변경)와 사용자 입력이 필요한 업데이트는 제외
   - 업데이트를 하나씩 받고 설치하며 진행 막대와 `[3/25]` 같은 진행 줄을 보여줌
   - 업데이트 하나가 오래 걸려도 1분마다 `still working ... (경과 시간)` 줄을 남겨 멈추지 않았음을 알 수 있음 (로그에도 기록)
@@ -61,7 +61,7 @@ irm https://get.activated.win | iex
 
 ### PowerToys
 
-- Setup: [windows/scripts/setup-powertoys.ps1](../windows/scripts/setup-powertoys.ps1) (최신 버전)
+- Setup: [desktop/scripts/setup-powertoys.ps1](../desktop/scripts/setup-powertoys.ps1) (최신 버전)
   - 다시 실행 시: 설치돼 있고 창 억제·ZoomIt 설정이 돼 있으면 건너뜀. 설치만 돼 있으면 설정만 적용
   - 설치 후 환영 창, 새로운 기능(What's new) 창을 띄우지 않음
   - ZoomIt 활성화 (정책으로 켜서 PowerToys 설정에서 끌 수 없음)
@@ -70,13 +70,13 @@ irm https://get.activated.win | iex
 <!-- 
 ### ZoomIt
 
-- Setup: [windows/scripts/setup-zoomit.ps1](../windows/scripts/setup-zoomit.ps1)
+- Setup: [desktop/scripts/setup-zoomit.ps1](../desktop/scripts/setup-zoomit.ps1)
  -->
 
 
 ### WinGet
 
-- Setup: [windows/scripts/setup-winget.ps1](../windows/scripts/setup-winget.ps1) (winget이 없거나 실행되지 않을 때 설치, LTSC/IoT처럼 Microsoft Store가 없는 환경용)
+- Setup: [desktop/scripts/setup-winget.ps1](../desktop/scripts/setup-winget.ps1) (winget이 없거나 실행되지 않을 때 설치, LTSC/IoT처럼 Microsoft Store가 없는 환경용)
   - winget GitHub 릴리스의 설치 파일, 의존 패키지, 라이선스 파일로 PC 전체에 등록 (`Add-AppxProvisionedPackage -LicensePath`) 후 현재 사용자에 바로 연결
   - 라이선스 없이 설치하면 "관련 앱 라이선스를 찾을 수 없습니다" 오류로 winget이 실행되지 않음
   - 다시 실행 시: `winget --version`이 실행되면 건너뜀
@@ -84,7 +84,7 @@ irm https://get.activated.win | iex
 
 ### Microsoft PC Manager
 
-- Setup: [windows/scripts/setup-pcmanager.ps1](../windows/scripts/setup-pcmanager.ps1) (winget으로 Store 앱 설치, winget은 위 WinGet 단계에서 준비)
+- Setup: [desktop/scripts/setup-pcmanager.ps1](../desktop/scripts/setup-pcmanager.ps1) (winget으로 Store 앱 설치, winget은 위 WinGet 단계에서 준비)
   - 다시 실행 시: winget 목록에 PC Manager가 있으면 건너뜀
 
 
@@ -102,7 +102,7 @@ irm https://get.activated.win | iex
 
 ### 바탕화면 아이콘
 
-- Setup: [windows/scripts/setup-desktop-icons.ps1](../windows/scripts/setup-desktop-icons.ps1) (내 PC, 사용자 폴더, 네트워크, 제어판, 휴지통 아이콘 표시, 현재 사용자)
+- Setup: [desktop/scripts/setup-desktop-icons.ps1](../desktop/scripts/setup-desktop-icons.ps1) (내 PC, 사용자 폴더, 네트워크, 제어판, 휴지통 아이콘 표시, 현재 사용자)
   - 설정 > 개인 설정 > 테마 > 바탕 화면 아이콘 설정과 같은 값
   - 바탕화면에서 F5(새로 고침)하거나 다시 로그인하면 보임
   - 다시 실행 시: 다섯 아이콘이 모두 표시로 설정돼 있으면 건너뜀

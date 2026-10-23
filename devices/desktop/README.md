@@ -1,4 +1,4 @@
-# windows
+# desktop
 
 - 기본 데스크탑 설정 자동화
 - 지원OS: Windows 10 혹은 그 이상
@@ -8,12 +8,12 @@
 - 전체 Setup: PowerShell에서 이 한 줄만 실행 ([setup.ps1](setup.ps1)):
 
 ```powershell
-irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/windows/setup.ps1 | iex
+irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/setup.ps1 | iex
 ```
 
 - 실패한 단계가 있어도 나머지 단계는 계속 진행하고, 끝에 단계별 결과(OK/SKIP/FAIL) 요약을 보여줌
 - 다시 실행: 같은 명령을 다시 실행하면 이미 설정된 단계는 SKIP하고, 실패했거나 안 된 단계만 다시 진행함 (단계별 확인 기준은 아래 각 기능의 "다시 실행 시" 참고)
-- 로그: `C:\silent_sdk\logs\windows-<시각>\` (`setup.log` 전체 실행 기록, `*-install.log` 설치 프로그램 로그)
+- 로그: `C:\silent_sdk\logs\desktop-<시각>\` (`setup.log` 전체 실행 기록, `*-install.log` 설치 프로그램 로그)
 
 
 

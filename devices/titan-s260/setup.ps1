@@ -37,7 +37,7 @@ try {
     }
 } catch {
     Write-Host "ERROR: getting the repo failed: $($_.Exception.Message)" -ForegroundColor Red
-    if (-not (Test-Path "$dir\devices\windows\scripts\lib-log.ps1")) {
+    if (-not (Test-Path "$dir\devices\desktop\scripts\lib-log.ps1")) {
         Stop-Transcript | Out-Null
         Read-Host "Setup aborted. Log: $bootstrapLog. Press Enter to exit"
         exit 1
@@ -45,12 +45,12 @@ try {
     Write-Warning "Continuing with the existing files in $dir"
 }
 
-. "$dir\devices\windows\scripts\lib-log.ps1"
+. "$dir\devices\desktop\scripts\lib-log.ps1"
 $logDir = Start-SetupLog $dir 'titan-s260' $stamp $bootstrapLog
 
-# Setup steps (shared Windows scripts from devices\windows\scripts): a failed step is logged and the next one still runs
+# Setup steps (shared Windows scripts from devices\desktop\scripts): a failed step is logged and the next one still runs
 $t = "$dir\devices\titan-s260\scripts"
-$w = "$dir\devices\windows\scripts"
+$w = "$dir\devices\desktop\scripts"
 $results = @()
 $results += Invoke-Step 'activation' {
     # The activation script reports failure by exit code, not by throwing

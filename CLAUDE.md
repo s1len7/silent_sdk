@@ -9,15 +9,15 @@
   - 단, 예외처리는 항상 고려하고 꼼꼼하게 할 것
 - 모든 수정에서 불필요한 수정은 최대한 피할 것
 - 주석은 한글, 로그와 콘솔 출력 메시지는 모두 영어로 작성할 것
-  - 장비 CLAUDE.md에 다른 규칙이 있으면 그것을 따름 (예: windows의 `.ps1`은 ASCII만 사용하므로 주석도 영어)
+  - 장비 CLAUDE.md에 다른 규칙이 있으면 그것을 따름 (예: desktop의 `.ps1`은 ASCII만 사용하므로 주석도 영어)
 
 
 ## silent_sdk 구조
 
 - 장비별 설정 자동화를 한 저장소에서 관리함
-- 장비마다 `devices/` 아래에 폴더 하나 (`devices/windows/`, `devices/raspberrypi4/`, `devices/titan-s260/`, `devices/byt-t1/`, `devices/jetson-nano-b01/`), 장비 전용 규칙은 각 폴더의 CLAUDE.md를 따를 것
+- 장비마다 `devices/` 아래에 폴더 하나 (`devices/desktop/`, `devices/raspberrypi4/`, `devices/titan-s260/`, `devices/byt-t1/`, `devices/jetson-nano-b01/`), 장비 전용 규칙은 각 폴더의 CLAUDE.md를 따를 것
 - 한 장비 작업에서 다른 장비 폴더는 수정하지 않을 것
-  - 단, `devices/windows/scripts/`는 `devices/titan-s260/setup.ps1`도 호출하므로 수정 시 titan-s260에 미치는 영향도 확인할 것
+  - 단, `devices/desktop/scripts/`는 `devices/titan-s260/setup.ps1`도 호출하므로 수정 시 titan-s260에 미치는 영향도 확인할 것
 - 장비의 전체 설치 진입점은 `devices/<장비>/setup.ps1` 또는 `devices/<장비>/scripts/setup.sh`에 두고, 루트에는 두지 않을 것
 - 새 장비는 `devices/<장비>/` 폴더에 CLAUDE.md와 README.md를 만들고, 루트 README.md의 장비 목록과 구조에 추가할 것
 - 줄바꿈은 .gitattributes를 따름 (`.sh`는 LF, `.ps1`은 CRLF)
