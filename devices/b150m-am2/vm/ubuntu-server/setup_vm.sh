@@ -38,6 +38,7 @@ failed=0
 modules=(
     setup_openclaw
     setup_openclaw_onboard
+    setup_openclaw_telegram
 )
 for name in "${modules[@]}"; do
     module="$vm_dir/scripts/$name.sh"

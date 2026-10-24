@@ -25,7 +25,7 @@
 
 - 순서: Proxmox VE 9 설치 → 호스트 Setup (저장소 설정, Wi-Fi 연결(선택), Ubuntu Server 24.04 LTS VM 생성, 첫 부팅 때 VM Setup 자동 실행: OpenClaw 설치·온보딩) → VM에 OpenRouter API 키 등록
 - 전체 셋업 스크립트: 호스트는 [setup_host.sh](setup_host.sh) (`scripts/host/` 모듈), VM은 [vm/ubuntu-server/setup_vm.sh](vm/ubuntu-server/setup_vm.sh) (`vm/ubuntu-server/scripts/` 모듈)
-- VM 사양·접속 방법·TODO: [vm/ubuntu-server/README.md](vm/ubuntu-server/README.md)
+- VM 사양·접속 방법: [vm/ubuntu-server/README.md](vm/ubuntu-server/README.md)
 - 호스트 Setup: Proxmox 셸(root)에서 이 한 줄만 실행 (저장소를 `~/silent_sdk`에 새로 받아 전체 설치):
 
 ```bash
@@ -121,7 +121,7 @@ cd ~/silent_sdk/devices/b150m-am2/vm/ubuntu-server && cp .env.example .env && na
 sudo bash scripts/setup_openclaw_onboard.sh
 ```
 
-- 채널(텔레그램 등)·스킬은 설정하지 않으므로 필요하면 VM에서 `openclaw configure`로 추가
+- 텔레그램은 아래 OpenClaw 텔레그램 모듈이 설정함. 다른 채널·스킬은 필요하면 VM에서 `openclaw configure`로 추가
 - 리버스 프록시(예: NAS의 Nginx Proxy Manager)로 `wss://` 주소를 쓸 때는 `.env`에 `OPENCLAW_TRUSTED_PROXY`(프록시 IP)와 `OPENCLAW_PUBLIC_ORIGIN`(외부 https 주소)을 넣고 다시 실행 ([Trusted proxy 문서](https://docs.openclaw.ai/gateway/trusted-proxy-auth))
   - 프록시는 `X-Forwarded-For`를 덧붙이지 말고 덮어써야 함. Nginx Proxy Manager는 해당 호스트의 Custom Locations에 경로 `/`를 추가하면 덮어씀
 - Gateway 토큰 확인 (VM에서, `openclaw config get`은 값을 가려서 보여 주므로 설정 파일에서 읽음):
@@ -129,3 +129,13 @@ sudo bash scripts/setup_openclaw_onboard.sh
 ```bash
 python3 -c "import json,os;print(json.load(open(os.path.expanduser('~/.openclaw/openclaw.json')))['gateway']['auth']['token'])"
 ```
+
+
+### OpenClaw 텔레그램 (VM)
+
+- Setup: [vm/ubuntu-server/scripts/setup_openclaw_telegram.sh](vm/ubuntu-server/scripts/setup_openclaw_telegram.sh) (텔레그램 봇으로 OpenClaw와 대화)
+  - 다시 실행 시: `.env`에 봇 토큰·허용 ID가 없거나, 토큰 파일 내용이 같고 채널 설정(토큰 파일, 허용 ID, `dmPolicy=allowlist`, 그룹 꺼짐, 켜짐)이 같으면 건너뜀
+- 설정: `vm/ubuntu-server/.env`의 `TELEGRAM_BOT_TOKEN`(@BotFather에서 받은 토큰), `TELEGRAM_ALLOW_FROM`(텔레그램 숫자 ID, @userinfobot에게 메시지를 보내면 알려 줌)
+- 허용 ID 한 명만 봇에게 말을 걸 수 있고 그룹 대화는 꺼짐 ([공식 문서](https://docs.openclaw.ai/channels/telegram/access-control))
+- 토큰은 `~/.openclaw/telegram-bot-token`(권한 600)에 두고 설정에는 파일 경로만 넣음
+- 봇 하나는 한 곳에서만 메시지를 받을 수 있으므로, 같은 봇을 다른 OpenClaw에서 동시에 쓰지 않음

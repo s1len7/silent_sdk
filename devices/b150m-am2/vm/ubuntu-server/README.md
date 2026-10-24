@@ -54,8 +54,9 @@ ssh silent@192.168.0.22 "python3 -c \"import json,os;print(json.load(open(os.pat
   - 연결 후 승인 대기가 뜨면 VM에서 `openclaw devices list` → `openclaw devices approve <요청 ID>`
 
 
-## TODO
+### OpenClaw 텔레그램
 
-- 다시 생각해볼 것
-  - 유선이 끊겨도 VM이 인터넷 쓰기: Wi-Fi는 브리지 불가 → VM을 NAT 브리지(`vmbr1`)로 옮길지 (VM 랜 IP는 없어짐)
-    - 옮기면 vmbr0에 VM 포트가 없어져서, `ignore_routes_with_linkdown=1`을 더하면 케이블이 빠졌을 때 호스트가 Wi-Fi로 넘어감 (테스트 VM에서 호스트 쪽 확인됨, NAT는 아직 시험 안 함)
+- Setup: [scripts/setup_openclaw_telegram.sh](scripts/setup_openclaw_telegram.sh) (텔레그램 봇으로 OpenClaw와 대화, 허용 ID 한 명만, 그룹 대화 꺼짐)
+  - 다시 실행 시: `.env`에 봇 토큰·허용 ID가 없거나, 토큰 파일과 채널 설정이 같으면 건너뜀
+- 설정: `.env`의 `TELEGRAM_BOT_TOKEN`, `TELEGRAM_ALLOW_FROM` ([.env.example](.env.example) 참고)
+- 상태 확인: `openclaw channels status`
