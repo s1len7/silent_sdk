@@ -40,7 +40,7 @@
 ## silent_sdk 구조
 
 - 장비별 설정 자동화를 한 저장소에서 관리함
-- 장비마다 `devices/` 아래에 폴더 하나 (`devices/desktop/`, `devices/raspberrypi4-8gb/`, `devices/raspberrypi4-2gb/`, `devices/titan-s260/`, `devices/byt-t1/`, `devices/jetson-nano-b01/`, `devices/b150m-am2/`), 장비 전용 규칙은 각 폴더의 CLAUDE.md를 따를 것
+- 장비마다 `devices/` 아래에 폴더 하나 (`devices/desktop/`, `devices/raspberrypi4-8gb/`, `devices/raspberrypi4-2gb/`, `devices/titan-s260/`, `devices/byt-t1/`, `devices/jetson-nano-b01/`, `devices/b150m-am2/`, `devices/thinkpad-s2-2nd-gen/`), 장비 전용 규칙은 각 폴더의 CLAUDE.md를 따를 것
 - 한 장비 작업에서 다른 장비 폴더는 수정하지 않을 것
   - 단, `devices/desktop/scripts/`는 `devices/titan-s260/setup.ps1`도 호출하므로 수정 시 titan-s260에 미치는 영향도 확인할 것
 - 장비의 전체 설치 진입점은 모든 장비에서 이름을 `setup`으로 통일해 장비 폴더 바로 아래에 둘 것 (`devices/<장비>/setup.ps1` 또는 `devices/<장비>/setup.sh`), 저장소 루트나 `scripts/` 안에는 두지 않을 것

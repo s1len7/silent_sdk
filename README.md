@@ -11,6 +11,7 @@
 | byt-t1 | PEGATRON BYT-T1 Mini-ITX 보드 (Intel Pentium J2900), Ubuntu Server 24.04 LTS | [devices/byt-t1/README.md](devices/byt-t1/README.md) |
 | jetson-nano-b01 | NVIDIA Jetson Nano Developer Kit B01, JetPack 4.6.6 (Ubuntu 18.04) | [devices/jetson-nano-b01/README.md](devices/jetson-nano-b01/README.md) |
 | b150m-am2 | ASUS B150M-A/M.2 Micro-ATX 보드 (Intel B150), Proxmox VE 9 + Ubuntu Server 24.04 LTS VM, OpenClaw 서버 | [devices/b150m-am2/README.md](devices/b150m-am2/README.md) |
+| thinkpad-s2-2nd-gen | Lenovo ThinkPad S2 2nd Gen 노트북, Windows 10 Pro | [devices/thinkpad-s2-2nd-gen/README.md](devices/thinkpad-s2-2nd-gen/README.md) |
 
 
 ## 구조
@@ -24,7 +25,8 @@ silent_sdk/
 │  ├─ raspberrypi4-2gb/
 │  ├─ byt-t1/
 │  ├─ jetson-nano-b01/
-│  └─ b150m-am2/
+│  ├─ b150m-am2/
+│  └─ thinkpad-s2-2nd-gen/
 ├─ logs/             설치 로그 (git에는 올라가지 않음)
 └─ CLAUDE.md         작성 원칙 (장비 공통)
 ```
