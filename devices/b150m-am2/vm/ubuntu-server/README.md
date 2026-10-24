@@ -3,7 +3,7 @@
 - 호스트: [b150m-am2](../../README.md) (Proxmox VE 9)의 VM
 - 지원OS: [Ubuntu Server 24.04 LTS](https://ubuntu.com/server) (공식 cloud 이미지)
 - 용도: [OpenClaw](https://docs.openclaw.ai/install) 서버
-- 작성 원칙: [장비 CLAUDE.md](../../CLAUDE.md) 참고 (공통 규칙은 [상위 CLAUDE.md](../../../../CLAUDE.md))
+- 작성 원칙: [장비 AGENTS.md](../../AGENTS.md) 참고 (공통 규칙은 [상위 AGENTS.md](../../../../AGENTS.md))
 
 | 항목 | 사양 |
 | --- | --- |

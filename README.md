@@ -19,7 +19,7 @@
 
 ```text
 silent_sdk/
-├─ devices/          장비별 폴더 (각 폴더에 README.md, CLAUDE.md, 설치 스크립트)
+├─ devices/          장비별 폴더 (각 폴더에 README.md, AGENTS.md(규칙), CLAUDE.md, 설치 스크립트)
 │  ├─ desktop/       Windows 데스크탑, Windows 공통 스크립트 (titan-s260도 사용)
 │  ├─ titan-s260/
 │  ├─ raspberrypi4-8gb/
@@ -30,7 +30,8 @@ silent_sdk/
 │  ├─ thinkpad-s2-2g/
 │  └─ ds218plus/     Synology NAS, Container Manager 프로젝트 (전체 설치 없음)
 ├─ logs/             설치 로그 (git에는 올라가지 않음)
-└─ CLAUDE.md         작성 원칙 (장비 공통)
+├─ AGENTS.md         작성 원칙 (장비 공통)
+└─ CLAUDE.md         AGENTS.md를 불러옴 (`@./AGENTS.md`)
 ```
 
 
@@ -74,4 +75,4 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150
 
 ## 개발
 
-- 작성 원칙: [CLAUDE.md](CLAUDE.md) 참고 (장비 전용 규칙은 각 `devices/<장비>/CLAUDE.md`)
+- 작성 원칙: [AGENTS.md](AGENTS.md) 참고 (장비 전용 규칙은 각 `devices/<장비>/AGENTS.md`, CLAUDE.md는 AGENTS.md를 불러오기만 함)
