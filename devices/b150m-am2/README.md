@@ -110,8 +110,9 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150
 ### OpenClaw 온보딩 (VM)
 
 - Setup: [vm/ubuntu-server/scripts/setup_openclaw_onboard.sh](vm/ubuntu-server/scripts/setup_openclaw_onboard.sh) (공식 `openclaw onboard`를 비대화형으로 실행)
-  - 다시 실행 시: Gateway 서비스 파일이 있고, 기본 모델이 OpenRouter 무료 라우터이고, `OPENROUTER_API_KEY`가 있으면 OpenRouter 키도 등록돼 있을 때 건너뜀
-- Gateway를 사용자 systemd 서비스(`openclaw-gateway`)로 등록함 (loopback, token 인증, 포트 18789)
+  - 다시 실행 시: Gateway 서비스 파일이 있고, 랜 공개(`gateway.bind=lan`)이고, 기본 모델이 OpenRouter 무료 라우터이고, `.env`에 값이 있으면 OpenRouter 키·리버스 프록시 설정도 돼 있을 때 건너뜀. 빠진 것만 설정함
+- Gateway를 사용자 systemd 서비스(`openclaw-gateway`)로 등록함 (랜 공개, token 인증, 포트 18789)
+  - 예전에 VM 안에서만 열리게(loopback) 설치한 VM도 다시 실행하면 랜 공개로 바뀜
 - 기본 모델은 무료인 OpenRouter 무료 라우터 (`openrouter/openrouter/free`)
 - OpenRouter API 키: [openrouter.ai/keys](https://openrouter.ai/keys)에서 무료로 발급해 `vm/ubuntu-server/.env`에 넣고 다시 실행 ([vm/ubuntu-server/.env.example](vm/ubuntu-server/.env.example) 참고, git에 올라가지 않음)
 
@@ -121,5 +122,10 @@ sudo bash scripts/setup_openclaw_onboard.sh
 ```
 
 - 채널(텔레그램 등)·스킬은 설정하지 않으므로 필요하면 VM에서 `openclaw configure`로 추가
-- Gateway는 VM 안에서만 접속됨. 다른 기기에서 접속하려면 SSH 터널(`ssh -N -L 18790:127.0.0.1:18789 silent@<VM IP>`)을 쓰고, `lan`·`tailnet`으로 열지 않음 ([Linux server 문서](https://docs.openclaw.ai/vps))
-- Gateway 토큰 확인 (VM에서): `openclaw config get gateway.auth.token`
+- 리버스 프록시(예: NAS의 Nginx Proxy Manager)로 `wss://` 주소를 쓸 때는 `.env`에 `OPENCLAW_TRUSTED_PROXY`(프록시 IP)와 `OPENCLAW_PUBLIC_ORIGIN`(외부 https 주소)을 넣고 다시 실행 ([Trusted proxy 문서](https://docs.openclaw.ai/gateway/trusted-proxy-auth))
+  - 프록시는 `X-Forwarded-For`를 덧붙이지 말고 덮어써야 함. Nginx Proxy Manager는 해당 호스트의 Custom Locations에 경로 `/`를 추가하면 덮어씀
+- Gateway 토큰 확인 (VM에서, `openclaw config get`은 값을 가려서 보여 주므로 설정 파일에서 읽음):
+
+```bash
+python3 -c "import json,os;print(json.load(open(os.path.expanduser('~/.openclaw/openclaw.json')))['gateway']['auth']['token'])"
+```

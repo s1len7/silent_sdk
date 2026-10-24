@@ -8,7 +8,8 @@
   - 온보드 LAN(Realtek RTL8111H, r8169)은 Proxmox 커널 업데이트 후 끊김 보고가 있으므로 네트워크 관련 변경 시 주의할 것
 - 용도: OpenClaw 서버
   - 설치와 실행 방식은 [OpenClaw 공식 문서](https://docs.openclaw.ai/install)를 따르고, 서드파티 가이드보다 공식 문서를 우선할 것
-  - Gateway는 공식 기본값(loopback)을 유지하고, 외부에 열 때는 인증(token 또는 password)을 반드시 설정할 것
+  - Gateway는 랜에 열고(`gateway.bind=lan`), 인증(token 또는 password)을 반드시 유지할 것
+    - 리버스 프록시를 거칠 때는 `gateway.trustedProxies`에 프록시 IP만 넣고, `gateway.publicOrigin`을 외부 https 주소로 둘 것 ([Trusted proxy 문서](https://docs.openclaw.ai/gateway/trusted-proxy-auth))
   - API 키, 토큰은 `.env`(git 무시)에 둘 것
 - 전체 셋업 스크립트는 호스트용 `setup_host.sh`(장비 폴더 바로 아래), VM용 `vm/<VM 이름>/setup_vm.sh`로 둘 것 (현재 VM: `ubuntu-server`)
 - 기능 하나당 모듈 하나로 만들고, 호스트용은 `scripts/host/setup_<기능>.sh`, VM용은 `vm/<VM 이름>/scripts/setup_<기능>.sh`에 둘 것

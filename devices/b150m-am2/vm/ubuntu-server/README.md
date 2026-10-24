@@ -38,25 +38,24 @@ sudo bash ~/silent_sdk/devices/b150m-am2/vm/ubuntu-server/setup_vm.sh
 ### OpenClaw 온보딩
 
 - Setup: [scripts/setup_openclaw_onboard.sh](scripts/setup_openclaw_onboard.sh) (Gateway 서비스 등록, 기본 모델 `openrouter/openrouter/free`)
-  - 다시 실행 시: Gateway 서비스 파일이 있고, 기본 모델이 OpenRouter 무료 라우터이고, `OPENROUTER_API_KEY`가 있으면 OpenRouter 키도 등록돼 있을 때 건너뜀
-- OpenRouter API 키: `.env`의 `OPENROUTER_API_KEY` ([.env.example](.env.example) 참고, git에 올라가지 않음)
-- Gateway는 VM 안에서만 열림 (`ws://127.0.0.1:18789`, token 인증). 데스크탑에서는 SSH 터널로 접속:
+  - 다시 실행 시: Gateway 서비스 파일이 있고, 랜 공개(`gateway.bind=lan`)이고, 기본 모델이 OpenRouter 무료 라우터이고, `.env`에 값이 있으면 OpenRouter 키·리버스 프록시 설정도 돼 있을 때 건너뜀
+- 설정: `.env` ([.env.example](.env.example) 참고, git에 올라가지 않음)
+  - `OPENROUTER_API_KEY`: OpenRouter API 키
+  - `OPENCLAW_TRUSTED_PROXY`, `OPENCLAW_PUBLIC_ORIGIN`: 리버스 프록시 IP와 외부 https 주소 (프록시로 `wss://` 주소를 쓸 때만)
+- Gateway는 랜에 열려 있음 (`ws://192.168.0.22:18789`, token 인증)
+- 데스크탑 OpenClaw 트레이 앱 연결: 새 연결에 Gateway URL과 공유 토큰을 넣음
+  - Gateway URL: 리버스 프록시를 쓰면 `wss://<OPENCLAW_PUBLIC_ORIGIN의 호스트>`, 아니면 `ws://192.168.0.22:18789`
+  - 공유 토큰 확인 (`openclaw config get`은 값을 가려서 보여 주므로 설정 파일에서 읽음):
 
 ```bash
-ssh -N -L 18790:127.0.0.1:18789 silent@192.168.0.22
+ssh silent@192.168.0.22 "python3 -c \"import json,os;print(json.load(open(os.path.expanduser('~/.openclaw/openclaw.json')))['gateway']['auth']['token'])\""
 ```
 
-  - 터널을 연 동안 웹 대시보드 `http://127.0.0.1:18790`, Gateway `ws://127.0.0.1:18790` (데스크탑의 18789는 데스크탑 자체 Gateway가 사용)
-  - 토큰 확인: `ssh silent@192.168.0.22 "bash -lc 'openclaw config get gateway.auth.token'"`
+  - 연결 후 승인 대기가 뜨면 VM에서 `openclaw devices list` → `openclaw devices approve <요청 ID>`
 
 
 ## TODO
 
-- 데스크탑 companion을 VM과 연동
-  1. 트레이 앱 → Connections → SSH 터널: 사용자 `silent`, 호스트 `192.168.0.22`, 원격 포트 `18789`, 로컬 포트 `18790`
-  2. 위의 토큰 확인 명령으로 토큰 입력
-  3. pairing 요청이 뜨면 VM에서 `openclaw devices list` → `openclaw devices approve <id>`
 - 다시 생각해볼 것
-  - Gateway를 랜(`192.168.0.22:18789`)에 바로 열지, 지금처럼 SSH 터널로 쓸지
   - 유선이 끊겨도 VM이 인터넷 쓰기: Wi-Fi는 브리지 불가 → VM을 NAT 브리지(`vmbr1`)로 옮길지 (VM 랜 IP는 없어짐)
     - 옮기면 vmbr0에 VM 포트가 없어져서, `ignore_routes_with_linkdown=1`을 더하면 케이블이 빠졌을 때 호스트가 Wi-Fi로 넘어감 (테스트 VM에서 호스트 쪽 확인됨, NAT는 아직 시험 안 함)
