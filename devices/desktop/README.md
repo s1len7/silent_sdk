@@ -153,3 +153,19 @@ event="done"
 - Setup: [scripts/setup-docker.ps1](scripts/setup-docker.ps1) (WSL 2 활성화 후 Docker Desktop 최신 버전 설치, docker-users 그룹 추가, 적용 후 재부팅)
   - 다시 실행 시: Docker Desktop이 설치돼 있고 사용자가 docker-users 그룹에 있으면 건너뜀. 그룹만 빠져 있으면 그룹만 추가
   - Docker Engine, CLI, Compose는 Docker Desktop에 포함
+
+
+### OpenClaw (로컬 Gateway)
+
+- Setup: [scripts/setup-openclaw.ps1](scripts/setup-openclaw.ps1) (Node.js(winget) 최신, OpenClaw CLI(npm) 최신, 이 PC에서만 접속되는 Gateway `ws://localhost:18789`를 token 인증으로 설치, 기본 모델 `openrouter/openrouter/free`)
+  - 다시 실행 시: `openclaw` 명령이 있고, 작업 스케줄러에 `OpenClaw Gateway`가 있고, `gateway.bind=loopback`이고, 기본 모델이 OpenRouter 무료 라우터이고, `.env`에 키가 있으면 OpenRouter 키도 등록돼 있을 때 건너뜀
+- 설정: `.env`의 `OPENROUTER_API_KEY` ([.env.example](.env.example) 참고, 비우면 키 없이 설치만 함)
+- Gateway는 작업 스케줄러 `OpenClaw Gateway`로 로그인 시 실행됨
+- 업데이트: `npm i -g openclaw@latest`
+
+
+### OpenClaw Companion (트레이 앱)
+
+- Setup: [scripts/setup-openclaw-companion.ps1](scripts/setup-openclaw-companion.ps1) (winget `OpenClaw.OpenClawCompanion` 설치, 위 로컬 Gateway에 연결, 트레이 앱의 페어링 요청(operator, node) 승인)
+  - 다시 실행 시: 트레이 앱이 설치돼 있고, 로컬 Gateway 연결이 활성 연결이고, 그 연결의 기기가 operator·node로 페어링돼 있으면 건너뜀
+- 트레이 앱에 이미 있는 다른 Gateway 연결은 그대로 두고, 로컬 연결을 활성 연결로 바꿈 (트레이 앱은 한 번에 Gateway 하나에만 연결됨)

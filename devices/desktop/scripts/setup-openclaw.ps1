@@ -1,0 +1,113 @@
+# Setup a local OpenClaw Gateway (loopback only, token auth) with the free OpenRouter router as the default model. Run as admin.
+# Node.js (winget) -> OpenClaw CLI (npm, latest) -> onboard (Gateway as the "OpenClaw Gateway" scheduled task)
+# -> default model -> OpenRouter API key from devices/desktop/.env (OPENROUTER_API_KEY; skipped when empty).
+# Needs winget: setup-winget.ps1 runs before this step and installs it when missing.
+# Docs: https://docs.openclaw.ai/install
+
+$ErrorActionPreference = 'Stop'
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+$logDir = if ($env:SILENT_SDK_LOG_DIR) { $env:SILENT_SDK_LOG_DIR } else { $env:TEMP }
+$envFile = Join-Path (Split-Path $PSScriptRoot) '.env'
+$taskName = 'OpenClaw Gateway'
+# openclaw stores the model shortened (openrouter/openrouter/free -> openrouter/free)
+$model = 'openrouter/openrouter/free'
+$modelStored = 'openrouter/free'
+# Packages whose npm install scripts OpenClaw needs (npm skips them unless allowed; listed by the npm warning)
+$allowScripts = '@google/genai,esbuild,koffi,protobufjs,openclaw'
+
+# Read KEY=VALUE lines from .env (comments and blank lines ignored, optional quotes removed)
+$values = @{}
+if (Test-Path $envFile) {
+    foreach ($line in Get-Content $envFile) {
+        if ($line -match '^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*$') {
+            $values[$Matches[1]] = $Matches[2].Trim('"', "'")
+        }
+    }
+}
+$apiKey = $values['OPENROUTER_API_KEY']
+
+# Node.js and npm global bin in this session too (a fresh install only updates PATH for new processes)
+foreach ($dir in "$env:ProgramFiles\nodejs", "$env:APPDATA\npm") {
+    if (($env:Path -split ';') -notcontains $dir) { $env:Path = "$dir;$env:Path" }
+}
+
+# Run openclaw and return its output; throws on a non-zero exit code
+function Invoke-OpenClaw {
+    $out = & openclaw @args 2>&1 | ForEach-Object { "$_" }
+    if ($LASTEXITCODE -ne 0) { throw "openclaw $($args -join ' ') failed: exit code $LASTEXITCODE`n$($out -join "`n")" }
+    $out
+}
+
+# Value of a config path, or '' when unset or when the CLI or config is not usable yet
+function Get-OpenClawConfig($path) {
+    try { ((Invoke-OpenClaw config get $path) -join '').Trim().Trim('"') } catch { '' }
+}
+
+function Test-Cli { [bool](Get-Command openclaw -ErrorAction SilentlyContinue) }
+function Test-Gateway {
+    schtasks /query /tn $taskName 2>&1 | Out-Null
+    ($LASTEXITCODE -eq 0) -and (Get-OpenClawConfig gateway.bind) -eq 'loopback'
+}
+function Test-Model { (Get-OpenClawConfig agents.defaults.model.primary) -eq $modelStored }
+function Test-Key {
+    if (-not $apiKey) { return $true }
+    try { (Invoke-OpenClaw models auth list --provider openrouter --json) -join '' -match '"openrouter:' } catch { $false }
+}
+
+if ((Test-Cli) -and (Test-Gateway) -and (Test-Model) -and (Test-Key)) {
+    # OpenClaw is updated with: npm i -g openclaw@latest
+    Write-Host 'Local OpenClaw Gateway is already set up, skipped'
+    $global:SetupStepSkipped = $true
+    return
+}
+
+# 1. Node.js: install, or upgrade to the newest release (OpenClaw requires a recent Node.js)
+$winget = "$env:LOCALAPPDATA\Microsoft\WindowsApps\winget.exe"
+if (-not (Test-Path $winget)) { $winget = (Get-Command winget -ErrorAction SilentlyContinue).Source }
+if (-not $winget) { throw 'winget not found. Run setup-winget.ps1 first' }
+& $winget list --id OpenJS.NodeJS --exact --accept-source-agreements | Out-Null
+$verb = if ($LASTEXITCODE -eq 0) { 'upgrade' } else { 'install' }
+Write-Host "[1/5] Node.js: winget $verb"
+& $winget $verb --id OpenJS.NodeJS --exact -s winget --silent --accept-package-agreements --accept-source-agreements
+# -1978335189 (0x8A15002B): no newer version, -1978335135 (0x8A150061): already installed
+if ($LASTEXITCODE -notin 0, -1978335189, -1978335135) { throw "Node.js $verb failed: exit code $LASTEXITCODE" }
+& node --version
+
+# 2. OpenClaw CLI (latest)
+Write-Host '[2/5] Installing the OpenClaw CLI (npm, latest)'
+& npm install -g --allow-scripts=$allowScripts openclaw@latest --loglevel error --logs-dir $logDir
+if ($LASTEXITCODE -ne 0) { throw "npm install openclaw failed: exit code $LASTEXITCODE" }
+Invoke-OpenClaw --version | Select-Object -Last 1
+
+# A config left by an older OpenClaw can fail validation after an upgrade; doctor migrates it
+try { Invoke-OpenClaw config validate | Out-Null } catch {
+    Write-Host 'Repairing the existing OpenClaw config (openclaw doctor --fix)'
+    Invoke-OpenClaw doctor --fix --non-interactive | Out-Null
+}
+
+# 3. Onboard: Gateway on loopback with token auth, installed as a scheduled task; channels and skills are set up later
+if (-not (Test-Gateway)) {
+    Write-Host '[3/5] Running openclaw onboard (loopback + token, scheduled task)'
+    Invoke-OpenClaw onboard --non-interactive --accept-risk --mode local --flow quickstart `
+        --auth-choice skip --gateway-bind loopback --gateway-auth token --install-daemon `
+        --skip-channels --skip-skills --skip-search --skip-ui --suppress-gateway-token-output | Out-Null
+    if (-not (Test-Gateway)) { throw "Gateway was not set up (scheduled task '$taskName', gateway.bind=loopback)" }
+}
+
+# 4. Default model
+if (-not (Test-Model)) {
+    Write-Host "[4/5] Setting the default model to $model"
+    Invoke-OpenClaw models set $model | Out-Null
+}
+
+# 5. OpenRouter API key (passed on stdin so it does not show up in process lists)
+if (-not $apiKey) {
+    Write-Host "[5/5] OPENROUTER_API_KEY is empty in $envFile. Add the key and run this step again."
+} elseif (-not (Test-Key)) {
+    Write-Host '[5/5] Saving the OpenRouter API key'
+    $apiKey | & openclaw models auth paste-api-key --provider openrouter | Out-Null
+    if ($LASTEXITCODE -ne 0) { throw "Saving the OpenRouter API key failed: exit code $LASTEXITCODE" }
+}
+
+Write-Host 'Local OpenClaw Gateway setup done: ws://localhost:18789 (loopback, token auth)'
