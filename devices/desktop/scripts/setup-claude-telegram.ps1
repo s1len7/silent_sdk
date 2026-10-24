@@ -1,4 +1,4 @@
-# Setup Telegram notifications for Claude Code: a Stop/Notification hook that messages a Telegram bot. Run as admin.
+# Setup Telegram notifications for Claude Code: Stop/Notification hooks that message a Telegram bot. Run as admin.
 # Installs claude-telegram-notify.sh to ~/.claude/hooks/telegram-notify.sh, writes ~/.claude/telegram.env
 # from devices/desktop/.env, and adds the hooks to ~/.claude/settings.json (other settings are kept).
 # Skipped when TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID is empty in .env (see .env.example).
@@ -13,8 +13,9 @@ $confDst = Join-Path $claudeDir 'telegram.env'
 $settingsFile = Join-Path $claudeDir 'settings.json'
 $command = 'bash ~/.claude/hooks/telegram-notify.sh'
 # Hook event -> matcher. Notification also fires for idle reminders after Claude finishes,
-# so only permission prompts are sent; Stop has no matcher
-$events = [ordered]@{ Stop = ''; Notification = 'permission_prompt' }
+# so only permission prompts are sent. UserPromptSubmit saves the start of the user's request
+# for the alert text (it sends nothing). Stop and UserPromptSubmit have no matcher
+$events = [ordered]@{ UserPromptSubmit = ''; Stop = ''; Notification = 'permission_prompt' }
 # Claude Code runs command hooks with Git Bash on Windows
 $bash = "$env:ProgramFiles\Git\bin\bash.exe"
 

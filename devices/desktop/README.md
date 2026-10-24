@@ -115,16 +115,17 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
 ### Claude Code 텔레그램 알림
 
 - Setup: [scripts/setup-claude-telegram.ps1](scripts/setup-claude-telegram.ps1) (Claude Code 응답이 끝나거나 권한 승인을 기다리면 텔레그램으로 알림)
-  - 다시 실행 시: `.env`에 토큰·chat id가 없거나, hook 스크립트·`telegram.env`가 같고 `settings.json`에 Stop hook과 Notification hook(권한 요청만)이 있으면 건너뜀. 빠진 것만 다시 만듦
+  - 다시 실행 시: `.env`에 토큰·chat id가 없거나, hook 스크립트·`telegram.env`가 같고 `settings.json`에 UserPromptSubmit·Stop hook과 Notification hook(권한 요청만)이 있으면 건너뜀. 빠진 것만 다시 만듦
 - 설정: `devices/desktop/.env`의 `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` ([.env.example](.env.example) 참고, git에 올라가지 않음)
   - 토큰: 텔레그램 @BotFather에게 `/newbot`
   - chat id: @userinfobot에게 메시지를 보내면 알려 주는 숫자
 - [scripts/claude-telegram-notify.sh](scripts/claude-telegram-notify.sh)를 `~/.claude/hooks/telegram-notify.sh`로 복사하고, 토큰·chat id를 `~/.claude/telegram.env`에 쓰고, `~/.claude/settings.json`에 hook을 추가함 (기존 설정은 유지, 바꾸기 전 `settings.json.bak`으로 백업)
-- 메시지 형식 (항목마다 줄바꿈, `ai` 값으로 다른 알림과 구분):
+- 메시지 형식 (항목마다 줄바꿈, `ai` 값으로 다른 알림과 구분, `request`는 마지막 질문의 앞 60자):
 
 ```text
 [Info] ai="Claude Code",
 workspace="silent_sdk",
+request="텔레그램 알림봇에 질의내용 간단요약본 추가해서...",
 event="done"
 ```
 
