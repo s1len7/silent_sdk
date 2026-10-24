@@ -59,17 +59,17 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150
 ### Wi-Fi (호스트)
 
 - Setup: [scripts/host/setup_wifi.sh](scripts/host/setup_wifi.sh) (유선은 그대로 두고 Wi-Fi도 연결, 내장 Intel Wireless-AC 3168 확인)
-  - 다시 실행 시: `WIFI_SSID`가 비어 있거나, 설정 파일 내용이 같고 `wpa_supplicant@<인터페이스>`·`systemd-networkd`가 실행 중이면 건너뜀
+  - 다시 실행 시: `WIFI_SSID`가 비어 있거나, 설정 파일 내용이 같고 `wpa_supplicant@<인터페이스>`·`systemd-networkd`·`wifi-failover-nft`가 실행 중이면 건너뜀
 - 설정: `.env`의 `WIFI_SSID`, `WIFI_PASSWORD` (선택: `WIFI_COUNTRY`, `WIFI_INTERFACE`, [.env.example](.env.example) 참고)
-- `wpasupplicant`, `iw`, `wireless-regdb`를 설치하고 Wi-Fi 인터페이스(기본: 첫 번째 무선 인터페이스)를 DHCP로 연결함
+- `wpasupplicant`, `iw`, `wireless-regdb`, `nftables`를 설치하고 Wi-Fi 인터페이스(기본: 첫 번째 무선 인터페이스)를 공유기 DHCP로 연결함
   - 비밀번호는 해시(psk)로 `/etc/wpa_supplicant/wpa_supplicant-<인터페이스>.conf`(root만 읽기)에 저장
-  - DHCP는 `systemd-networkd`가 Wi-Fi 인터페이스만 맡음 (`/etc/systemd/network/50-wifi-<인터페이스>.network`, 기본 경로 metric 600이라 유선이 우선)
+  - DHCP는 `systemd-networkd`가 Wi-Fi 인터페이스만 맡고, 경로는 테이블 100에 넣어 유선 경로와 겹치지 않게 함 (`/etc/systemd/network/50-wifi-<인터페이스>.network`)
 - Wi-Fi는 Linux 브리지에 넣을 수 없어 VM은 계속 유선(`vmbr0`)으로 연결됨. 호스트는 유선 IP와 Wi-Fi IP 양쪽으로 접속 가능
-- 유선이 끊겼을 때도 Wi-Fi IP로 접속하려면 `.env`에 `WIFI_IP`(고정 IP, CIDR)와 `WIFI_GATEWAY`를 넣고 다시 실행
-  - 고정 IP일 때는 Wi-Fi IP에서 나가는 패킷을 경로 테이블 100으로 Wi-Fi로 보냄 (`ip rule`, `ip route show table 100`으로 확인)
-  - 고정 IP는 공유기 DHCP 범위 밖 주소나 DHCP 예약 주소를 쓸 것
+- 유선이 끊겨도 Wi-Fi IP로 호스트에 접속됨: Wi-Fi로 들어온 연결에 nftables 표시를 붙여 그 응답을 테이블 100(Wi-Fi)으로 보냄
+  - `wifi-failover-nft` 서비스(`/etc/nftables.d/50-wifi-failover.nft`)와 `ip rule`의 `fwmark 0x64 lookup 100`으로 확인
+  - ARP가 엉키지 않게 `/etc/sysctl.d/50-wifi-arp.conf`(`arp_ignore=1`, `arp_announce=2`)를 둠
   - 유선이 끊겼을 때 살아나는 것은 Wi-Fi IP로 들어오는 접속(SSH, 웹 UI)뿐이고, 호스트가 밖으로 나가는 연결(apt 등)과 VM 네트워크는 끊김
-- 상태 확인: `ip -br addr show`, `journalctl -u wpa_supplicant@wlp3s0`
+- 상태 확인: `ip -br addr show`, `ip rule`, `ip route show table 100`, `journalctl -u wpa_supplicant@wlp3s0`
 
 
 ### Ubuntu VM 생성 (호스트)
@@ -87,16 +87,13 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150
 | 계정 | silent (비밀번호 없이 sudo) | `VM_USER` |
 | 콘솔 비밀번호 | 없음 | `VM_PASSWORD` |
 | SSH 키 | 호스트의 `/root/.ssh/authorized_keys` | `VM_SSH_KEYS_FILE` |
-| IP | DHCP | `VM_IP` (CIDR), `VM_GATEWAY`, `VM_DNS` |
 | OpenClaw 자동 설치 | yes | `VM_AUTO_OPENCLAW` |
 
 - SSH는 키로만 접속함 (`VM_PASSWORD`는 웹 화면 콘솔·`qm terminal` 로그인용). 기본값이면 Proxmox 호스트 셸에서 `ssh silent@<VM IP>`로 접속
-  - DHCP일 때 VM IP는 첫 부팅 후 웹 화면의 VM → 요약(guest agent가 알려 줌)에서 확인
+  - IP는 공유기 DHCP로 받음. 첫 부팅 후 웹 화면의 VM → 요약(guest agent가 알려 줌)에서 확인
 - 첫 부팅 때 guest agent와 git을 설치하고, 저장소를 클론해 VM의 `vm/ubuntu-server/setup_vm.sh`(OpenClaw 설치·온보딩)를 실행함 (몇 분 걸림)
   - 진행 확인: 호스트에서 `qm terminal 100` (나가기: Ctrl+O), VM에서 `cloud-init status --wait`
   - 이를 위해 `local` 저장소에 snippets 용도를 추가하고 `/var/lib/vz/snippets/`에 첫 부팅 작업 파일을 만듦
-- 호스트가 Wi-Fi뿐이면 VM이 인터넷에 나가도록 호스트에 Wi-Fi와 NAT를 먼저 설정하고, `.env`에 `VM_IP=10.10.10.2/24`, `VM_GATEWAY=10.10.10.1`, `VM_DNS`를 넣음
-
 
 ### VM 백업 (호스트)
 

@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 # Wi-Fi 연결 스크립트 (Proxmox 호스트에서 root로 실행)
 # 유선(vmbr0)은 그대로 두고 호스트의 Wi-Fi도 공유기에 연결함 (Wi-Fi는 브리지에 넣을 수 없으므로 VM은 계속 vmbr0 사용)
-# ifupdown2에는 Wi-Fi 인증 기능이 없고 dhcp에 route metric도 없어 Wi-Fi 기본 경로가 유선과 겹치므로,
-# 인증은 wpa_supplicant@<인터페이스>, DHCP는 Wi-Fi 인터페이스만 맡긴 systemd-networkd(metric 600, 유선이 우선)로 함
+# ifupdown2에는 Wi-Fi 인증 기능이 없고 dhcp에 경로 테이블 지정도 없으므로,
+# 인증은 wpa_supplicant@<인터페이스>, DHCP는 Wi-Fi 인터페이스만 맡긴 systemd-networkd로 함
+# 케이블이 빠져도 VM 포트(tap) 때문에 vmbr0이 살아 있는 것으로 보여 Wi-Fi로 들어온 접속의 응답이 vmbr0으로 나가므로,
+# Wi-Fi로 들어온 연결에 nftables 표시(connmark)를 붙이고 그 응답은 Wi-Fi 경로 테이블로 보냄 (DHCP 주소가 바뀌어도 동작)
 # 값은 devices/b150m-am2/.env의 WIFI_SSID, WIFI_PASSWORD에서 읽고, WIFI_SSID가 비어 있으면 건너뜀
-# WIFI_IP(고정 IP)를 넣으면 유선이 끊겨도 Wi-Fi 주소로 호스트에 접속되도록 정책 라우팅을 추가함
 # 사용법: bash scripts/host/setup_wifi.sh
 set -euo pipefail
 
@@ -32,18 +33,12 @@ fi
 ssid="${WIFI_SSID:-}"
 password="${WIFI_PASSWORD:-}"
 country="${WIFI_COUNTRY:-}"
-wifi_ip="${WIFI_IP:-}"
-wifi_gateway="${WIFI_GATEWAY:-}"
-# Wi-Fi 주소에서 나가는 패킷용 경로 테이블 번호 (고정 IP일 때만 사용)
+# Wi-Fi DHCP 경로를 넣는 테이블 번호와, Wi-Fi로 들어온 연결에 붙이는 표시 값
 route_table=100
+fw_mark=100
 
 if [[ -z "$ssid" ]]; then
     skip_done "WIFI_SSID is empty in $env_file (set it to connect Wi-Fi)"
-fi
-if [[ -n "$wifi_ip" ]]; then
-    [[ "$wifi_ip" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/[0-9]+$ && ${wifi_ip#*/} -le 32 ]] \
-        || { echo "WIFI_IP must be CIDR (e.g. 192.168.0.25/24): $wifi_ip" >&2; exit 1; }
-    [[ -n "$wifi_gateway" ]] || { echo "WIFI_GATEWAY is required with WIFI_IP" >&2; exit 1; }
 fi
 
 # Wi-Fi 인터페이스: .env의 WIFI_INTERFACE, 없으면 첫 번째 무선 인터페이스
@@ -64,10 +59,14 @@ if grep -qsE "^[[:space:]]*(auto|allow-hotplug|iface)[[:space:]]+$iface([[:space
     exit 1
 fi
 
-pkgs=(wpasupplicant iw wireless-regdb)
+pkgs=(wpasupplicant iw wireless-regdb nftables)
 wpa_conf="/etc/wpa_supplicant/wpa_supplicant-$iface.conf"
 network_file="/etc/systemd/network/50-wifi-$iface.network"
 networkd_conf=/etc/systemd/networkd.conf.d/50-wifi-only.conf
+nft_file=/etc/nftables.d/50-wifi-failover.nft
+nft_unit=wifi-failover-nft.service
+nft_unit_file="/etc/systemd/system/$nft_unit"
+sysctl_file=/etc/sysctl.d/50-wifi-arp.conf
 
 work="$(mktemp -d)"
 trap 'rm -rf "$work"' EXIT
@@ -86,16 +85,8 @@ build_wpa_conf() {
     fi
 }
 
-# CIDR(예: 192.168.0.25/24)의 네트워크 주소 (예: 192.168.0.0/24)
-network_of() {
-    local a b c d len="${1#*/}" n
-    IFS=. read -r a b c d <<< "${1%/*}"
-    n=$(( ((a << 24) | (b << 16) | (c << 8) | d) & ((0xFFFFFFFF << (32 - len)) & 0xFFFFFFFF) ))
-    echo "$(( n >> 24 & 255 )).$(( n >> 16 & 255 )).$(( n >> 8 & 255 )).$(( n & 255 ))/$len"
-}
-
-if [[ -z "$wifi_ip" ]]; then
-    cat > "$work/network" <<EOF
+# DHCP 경로는 main이 아닌 별도 테이블에 넣어 유선 경로와 겹치지 않게 하고, 표시가 붙은 패킷만 그 테이블을 씀
+cat > "$work/network" <<EOF
 [Match]
 Name=$iface
 
@@ -103,36 +94,52 @@ Name=$iface
 DHCP=ipv4
 
 [DHCPv4]
-RouteMetric=600
-EOF
-else
-    # 고정 IP: 케이블이 빠져도 VM 포트(tap) 때문에 vmbr0이 살아 있는 것으로 보여
-    # Wi-Fi 주소로 들어온 접속의 응답이 vmbr0으로 나가므로, Wi-Fi 주소에서 나가는 패킷은 별도 경로 테이블로 보냄
-    cat > "$work/network" <<EOF
-[Match]
-Name=$iface
-
-[Address]
-Address=$wifi_ip
-RouteMetric=600
-
-[Route]
-Gateway=$wifi_gateway
-Metric=600
-
-[Route]
-Destination=$(network_of "$wifi_ip")
-Table=$route_table
-
-[Route]
-Gateway=$wifi_gateway
-Table=$route_table
+RouteTable=$route_table
 
 [RoutingPolicyRule]
-From=${wifi_ip%/*}
+FirewallMark=$fw_mark
 Table=$route_table
 EOF
-fi
+
+# Wi-Fi로 들어온 연결에 표시를 붙이고, 그 연결의 응답 패킷에도 같은 표시를 붙여 경로를 다시 고르게 함
+# 자기 테이블만 지우고 다시 만듦 (다른 nftables 규칙은 건드리지 않음)
+cat > "$work/nft" <<EOF
+table inet wifi_failover
+delete table inet wifi_failover
+table inet wifi_failover {
+    chain prerouting {
+        type filter hook prerouting priority mangle; policy accept;
+        iifname "$iface" ct mark set $fw_mark
+    }
+    chain output {
+        type route hook output priority mangle; policy accept;
+        ct mark $fw_mark meta mark set $fw_mark
+    }
+}
+EOF
+
+# 유선·Wi-Fi가 같은 대역이면 각 인터페이스가 상대 IP의 ARP에도 답해서(ARP flux), 케이블이 빠진 직후
+# 공유기·PC가 Wi-Fi IP를 유선 MAC으로 기억해 30초쯤 접속이 안 되므로, IP가 붙은 인터페이스에서만 답하게 함
+cat > "$work/sysctl.conf" <<'EOF'
+net.ipv4.conf.all.arp_ignore = 1
+net.ipv4.conf.all.arp_announce = 2
+EOF
+
+cat > "$work/nft.service" <<EOF
+[Unit]
+Description=Mark connections arriving on Wi-Fi $iface (silent_sdk setup_wifi.sh)
+Before=network-pre.target
+Wants=network-pre.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/sbin/nft -f $nft_file
+ExecStop=/usr/sbin/nft delete table inet wifi_failover
+
+[Install]
+WantedBy=multi-user.target
+EOF
 
 # networkd가 ifupdown2가 만든 경로·규칙(vmbr0 등)을 지우지 않게 함
 cat > "$work/networkd.conf" <<'EOF'
@@ -147,7 +154,10 @@ wifi_ready() {
         && cmp -s "$work/wpa.conf" "$wpa_conf" \
         && cmp -s "$work/network" "$network_file" \
         && cmp -s "$work/networkd.conf" "$networkd_conf" \
-        && systemctl is-active --quiet systemd-networkd "wpa_supplicant@$iface"
+        && cmp -s "$work/nft" "$nft_file" \
+        && cmp -s "$work/nft.service" "$nft_unit_file" \
+        && cmp -s "$work/sysctl.conf" "$sysctl_file" \
+        && systemctl is-active --quiet systemd-networkd "wpa_supplicant@$iface" "$nft_unit"
 }
 
 # 1. 패키지 설치 (wpa_passphrase가 필요하므로 설정 비교보다 먼저)
@@ -169,13 +179,20 @@ echo "[2/4] Writing Wi-Fi config for $iface ($ssid)"
 install -m 600 "$work/wpa.conf" "$wpa_conf"
 install -D -m 644 "$work/network" "$network_file"
 install -D -m 644 "$work/networkd.conf" "$networkd_conf"
+install -D -m 644 "$work/nft" "$nft_file"
+install -m 644 "$work/nft.service" "$nft_unit_file"
+install -m 644 "$work/sysctl.conf" "$sysctl_file"
+sysctl -q -p "$sysctl_file"
 
 # 3. 서비스 시작 (networkd는 .network 파일이 있는 Wi-Fi만 관리하고 vmbr0 등은 건드리지 않음)
 #    wait-online은 Wi-Fi가 안 잡히면 부팅을 지연시키므로 끔
-echo "[3/4] Starting wpa_supplicant@$iface and systemd-networkd"
+echo "[3/4] Starting $nft_unit, wpa_supplicant@$iface and systemd-networkd"
+systemctl daemon-reload
+systemctl enable "$nft_unit"
+systemctl restart "$nft_unit"
 systemctl enable systemd-networkd
 systemctl disable systemd-networkd-wait-online.service 2>/dev/null || true
-# 예전 고정 IP의 정책 규칙·경로는 networkd가 재시작 후 남의 것으로 보고 지우지 않으므로 먼저 지움
+# 이전 설정의 정책 규칙·경로는 networkd가 재시작 후 남의 것으로 보고 지우지 않으므로 먼저 지움
 while ip rule del table "$route_table" 2>/dev/null; do :; done
 ip route flush table "$route_table" 2>/dev/null || true
 systemctl restart systemd-networkd
