@@ -73,6 +73,8 @@ case "$event" in
     *) exit 0 ;;
 esac
 
-curl -s -m 10 -o /dev/null "$api/sendMessage" \
+# 본문은 표준 입력으로 넘김: Windows용 curl은 명령줄 인자를 시스템 코드페이지로 받아 한글이 깨지고
+# 텔레그램이 "strings must be encoded in UTF-8"로 거부함
+printf '%s' "$text" | curl -s -m 10 -o /dev/null "$api/sendMessage" \
     --data-urlencode "chat_id=$chat_id" \
-    --data-urlencode "text=$text"
+    --data-urlencode "text@-"
