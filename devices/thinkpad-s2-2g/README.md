@@ -1,7 +1,7 @@
-# Lenovo ThinkPad S2 2G
+# Lenovo ThinkPad S2 2G(2nd Gen)
 
 - 제조사: [레노버(Lenovo)](https://www.lenovo.com/)
-- 모델명: ThinkPad S2 2G (ThinkPad 13 2nd Gen과 같은 플랫폼, MT 20J1/20J2/20J3)
+- 모델명: ThinkPad S2 2G(2nd Gen) (ThinkPad 13 2nd Gen과 같은 플랫폼, MT 20J1/20J2/20J3)
   - [사양(PSREF, ThinkPad 13 2nd Gen)](https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_13_2nd_Gen/ThinkPad_13_2nd_Gen_Spec.PDF)
 - 지원OS: Windows 10 Pro (64-bit)
 
