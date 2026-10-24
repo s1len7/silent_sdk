@@ -88,6 +88,8 @@ $results += Invoke-Step 'sysinternals' { & "$s\setup-sysinternals.ps1" }
 # Autologon right after Sysinternals, which provides Autologon64.exe; asks for the account password
 $results += Invoke-Step 'autologon'    { & "$s\setup-autologon.ps1" }
 $results += Invoke-Step 'git'          { & "$s\setup-git.ps1" }
+# After Git: the Claude Code hook runs with Git Bash
+$results += Invoke-Step 'claude-telegram' { & "$s\setup-claude-telegram.ps1" }
 $results += Invoke-Step 'vscode'       { & "$s\setup-vscode.ps1" }
 $results += Invoke-Step 'python'       { & "$s\setup-python.ps1" }
 $results += Invoke-Step 'docker'       { & "$s\setup-docker.ps1" }

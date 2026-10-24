@@ -112,6 +112,25 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
   - 전역 `user.name`, `user.email` 설정 (이메일은 GitHub noreply 주소로 비식별화)
 
 
+### Claude Code 텔레그램 알림
+
+- Setup: [scripts/setup-claude-telegram.ps1](scripts/setup-claude-telegram.ps1) (Claude Code 작업이 끝나거나 입력이 필요하면 텔레그램으로 알림)
+  - 다시 실행 시: `.env`에 토큰·chat id가 없거나, hook 스크립트·`telegram.env`가 같고 `settings.json`에 Stop·Notification hook이 있으면 건너뜀. 빠진 것만 다시 만듦
+- 설정: `devices/desktop/.env`의 `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` ([.env.example](.env.example) 참고, git에 올라가지 않음)
+  - 토큰: 텔레그램 @BotFather에게 `/newbot`
+  - chat id: @userinfobot에게 메시지를 보내면 알려 주는 숫자
+- [scripts/claude-telegram-notify.sh](scripts/claude-telegram-notify.sh)를 `~/.claude/hooks/telegram-notify.sh`로 복사하고, 토큰·chat id를 `~/.claude/telegram.env`에 쓰고, `~/.claude/settings.json`에 hook을 추가함 (기존 설정은 유지, 바꾸기 전 `settings.json.bak`으로 백업)
+- 메시지 형식 (항목마다 줄바꿈, `ai` 값으로 다른 알림과 구분):
+
+```text
+[Info] ai="Claude Code",
+workspace="silent_sdk",
+event="done"
+```
+
+- 적용: 설치 후 Claude Code를 다시 시작하거나 `/hooks`를 한 번 열기
+
+
 ### Visual Studio Code
 
 - Setup: [scripts/setup-vscode.ps1](scripts/setup-vscode.ps1) (System Installer x64 최신 버전, PATH 추가, 탐색기 "Code로 열기" 메뉴)
