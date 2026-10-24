@@ -114,8 +114,8 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
 
 ### Claude Code 텔레그램 알림
 
-- Setup: [scripts/setup-claude-telegram.ps1](scripts/setup-claude-telegram.ps1) (Claude Code 작업이 끝나거나 입력이 필요하면 텔레그램으로 알림)
-  - 다시 실행 시: `.env`에 토큰·chat id가 없거나, hook 스크립트·`telegram.env`가 같고 `settings.json`에 Stop·Notification hook이 있으면 건너뜀. 빠진 것만 다시 만듦
+- Setup: [scripts/setup-claude-telegram.ps1](scripts/setup-claude-telegram.ps1) (Claude Code 응답이 끝나거나 권한 승인을 기다리면 텔레그램으로 알림)
+  - 다시 실행 시: `.env`에 토큰·chat id가 없거나, hook 스크립트·`telegram.env`가 같고 `settings.json`에 Stop hook과 Notification hook(권한 요청만)이 있으면 건너뜀. 빠진 것만 다시 만듦
 - 설정: `devices/desktop/.env`의 `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` ([.env.example](.env.example) 참고, git에 올라가지 않음)
   - 토큰: 텔레그램 @BotFather에게 `/newbot`
   - chat id: @userinfobot에게 메시지를 보내면 알려 주는 숫자

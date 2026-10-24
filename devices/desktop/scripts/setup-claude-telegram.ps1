@@ -12,7 +12,9 @@ $hookDst = Join-Path $claudeDir 'hooks\telegram-notify.sh'
 $confDst = Join-Path $claudeDir 'telegram.env'
 $settingsFile = Join-Path $claudeDir 'settings.json'
 $command = 'bash ~/.claude/hooks/telegram-notify.sh'
-$events = 'Stop', 'Notification'
+# Hook event -> matcher. Notification also fires for idle reminders after Claude finishes,
+# so only permission prompts are sent; Stop has no matcher
+$events = [ordered]@{ Stop = ''; Notification = 'permission_prompt' }
 # Claude Code runs command hooks with Git Bash on Windows
 $bash = "$env:ProgramFiles\Git\bin\bash.exe"
 
@@ -38,12 +40,16 @@ $conf = "# Written by silent_sdk devices/desktop/scripts/setup-claude-telegram.p
     "TELEGRAM_BOT_TOKEN=$token`nTELEGRAM_CHAT_ID=$chatId`n"
 $utf8 = New-Object Text.UTF8Encoding($false)
 
+# True if a hook entry runs our command
+function Test-OurEntry($entry) {
+    return [bool]@($entry.hooks | Where-Object { $_.command -eq $command })
+}
+
+# True if our command is registered for the event with the expected matcher
 function Test-HookRegistered($settings, $eventName) {
     if (-not $settings -or -not $settings.hooks -or -not $settings.hooks.$eventName) { return $false }
     foreach ($entry in @($settings.hooks.$eventName)) {
-        foreach ($hook in @($entry.hooks)) {
-            if ($hook.command -eq $command) { return $true }
-        }
+        if ((Test-OurEntry $entry) -and [string]$entry.matcher -eq $events[$eventName]) { return $true }
     }
     return $false
 }
@@ -56,7 +62,7 @@ if (Test-Path $settingsFile) {
 
 $hookOk = (Test-Path $hookDst) -and (Get-FileHash $hookDst).Hash -eq (Get-FileHash $hookSrc).Hash
 $confOk = (Test-Path $confDst) -and [IO.File]::ReadAllText($confDst) -eq $conf
-$missing = @($events | Where-Object { -not (Test-HookRegistered $settings $_) })
+$missing = @($events.Keys | Where-Object { -not (Test-HookRegistered $settings $_) })
 if ($hookOk -and $confOk -and -not $missing) {
     Write-Host 'Claude Code Telegram notifications are already set up, skipped'
     $global:SetupStepSkipped = $true
@@ -75,14 +81,15 @@ if (-not $confOk) {
     Write-Host "Bot settings written: $confDst"
 }
 if ($missing) {
-    # Add only the missing hook entries; everything else in settings.json stays as it is
+    # Replace only our own entries (e.g. an older one without the matcher); other hooks stay as they are
     if (-not $settings) { $settings = New-Object PSObject }
     if (-not $settings.hooks) { $settings | Add-Member -NotePropertyName hooks -NotePropertyValue (New-Object PSObject) }
     foreach ($eventName in $missing) {
-        $entry = [PSCustomObject]@{
-            hooks = @([PSCustomObject]@{ type = 'command'; command = $command; timeout = 15; async = $true })
-        }
-        $list = @($settings.hooks.$eventName | Where-Object { $_ }) + $entry
+        $entry = [ordered]@{}
+        if ($events[$eventName]) { $entry.matcher = $events[$eventName] }
+        $entry.hooks = @([PSCustomObject]@{ type = 'command'; command = $command; timeout = 15; async = $true })
+        $others = @($settings.hooks.$eventName | Where-Object { $_ -and -not (Test-OurEntry $_) })
+        $list = $others + [PSCustomObject]$entry
         $settings.hooks | Add-Member -NotePropertyName $eventName -NotePropertyValue $list -Force
     }
     if (Test-Path $settingsFile) { Copy-Item $settingsFile "$settingsFile.bak" -Force }
