@@ -23,7 +23,7 @@
 
 ## 기능
 
-- 순서: Proxmox VE 9 설치 → 호스트 Setup (저장소 설정, Wi-Fi 연결(선택), Ubuntu Server 24.04 LTS VM 생성, VM 백업 job 등록, 첫 부팅 때 VM Setup 자동 실행: OpenClaw 설치·온보딩) → VM에 OpenRouter API 키 등록
+- 순서: Proxmox VE 9 설치 → 호스트 Setup (저장소 설정, Wi-Fi 연결(선택), Ubuntu Server 24.04 LTS VM 생성, 첫 부팅 때 VM Setup 자동 실행: OpenClaw 설치·온보딩) → VM에 OpenRouter API 키 등록
 - 전체 셋업 스크립트: 호스트는 [setup_host.sh](setup_host.sh) (`scripts/host/` 모듈), VM은 [vm/ubuntu-server/setup_vm.sh](vm/ubuntu-server/setup_vm.sh) (`vm/ubuntu-server/scripts/` 모듈)
 - VM 사양·접속 방법·TODO: [vm/ubuntu-server/README.md](vm/ubuntu-server/README.md)
 - 호스트 Setup: Proxmox 셸(root)에서 이 한 줄만 실행 (저장소를 `~/silent_sdk`에 새로 받아 전체 설치):
@@ -94,16 +94,6 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150
 - 첫 부팅 때 guest agent와 git을 설치하고, 저장소를 클론해 VM의 `vm/ubuntu-server/setup_vm.sh`(OpenClaw 설치·온보딩)를 실행함 (몇 분 걸림)
   - 진행 확인: 호스트에서 `qm terminal 100` (나가기: Ctrl+O), VM에서 `cloud-init status --wait`
   - 이를 위해 `local` 저장소에 snippets 용도를 추가하고 `/var/lib/vz/snippets/`에 첫 부팅 작업 파일을 만듦
-
-### VM 백업 (호스트)
-
-- Setup: [scripts/host/setup_vm_backup.sh](scripts/host/setup_vm_backup.sh) ([공식 Backup 문서](https://pve.proxmox.com/wiki/Backup_and_Restore)의 백업 job 등록)
-  - 다시 실행 시: 같은 이름의 백업 job(`b150m-am2-vm-<VM_ID>`)이 있으면 건너뜀 (웹 UI에서 바꾼 설정은 그대로 둠)
-- VM을 끄지 않고(스냅샷 모드, guest agent로 파일시스템 고정) `local` 저장소(`/var/lib/vz/dump/`)에 zstd 압축으로 백업함
-- 설정: `.env`의 `VM_BACKUP_SCHEDULE`(기본 `sun 03:00`), `VM_BACKUP_KEEP`(기본 3개, 넘으면 오래된 것부터 삭제)
-- 지금 바로 백업: 웹 UI 데이터센터 → 백업 → 지금 실행, 또는 `vzdump 100 --storage local --mode snapshot --compress zstd`
-- 복원: 웹 UI VM → 백업에서 고르고 복원, 또는 `qmrestore /var/lib/vz/dump/<백업 파일> <VM 번호>`
-
 
 ### OpenClaw (VM)
 
