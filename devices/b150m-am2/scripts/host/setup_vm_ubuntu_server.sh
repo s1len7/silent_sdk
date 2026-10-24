@@ -66,12 +66,6 @@ if [[ ! -s "$ssh_keys_file" ]]; then
     echo "SSH public key file is empty or missing: $ssh_keys_file (set VM_SSH_KEYS_FILE in $env_file)" >&2
     exit 1
 fi
-if [[ -n "${VM_IP:-}" ]]; then
-    [[ "$VM_IP" =~ ^[0-9.]+/[0-9]+$ ]] || { echo "VM_IP must be CIDR (e.g. 10.10.10.2/24): $VM_IP" >&2; exit 1; }
-    ipconfig="ip=$VM_IP${VM_GATEWAY:+,gw=$VM_GATEWAY}"
-else
-    ipconfig="ip=dhcp"
-fi
 
 work="$(mktemp -d)"
 trap 'rm -rf "$work"' EXIT
@@ -103,12 +97,9 @@ qm set "$vm_id" --scsi0 "$vm_storage:0,import-from=$work/image.img"
 qm resize "$vm_id" scsi0 "${vm_disk}G"
 qm set "$vm_id" --ide2 "$vm_storage:cloudinit" --boot order=scsi0 --serial0 socket --vga serial0
 
-# 3. cloud-init: 계정, SSH 키, IP
-echo "[3/5] Configuring cloud-init ($vm_user, $ipconfig)"
-qm set "$vm_id" --ciuser "$vm_user" --sshkeys "$work/ssh_keys" --ipconfig0 "$ipconfig"
-if [[ -n "${VM_DNS:-}" ]]; then
-    qm set "$vm_id" --nameserver "$VM_DNS"
-fi
+# 3. cloud-init: 계정, SSH 키, IP (공유기 DHCP)
+echo "[3/5] Configuring cloud-init ($vm_user, DHCP)"
+qm set "$vm_id" --ciuser "$vm_user" --sshkeys "$work/ssh_keys" --ipconfig0 ip=dhcp
 # 콘솔 로그인용 비밀번호 (SSH는 키로만 접속, Proxmox가 해시로 저장)
 if [[ -n "${VM_PASSWORD:-}" ]]; then
     qm set "$vm_id" --cipassword "$VM_PASSWORD"
