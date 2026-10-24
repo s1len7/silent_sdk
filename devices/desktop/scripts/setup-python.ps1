@@ -1,4 +1,4 @@
-# Setup Python for all users (NOT added to PATH; use the py launcher) and data analysis packages. Run as admin.
+# Setup Python for the current user (NOT added to PATH; use the py launcher) and data analysis packages.
 # Installs the newest patch of $minor that still ships a Windows installer
 # (security-only releases are source-only on python.org).
 
@@ -11,7 +11,8 @@ $logDir = if ($env:SILENT_SDK_LOG_DIR) { $env:SILENT_SDK_LOG_DIR } else { $env:T
 $minor    = '3.12'  # Most used Python version by package downloads (pypistats)
 $packages = 'tqdm', 'pandas', 'matplotlib', 'seaborn', 'scikit-learn', 'ipykernel', 'openpyxl', 'requests'
 
-$dir    = "$env:ProgramFiles\Python$($minor -replace '\.', '')"
+# Per-user default install folder (same user even when setup.ps1 runs elevated via UAC)
+$dir    = "$env:LOCALAPPDATA\Programs\Python\Python$($minor -replace '\.', '')"
 $python = "$dir\python.exe"
 
 # Packages from $packages that pip does not list as installed (compared like pip: case and _/- insensitive)
@@ -51,7 +52,7 @@ if (Test-Path $python) {
     $exe = "$env:TEMP\python-$version-amd64.exe"
     Invoke-WebRequest "$base/$version/python-$version-amd64.exe" -OutFile $exe -UseBasicParsing
 
-    $installArgs = "/quiet InstallAllUsers=1 TargetDir=`"$dir`" PrependPath=0 AppendPath=0 Include_test=0 /log `"$logDir\python-install.log`""
+    $installArgs = "/quiet InstallAllUsers=0 InstallLauncherAllUsers=0 TargetDir=`"$dir`" PrependPath=0 AppendPath=0 Include_test=0 /log `"$logDir\python-install.log`""
     $p = Start-Process $exe -ArgumentList $installArgs -Wait -PassThru
     if ($p.ExitCode -notin 0, 3010) { throw "Python installer failed: exit code $($p.ExitCode)" }
     Write-Host "Python $version setup done: $dir (not in PATH, run with: py -$minor)"

@@ -147,7 +147,7 @@ event="done"
 
 ### Python
 
-- Setup: [scripts/setup-python.ps1](scripts/setup-python.ps1) (모든 사용자용, `C:\Program Files\Python312`에 설치)
+- Setup: [scripts/setup-python.ps1](scripts/setup-python.ps1) (현재 사용자용, `%LOCALAPPDATA%\Programs\Python\Python312`에 설치)
   - 다시 실행 시: Python 3.12와 모든 패키지가 설치돼 있으면 건너뜀. 패키지만 빠져 있으면 패키지만 설치
   - 버전: 가장 많이 쓰는 3.12 ([pypistats](https://pypistats.org/packages/pandas) 기준) 중 Windows 설치 파일이 있는 최신 패치 (3.12.10)
     - 3.12는 보안 수정만 받는 단계라 3.12.11 이후는 Windows 설치 파일이 없음. 버전은 스크립트의 `$minor`로 변경
