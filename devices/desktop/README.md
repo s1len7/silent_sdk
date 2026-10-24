@@ -157,9 +157,10 @@ event="done"
 
 ### OpenClaw (로컬 Gateway)
 
-- Setup: [scripts/setup-openclaw.ps1](scripts/setup-openclaw.ps1) (Node.js(winget) 최신, OpenClaw CLI(npm) 최신, 이 PC에서만 접속되는 Gateway `ws://localhost:18789`를 token 인증으로 설치, 기본 모델 `openrouter/openrouter/free`)
-  - 다시 실행 시: `openclaw` 명령이 있고, 작업 스케줄러에 `OpenClaw Gateway`가 있고, `gateway.bind=loopback`이고, 기본 모델이 OpenRouter 무료 라우터이고, `.env`에 키가 있으면 OpenRouter 키도 등록돼 있을 때 건너뜀
+- Setup: [scripts/setup-openclaw-gateway.ps1](scripts/setup-openclaw-gateway.ps1) (Node.js(winget) 최신, OpenClaw CLI(npm) 최신, 이 PC에서만 접속되는 Gateway `ws://localhost:18789`를 token 인증으로 설치, 기본 모델 `openrouter/openrouter/free`)
+  - 다시 실행 시: `openclaw` 명령이 있고, 작업 스케줄러에 `OpenClaw Gateway`가 있고, `gateway.bind=loopback`이고, 기본 모델이 OpenRouter 무료 라우터이고, `.env`에 키가 있으면 OpenRouter·Gemini 키도 등록돼 있을 때 건너뜀
 - 설정: `.env`의 `OPENROUTER_API_KEY` ([.env.example](.env.example) 참고, 비우면 키 없이 설치만 함)
+- 설정: `.env`의 `GEMINI_API_KEY` (비우면 Gemini 연결 안 함, 기본 모델은 그대로 OpenRouter), `openclaw infer model run --model google/gemini-3.6-flash --prompt "..."`로 사용
 - Gateway는 작업 스케줄러 `OpenClaw Gateway`로 로그인 시 실행됨
 - 업데이트: `npm i -g openclaw@latest`
 
@@ -169,3 +170,22 @@ event="done"
 - Setup: [scripts/setup-openclaw-companion.ps1](scripts/setup-openclaw-companion.ps1) (winget `OpenClaw.OpenClawCompanion` 설치, 위 로컬 Gateway에 연결, 트레이 앱의 페어링 요청(operator, node) 승인)
   - 다시 실행 시: 트레이 앱이 설치돼 있고, 로컬 Gateway 연결이 활성 연결이고, 그 연결의 기기가 operator·node로 페어링돼 있으면 건너뜀
 - 트레이 앱에 이미 있는 다른 Gateway 연결은 그대로 두고, 로컬 연결을 활성 연결로 바꿈 (트레이 앱은 한 번에 Gateway 하나에만 연결됨)
+
+
+### OpenClaw Companion (원격 Gateway 연결)
+
+- Setup: [scripts/setup-openclaw-remote.ps1](scripts/setup-openclaw-remote.ps1) (이 PC에는 Gateway·OpenClaw CLI를 설치하지 않음, winget `OpenClaw.OpenClawCompanion` 설치, 원격 Gateway에 연결, 트레이 앱의 페어링 요청(operator, node)을 Gateway 장비에서 ssh로 승인)
+  - 다시 실행 시: 트레이 앱이 있고, 원격 Gateway 연결이 활성 연결이고 token이 같고, 그 연결의 기기가 Gateway에 operator·node로 페어링돼 있으면 건너뜀
+- 설정: `.env`의 `OPENCLAW_GATEWAY_URL`, `OPENCLAW_GATEWAY_TOKEN`, `OPENCLAW_GATEWAY_SSH` ([.env.example](.env.example) 참고, 하나라도 비우면 건너뜀)
+- Gateway 장비에 비밀번호 없이(ssh 키로) ssh 접속이 돼야 함 (Setup 중 페어링 승인에만 사용)
+- desktop 전체 Setup에서는 실행하지 않음 (desktop은 로컬 Gateway 사용, 다른 Windows 장비의 Setup에서 호출)
+
+
+### OpenCode
+
+- Setup: [scripts/setup-opencode.ps1](scripts/setup-opencode.ps1) (Node.js(winget) 최신, OpenCode CLI(npm `opencode-ai`) 최신, 기본 모델 `opencode/deepseek-v4.1-flash-free`, 실패 시 `opencode-runtime-fallback` 플러그인으로 `opencode/glm-5.3-flash-free` → `opencode/beam-free` 순으로 전환)
+  - 다시 실행 시: `opencode` 명령이 있고, `~\.config\opencode\opencode.json`의 기본 모델과 플러그인, `~\.config\opencode\opencode-fallback.json`의 대체 모델이 모두 같고, `.env`에 키가 있으면 Gemini 키도 등록돼 있을 때 건너뜀. CLI만 설치돼 있으면 설정만 적용
+- 설정: `.env`의 `GEMINI_API_KEY` ([.env.example](.env.example) 참고, 비우면 Gemini 연결 없이 설치만 함), `opencode run -m google/gemini-3.6-flash "..."`로 사용 (`gemini-3.8-flash`는 첫 응답까지 1~3분 걸려 대체 모델 플러그인의 30초 제한에 중단됨)
+- 무료 `opencode/` 모델은 로그인 없이 사용 가능
+- 설정 파일의 다른 항목은 그대로 둠
+- 업데이트: `npm i -g --allow-scripts=opencode-ai opencode-ai@latest`

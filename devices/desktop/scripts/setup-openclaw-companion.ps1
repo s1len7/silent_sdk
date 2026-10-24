@@ -1,4 +1,4 @@
-# Setup the OpenClaw Companion tray app (winget) and connect it to the local Gateway from setup-openclaw.ps1. Run as admin.
+# Setup the OpenClaw Companion tray app (winget) and connect it to the local Gateway from setup-openclaw-gateway.ps1. Run as admin.
 # The tray app has no command-line option for adding a gateway, so this writes the connection into its
 # gateways.json (URL + the local Gateway token), restarts the app, and approves only the pairing requests
 # whose device ID matches the key the app created for that connection (operator, then node).
@@ -20,7 +20,7 @@ foreach ($dir in "$env:ProgramFiles\nodejs", "$env:APPDATA\npm") {
     if (($env:Path -split ';') -notcontains $dir) { $env:Path = "$dir;$env:Path" }
 }
 if (-not (Get-Command openclaw -ErrorAction SilentlyContinue) -or -not (Test-Path $openclawConfig)) {
-    throw 'Local OpenClaw Gateway is not set up. Run setup-openclaw.ps1 first'
+    throw 'Local OpenClaw Gateway is not set up. Run setup-openclaw-gateway.ps1 first'
 }
 
 # Parsed JSON output of an openclaw command (log lines before the JSON are ignored)

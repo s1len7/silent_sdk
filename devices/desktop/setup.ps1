@@ -93,9 +93,10 @@ $results += Invoke-Step 'claude-telegrambot' { & "$s\setup-claude-telegrambot.ps
 $results += Invoke-Step 'python'       { & "$s\setup-python.ps1" }
 $results += Invoke-Step 'vscode'       { & "$s\setup-vscode.ps1" }
 $results += Invoke-Step 'docker'       { & "$s\setup-docker.ps1" }
-$results += Invoke-Step 'openclaw'     { & "$s\setup-openclaw.ps1" }
+$results += Invoke-Step 'openclaw-gateway' { & "$s\setup-openclaw-gateway.ps1" }
 # After the local Gateway, which the tray app connects to
 $results += Invoke-Step 'openclaw-companion' { & "$s\setup-openclaw-companion.ps1" }
+$results += Invoke-Step 'opencode'     { & "$s\setup-opencode.ps1" }
 
 Write-SetupSummary $results $logDir
 Stop-Transcript | Out-Null

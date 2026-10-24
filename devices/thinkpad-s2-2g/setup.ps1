@@ -91,6 +91,9 @@ $results += Invoke-Step 'autologon'      { & "$w\setup-autologon.ps1" }
 $results += Invoke-Step 'git'            { & "$w\setup-git.ps1" }
 $results += Invoke-Step 'python'         { & "$w\setup-python.ps1" }
 $results += Invoke-Step 'vscode'         { & "$w\setup-vscode.ps1" }
+$results += Invoke-Step 'opencode'       { & "$w\setup-opencode.ps1" }
+# Tray app connected to the always-on Gateway on the b150m-am2 VM instead of a Gateway on this laptop
+$results += Invoke-Step 'openclaw-remote' { & "$w\setup-openclaw-remote.ps1" }
 
 Write-SetupSummary $results $logDir
 Stop-Transcript | Out-Null

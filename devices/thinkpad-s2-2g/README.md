@@ -111,3 +111,18 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/thinkpad-s2
 
 - Setup: [desktop/scripts/setup-vscode.ps1](../desktop/scripts/setup-vscode.ps1) (System Installer x64 최신 버전, PATH 추가, 탐색기 "Code로 열기" 메뉴)
   - 다시 실행 시: VS Code가 설치돼 있으면(PC 전체 또는 사용자 단위) 건너뜀
+
+
+### OpenCode
+
+- Setup: [desktop/scripts/setup-opencode.ps1](../desktop/scripts/setup-opencode.ps1) (Node.js(winget) 최신, OpenCode CLI(npm) 최신, 무료 기본 모델 `opencode/deepseek-v4.1-flash-free`와 대체 모델 설정)
+  - 다시 실행 시: `opencode` 명령이 있고 기본 모델·플러그인·대체 모델 설정이 모두 같고, `.env`에 키가 있으면 Gemini 키도 등록돼 있을 때 건너뜀. CLI만 설치돼 있으면 설정만 적용
+- 설정: `devices/desktop/.env`의 `GEMINI_API_KEY` (비우면 Gemini 연결 없이 설치만 함)
+
+
+### OpenClaw Companion (원격 Gateway 연결)
+
+- Setup: [desktop/scripts/setup-openclaw-remote.ps1](../desktop/scripts/setup-openclaw-remote.ps1) (이 노트북에는 Gateway를 설치하지 않고, 트레이 앱을 b150m-am2 VM의 Gateway에 연결)
+  - 다시 실행 시: 트레이 앱이 원격 Gateway에 연결·페어링돼 있으면 건너뜀
+- 설정: `devices/desktop/.env`의 `OPENCLAW_GATEWAY_URL`(외부에서도 쓰면 리버스 프록시의 `wss://` 주소, 랜에서만 쓰면 `ws://192.168.0.22:18789`), `OPENCLAW_GATEWAY_TOKEN`, `OPENCLAW_GATEWAY_SSH`(`silent@192.168.0.22`) (하나라도 비우면 건너뜀)
+- 페어링 승인을 VM에서 ssh로 하므로, Setup은 VM에 ssh 키로 접속되는 랜에서 실행해야 함
