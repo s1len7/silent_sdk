@@ -1,3 +1,5 @@
+@../../CLAUDE.md
+
 ## jetson-nano-b01 전용
 
 - 대상: NVIDIA Jetson Nano Developer Kit B01 (ARM Cortex-A57, aarch64, RAM 4GB), JetPack 4.6.6 (Jetson Linux R32.7.6, Ubuntu 18.04)

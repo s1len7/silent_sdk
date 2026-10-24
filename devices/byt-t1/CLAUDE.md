@@ -1,3 +1,5 @@
+@../../CLAUDE.md
+
 ## byt-t1 전용
 
 - 대상: PEGATRON BYT-T1 (Intel Pentium J2900, x86_64, RAM 최대 4GB), Ubuntu Server 24.04 LTS

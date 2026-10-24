@@ -1,3 +1,5 @@
+@../../CLAUDE.md
+
 ## raspberrypi4-8gb 전용
 
 - 대상: Raspberry Pi 4 Model B (RAM 8GB), Raspberry Pi OS Trixie 이상 (labwc / Wayland)

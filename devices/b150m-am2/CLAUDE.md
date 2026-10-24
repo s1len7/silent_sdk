@@ -1,3 +1,5 @@
+@../../CLAUDE.md
+
 ## b150m-am2 전용
 
 - 대상: ASUS B150M-A/M.2 (Intel Core i5-7600, RAM 16GB, SSD 256GB, x86_64)

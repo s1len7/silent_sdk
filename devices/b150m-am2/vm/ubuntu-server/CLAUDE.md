@@ -1,3 +1,5 @@
+@../../CLAUDE.md
+
 ## ubuntu-server VM 전용
 
 - 규칙은 [장비 CLAUDE.md](../../CLAUDE.md)를 따를 것

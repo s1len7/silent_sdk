@@ -1,3 +1,5 @@
+@../../CLAUDE.md
+
 ## desktop 전용
 
 - 대상: Windows 10 이상, Windows PowerShell 5.1

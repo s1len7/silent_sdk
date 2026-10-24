@@ -1,3 +1,5 @@
+@../../CLAUDE.md
+
 ## raspberrypi4-2gb 전용
 
 - 대상: Raspberry Pi 4 Model B (RAM 2GB), Raspberry Pi OS Lite 64-bit (Trixie)
