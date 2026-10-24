@@ -52,10 +52,6 @@ ssh -N -L 18790:127.0.0.1:18789 silent@192.168.0.22
 
 ## TODO
 
-- OpenRouter API 키 등록 (무료)
-  1. https://openrouter.ai/keys 에서 발급
-  2. VM에서 `cd ~/silent_sdk/devices/b150m-am2/vm/ubuntu-server && cp .env.example .env && nano .env` → `OPENROUTER_API_KEY=`에 입력
-  3. `sudo bash scripts/setup_openclaw_onboard.sh`
 - 데스크탑 companion을 VM과 연동
   1. 트레이 앱 → Connections → SSH 터널: 사용자 `silent`, 호스트 `192.168.0.22`, 원격 포트 `18789`, 로컬 포트 `18790`
   2. 위의 토큰 확인 명령으로 토큰 입력
