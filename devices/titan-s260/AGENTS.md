@@ -1,4 +1,4 @@
-@../desktop/AGENTS.md
+> 이 파일의 규칙은 [desktop 규칙](../desktop/AGENTS.md)과 [공통 규칙](../../AGENTS.md)에 더해 적용됨 (둘 다 함께 읽고 따를 것)
 
 ## titan-s260 전용
 

@@ -64,8 +64,10 @@
   - 단, 재설치 자동화가 목적이 아닌 장비(ds218plus)는 진입점을 두지 않음 (장비 AGENTS.md 참고)
 - 새 장비는 `devices/<장비>/` 폴더에 AGENTS.md(규칙), CLAUDE.md, README.md를 만들고, 루트 README.md의 장비 목록과 구조에 추가할 것
   - 장비에 전체 설치 진입점(`setup`)을 만들거나 설치 명령을 바꾸면, 루트 README.md `## 전체 설치`에도 같은 한 줄 명령을 추가·수정할 것
-- 규칙은 모든 폴더에서 AGENTS.md에 쓰고, CLAUDE.md에는 `@./AGENTS.md` 한 줄만 둘 것 (Claude Code가 AGENTS.md를 불러오게 함)
-  - 하위 폴더의 AGENTS.md는 첫 줄에서 상위 AGENTS.md를 불러올 것 (예: `@../../AGENTS.md`)
+- 규칙은 모든 폴더에서 AGENTS.md에 쓸 것 (Claude 외의 AI 에이전트도 읽는 공통 파일)
+  - 하위 폴더의 AGENTS.md는 첫 줄에 함께 따라야 하는 상위·형제 AGENTS.md를 일반 문장과 링크로 적을 것 (예: `> 이 파일의 규칙은 [공통 규칙](../../AGENTS.md)에 더해 적용됨`)
+  - `@경로` 불러오기는 Claude Code 전용 문법이므로 AGENTS.md에는 쓰지 않을 것
+- CLAUDE.md에는 Claude Code용 불러오기만 둘 것: 자기 폴더의 `@./AGENTS.md`와, 그 AGENTS.md가 따르라고 한 상위·형제 AGENTS.md (루트 AGENTS.md는 루트 CLAUDE.md로 항상 읽히므로 제외)
 - 줄바꿈은 .gitattributes를 따름 (`.sh`는 LF, `.ps1`은 CRLF)
 
 
