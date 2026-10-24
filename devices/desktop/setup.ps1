@@ -90,8 +90,8 @@ $results += Invoke-Step 'autologon'    { & "$s\setup-autologon.ps1" }
 $results += Invoke-Step 'git'          { & "$s\setup-git.ps1" }
 # After Git: the Claude Code hook runs with Git Bash
 $results += Invoke-Step 'claude-telegrambot' { & "$s\setup-claude-telegrambot.ps1" }
-$results += Invoke-Step 'vscode'       { & "$s\setup-vscode.ps1" }
 $results += Invoke-Step 'python'       { & "$s\setup-python.ps1" }
+$results += Invoke-Step 'vscode'       { & "$s\setup-vscode.ps1" }
 $results += Invoke-Step 'docker'       { & "$s\setup-docker.ps1" }
 
 Write-SetupSummary $results $logDir

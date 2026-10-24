@@ -101,13 +101,13 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/thinkpad-s2
   - 다시 실행 시: Git이 설치돼 있고 user.name/user.email이 같으면 건너뜀. 설치만 돼 있으면 사용자 정보만 설정
 
 
-### Visual Studio Code
-
-- Setup: [desktop/scripts/setup-vscode.ps1](../desktop/scripts/setup-vscode.ps1) (System Installer x64 최신 버전, PATH 추가, 탐색기 "Code로 열기" 메뉴)
-  - 다시 실행 시: VS Code가 설치돼 있으면(PC 전체 또는 사용자 단위) 건너뜀
-
-
 ### Python
 
 - Setup: [desktop/scripts/setup-python.ps1](../desktop/scripts/setup-python.ps1) (3.12 현재 사용자용, PATH 추가 안 함, `py -3.12`로 실행, 데이터 분석 패키지 설치)
   - 다시 실행 시: Python 3.12와 모든 패키지가 설치돼 있으면 건너뜀. 패키지만 빠져 있으면 패키지만 설치
+
+
+### Visual Studio Code
+
+- Setup: [desktop/scripts/setup-vscode.ps1](../desktop/scripts/setup-vscode.ps1) (System Installer x64 최신 버전, PATH 추가, 탐색기 "Code로 열기" 메뉴)
+  - 다시 실행 시: VS Code가 설치돼 있으면(PC 전체 또는 사용자 단위) 건너뜀

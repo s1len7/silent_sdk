@@ -132,6 +132,16 @@ event="done"
 - 적용: 설치 후 Claude Code를 다시 시작하거나 `/hooks`를 한 번 열기
 
 
+### Python
+
+- Setup: [scripts/setup-python.ps1](scripts/setup-python.ps1) (현재 사용자용, `%LOCALAPPDATA%\Programs\Python\Python312`에 설치)
+  - 다시 실행 시: Python 3.12와 모든 패키지가 설치돼 있으면 건너뜀. 패키지만 빠져 있으면 패키지만 설치
+  - 버전: 가장 많이 쓰는 3.12 ([pypistats](https://pypistats.org/packages/pandas) 기준) 중 Windows 설치 파일이 있는 최신 패치 (3.12.10)
+    - 3.12는 보안 수정만 받는 단계라 3.12.11 이후는 Windows 설치 파일이 없음. 버전은 스크립트의 `$minor`로 변경
+  - PATH 환경변수에 추가하지 않음. `py -3.12`로 실행 (py 런처는 함께 설치됨)
+  - 설치 후 tqdm, pandas, matplotlib, seaborn, scikit-learn, ipykernel, openpyxl, requests 설치
+
+
 ### Visual Studio Code
 
 - Setup: [scripts/setup-vscode.ps1](scripts/setup-vscode.ps1) (System Installer x64 최신 버전, PATH 추가, 탐색기 "Code로 열기" 메뉴)
@@ -143,13 +153,3 @@ event="done"
 - Setup: [scripts/setup-docker.ps1](scripts/setup-docker.ps1) (WSL 2 활성화 후 Docker Desktop 최신 버전 설치, docker-users 그룹 추가, 적용 후 재부팅)
   - 다시 실행 시: Docker Desktop이 설치돼 있고 사용자가 docker-users 그룹에 있으면 건너뜀. 그룹만 빠져 있으면 그룹만 추가
   - Docker Engine, CLI, Compose는 Docker Desktop에 포함
-
-
-### Python
-
-- Setup: [scripts/setup-python.ps1](scripts/setup-python.ps1) (현재 사용자용, `%LOCALAPPDATA%\Programs\Python\Python312`에 설치)
-  - 다시 실행 시: Python 3.12와 모든 패키지가 설치돼 있으면 건너뜀. 패키지만 빠져 있으면 패키지만 설치
-  - 버전: 가장 많이 쓰는 3.12 ([pypistats](https://pypistats.org/packages/pandas) 기준) 중 Windows 설치 파일이 있는 최신 패치 (3.12.10)
-    - 3.12는 보안 수정만 받는 단계라 3.12.11 이후는 Windows 설치 파일이 없음. 버전은 스크립트의 `$minor`로 변경
-  - PATH 환경변수에 추가하지 않음. `py -3.12`로 실행 (py 런처는 함께 설치됨)
-  - 설치 후 tqdm, pandas, matplotlib, seaborn, scikit-learn, ipykernel, openpyxl, requests 설치
