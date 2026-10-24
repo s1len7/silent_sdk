@@ -1,5 +1,5 @@
 # Setup Telegram notifications for Claude Code: Stop/Notification hooks that message a Telegram bot. Run as admin.
-# Installs claude-telegram-notify.sh to ~/.claude/hooks/telegram-notify.sh, writes ~/.claude/telegram.env
+# Installs setup-claude-telegrambot.sh to ~/.claude/hooks/telegram-notify.sh, writes ~/.claude/telegram.env
 # from devices/desktop/.env, and adds the hooks to ~/.claude/settings.json (other settings are kept).
 # Skipped when TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID is empty in .env (see .env.example).
 
@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 
 $envFile = Join-Path (Split-Path $PSScriptRoot) '.env'
 $claudeDir = Join-Path $env:USERPROFILE '.claude'
-$hookSrc = Join-Path $PSScriptRoot 'claude-telegram-notify.sh'
+$hookSrc = Join-Path $PSScriptRoot 'setup-claude-telegrambot.sh'
 $hookDst = Join-Path $claudeDir 'hooks\telegram-notify.sh'
 $confDst = Join-Path $claudeDir 'telegram.env'
 $settingsFile = Join-Path $claudeDir 'settings.json'
@@ -37,7 +37,7 @@ if (-not $token -or -not $chatId) {
 }
 if ($chatId -notmatch '^-?\d+$') { throw "TELEGRAM_CHAT_ID must be a number: $chatId" }
 
-$conf = "# Written by silent_sdk devices/desktop/scripts/setup-claude-telegram.ps1 from devices/desktop/.env`n" +
+$conf = "# Written by silent_sdk devices/desktop/scripts/setup-claude-telegrambot.ps1 from devices/desktop/.env`n" +
     "TELEGRAM_BOT_TOKEN=$token`nTELEGRAM_CHAT_ID=$chatId`n"
 $utf8 = New-Object Text.UTF8Encoding($false)
 

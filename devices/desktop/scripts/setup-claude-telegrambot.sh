@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Claude Code hook: 작업이 끝나면(Stop), 권한 승인을 기다리면(Notification) 텔레그램으로 알림
 # 사용자가 질문을 보낼 때(UserPromptSubmit) 질문 앞부분을 세션별로 저장해 두고 알림에 request로 넣음
-# setup-claude-telegram.ps1이 ~/.claude/hooks/telegram-notify.sh로 복사하고 settings.json에 hook으로 등록함
+# setup-claude-telegrambot.ps1이 ~/.claude/hooks/telegram-notify.sh로 복사하고 settings.json에 hook으로 등록함
 # 토큰과 chat id는 ~/.claude/telegram.env (TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID)
 # chat id 찾기: 봇에게 아무 메시지나 보낸 뒤 bash ~/.claude/hooks/telegram-notify.sh chat-id
 set -uo pipefail
