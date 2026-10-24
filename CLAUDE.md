@@ -56,11 +56,12 @@
 ## silent_sdk 구조
 
 - 장비별 설정 자동화를 한 저장소에서 관리함
-- 장비마다 `devices/` 아래에 폴더 하나 (`devices/desktop/`, `devices/raspberrypi4-8gb/`, `devices/raspberrypi4-2gb/`, `devices/titan-s260/`, `devices/byt-t1/`, `devices/jetson-nano-b01/`, `devices/b150m-am2/`, `devices/thinkpad-s2-2g/`), 장비 전용 규칙은 각 폴더의 CLAUDE.md를 따를 것
+- 장비마다 `devices/` 아래에 폴더 하나 (`devices/desktop/`, `devices/raspberrypi4-8gb/`, `devices/raspberrypi4-2gb/`, `devices/titan-s260/`, `devices/byt-t1/`, `devices/jetson-nano-b01/`, `devices/b150m-am2/`, `devices/thinkpad-s2-2g/`, `devices/ds218plus/`), 장비 전용 규칙은 각 폴더의 CLAUDE.md를 따를 것
 - 한 장비 작업에서 다른 장비 폴더는 수정하지 않을 것
   - 단, `devices/desktop/scripts/`는 `devices/titan-s260/setup.ps1`도 호출하므로 수정 시 titan-s260에 미치는 영향도 확인할 것
 - 장비의 전체 설치 진입점은 모든 장비에서 이름을 `setup`으로 통일해 장비 폴더 바로 아래에 둘 것 (`devices/<장비>/setup.ps1` 또는 `devices/<장비>/setup.sh`), 저장소 루트나 `scripts/` 안에는 두지 않을 것
   - 단, Proxmox처럼 호스트와 VM이 나뉘는 장비는 호스트용 `setup_host`, VM용 `vm/<VM 이름>/setup_vm`으로 둠 (장비 CLAUDE.md 참고)
+  - 단, 재설치 자동화가 목적이 아닌 장비(ds218plus)는 진입점을 두지 않음 (장비 CLAUDE.md 참고)
 - 새 장비는 `devices/<장비>/` 폴더에 CLAUDE.md와 README.md를 만들고, 루트 README.md의 장비 목록과 구조에 추가할 것
   - 장비에 전체 설치 진입점(`setup`)을 만들거나 설치 명령을 바꾸면, 루트 README.md `## 전체 설치`에도 같은 한 줄 명령을 추가·수정할 것
 - 줄바꿈은 .gitattributes를 따름 (`.sh`는 LF, `.ps1`은 CRLF)

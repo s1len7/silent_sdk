@@ -12,6 +12,7 @@
 | jetson-nano-b01 | NVIDIA Jetson Nano Developer Kit B01, JetPack 4.6.6 (Ubuntu 18.04) | [devices/jetson-nano-b01/README.md](devices/jetson-nano-b01/README.md) |
 | b150m-am2 | ASUS B150M-A/M.2 Micro-ATX 보드 (Intel B150), Proxmox VE 9 + Ubuntu Server 24.04 LTS VM, OpenClaw 서버 | [devices/b150m-am2/README.md](devices/b150m-am2/README.md) |
 | thinkpad-s2-2g | Lenovo ThinkPad S2 2G(2nd Gen) 노트북, Windows 10 Pro | [devices/thinkpad-s2-2g/README.md](devices/thinkpad-s2-2g/README.md) |
+| ds218plus | Synology DS218+ NAS, DSM 7, Container Manager(Docker) 프로젝트 관리 | [devices/ds218plus/README.md](devices/ds218plus/README.md) |
 
 
 ## 구조
@@ -26,7 +27,8 @@ silent_sdk/
 │  ├─ byt-t1/
 │  ├─ jetson-nano-b01/
 │  ├─ b150m-am2/
-│  └─ thinkpad-s2-2g/
+│  ├─ thinkpad-s2-2g/
+│  └─ ds218plus/     Synology NAS, Container Manager 프로젝트 (전체 설치 없음)
 ├─ logs/             설치 로그 (git에는 올라가지 않음)
 └─ CLAUDE.md         작성 원칙 (장비 공통)
 ```
