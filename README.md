@@ -44,6 +44,11 @@ TITAN-S260 (PowerShell):
 irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/titan-s260/setup.ps1 | iex
 ```
 
+ThinkPad S2 2G(2nd Gen) (PowerShell):
+```powershell
+irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/thinkpad-s2-2g/setup.ps1 | iex
+```
+
 Raspberry Pi 4 (8GB):
 ```bash
 (command -v git >/dev/null || (sudo apt-get update && sudo apt-get install -y git)) && git clone https://github.com/s1len7/silent_sdk.git ~/silent_sdk && sudo bash ~/silent_sdk/devices/raspberrypi4-8gb/setup.sh
