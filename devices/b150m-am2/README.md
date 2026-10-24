@@ -68,6 +68,7 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150
 - 유선이 끊겨도 Wi-Fi IP로 호스트에 접속됨: Wi-Fi로 들어온 연결에 nftables 표시를 붙여 그 응답을 테이블 100(Wi-Fi)으로 보냄
   - `wifi-failover-nft` 서비스(`/etc/nftables.d/50-wifi-failover.nft`)와 `ip rule`의 `fwmark 0x64 lookup 100`으로 확인
   - ARP가 엉키지 않게 `/etc/sysctl.d/50-wifi-arp.conf`(`arp_ignore=1`, `arp_announce=2`)를 둠
+  - Wi-Fi 절전 모드를 끔: `wpa_supplicant@<인터페이스>`가 시작될 때마다 `iw dev <인터페이스> set power_save off` 실행 (`/etc/systemd/system/wpa_supplicant@<인터페이스>.service.d/50-power-save-off.conf`, 확인: `iw dev wlp3s0 get power_save`)
   - 유선이 끊겼을 때 살아나는 것은 Wi-Fi IP로 들어오는 접속(SSH, 웹 UI)뿐이고, 호스트가 밖으로 나가는 연결(apt 등)과 VM 네트워크는 끊김
 - 상태 확인: `ip -br addr show`, `ip rule`, `ip route show table 100`, `journalctl -u wpa_supplicant@wlp3s0`
 

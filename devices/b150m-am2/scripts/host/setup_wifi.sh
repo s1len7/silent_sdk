@@ -67,6 +67,7 @@ nft_file=/etc/nftables.d/50-wifi-failover.nft
 nft_unit=wifi-failover-nft.service
 nft_unit_file="/etc/systemd/system/$nft_unit"
 sysctl_file=/etc/sysctl.d/50-wifi-arp.conf
+power_save_file="/etc/systemd/system/wpa_supplicant@$iface.service.d/50-power-save-off.conf"
 
 work="$(mktemp -d)"
 trap 'rm -rf "$work"' EXIT
@@ -125,6 +126,13 @@ net.ipv4.conf.all.arp_ignore = 1
 net.ipv4.conf.all.arp_announce = 2
 EOF
 
+# Wi-Fi 절전 모드가 켜져 있으면 들어오는 패킷이 빠져(실측 ping 손실 50%) Wi-Fi IP로 접속이 끊기므로,
+# Wi-Fi 서비스가 시작될 때마다 절전을 끔 (iw가 실패해도 Wi-Fi 연결은 계속되게 '-'를 붙임)
+cat > "$work/power-save.conf" <<'EOF'
+[Service]
+ExecStartPost=-/usr/sbin/iw dev %i set power_save off
+EOF
+
 cat > "$work/nft.service" <<EOF
 [Unit]
 Description=Mark connections arriving on Wi-Fi $iface (silent_sdk setup_wifi.sh)
@@ -157,6 +165,7 @@ wifi_ready() {
         && cmp -s "$work/nft" "$nft_file" \
         && cmp -s "$work/nft.service" "$nft_unit_file" \
         && cmp -s "$work/sysctl.conf" "$sysctl_file" \
+        && cmp -s "$work/power-save.conf" "$power_save_file" \
         && systemctl is-active --quiet systemd-networkd "wpa_supplicant@$iface" "$nft_unit"
 }
 
@@ -182,6 +191,7 @@ install -D -m 644 "$work/networkd.conf" "$networkd_conf"
 install -D -m 644 "$work/nft" "$nft_file"
 install -m 644 "$work/nft.service" "$nft_unit_file"
 install -m 644 "$work/sysctl.conf" "$sysctl_file"
+install -D -m 644 "$work/power-save.conf" "$power_save_file"
 sysctl -q -p "$sysctl_file"
 
 # 3. 서비스 시작 (networkd는 .network 파일이 있는 Wi-Fi만 관리하고 vmbr0 등은 건드리지 않음)
