@@ -1,0 +1,15 @@
+services:
+  code-server:
+    image: codercom/code-server:latest
+    container_name: code-server
+    # NAS 사용자(silent:users)로 실행해 /volume1/docker 아래 파일의 소유자가 바뀌지 않게 함
+    user: "1026:100"
+    environment:
+      - TZ=Asia/Seoul
+      - DOCKER_USER=silent
+    volumes:
+      - ./home/coder:/home/coder
+      - /volume1/docker:/docker
+    ports:
+      - 38081:8080
+    restart: unless-stopped

@@ -1,0 +1,70 @@
+services:
+  vector:
+    image: timberio/vector:latest-alpine
+    container_name: vector
+    # restart: unless-stopped
+    # network_mode: "host"
+    ports:
+      - "1514:1514/udp"
+      - "8899:8899/tcp"
+    volumes:
+      - ./vector/etc/vector/vector.yaml:/etc/vector/vector.yaml:ro
+      - ./vector/data:/data
+
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./loki/loki:/loki
+      # 기본 설정에 로그 보관 기간 30일을 더한 설정
+      - ./loki/etc/loki/local-config.yaml:/etc/loki/local-config.yaml:ro
+    # restart: unless-stopped
+
+#  promtail:
+#    image: grafana/promtail:latest
+#    container_name: promtail
+#    network_mode: host
+#    volumes:
+#      - /var/log:/var/log
+#      - ./promtail/config.yml:/etc/promtail/config.yml
+#    command: -config.file=/etc/promtail/config.yml
+#    depends_on:
+#      - loki
+#    # restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    # restart: unless-stopped
+    user: "472:472"
+    ports:
+      - "33000:3000"
+    depends_on:
+          - loki
+    volumes:
+      - ./grafana/var/lib/grafana:/var/lib/grafana
+      # 파일로 등록하는 데이터 소스와 대시보드 (NAS 서비스 상태 대시보드, README 참고)
+      - ./grafana/etc/grafana/provisioning:/etc/grafana/provisioning
+
+    environment:
+      - TZ=Asia/Seoul
+      # NAS 서비스 상태 대시보드가 WUD API를 읽는 Infinity 플러그인
+      - GF_PLUGINS_PREINSTALL=yesoreyeram-infinity-datasource
+      - WUD_URL=${WUD_URL}
+      - WUD_PASSWORD=${WUD_PASSWORD}
+      # authentik 로그인(SSO), 주소와 클라이언트 값은 .env에서 읽음 (authentik 애플리케이션 slug: grafana)
+      - GF_SERVER_ROOT_URL=${GRAFANA_ROOT_URL}
+      - GF_AUTH_GENERIC_OAUTH_ENABLED=true
+      - GF_AUTH_GENERIC_OAUTH_NAME=authentik
+      - GF_AUTH_GENERIC_OAUTH_CLIENT_ID=${GRAFANA_OAUTH_CLIENT_ID}
+      - GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET=${GRAFANA_OAUTH_CLIENT_SECRET}
+      - GF_AUTH_GENERIC_OAUTH_SCOPES=openid profile email
+      - GF_AUTH_GENERIC_OAUTH_AUTH_URL=${AUTHENTIK_URL}/application/o/authorize/
+      - GF_AUTH_GENERIC_OAUTH_TOKEN_URL=${AUTHENTIK_URL}/application/o/token/
+      - GF_AUTH_GENERIC_OAUTH_API_URL=${AUTHENTIK_URL}/application/o/userinfo/
+      - GF_AUTH_SIGNOUT_REDIRECT_URL=${AUTHENTIK_URL}/application/o/grafana/end-session/
+      # authentik Admins 그룹은 Grafana 관리자, 나머지는 보기 전용
+      - "GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH=contains(groups[*], 'authentik Admins') && 'Admin' || 'Viewer'"

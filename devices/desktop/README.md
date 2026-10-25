@@ -189,3 +189,11 @@ event="done"
 - 무료 `opencode/` 모델은 로그인 없이 사용 가능
 - 설정 파일의 다른 항목은 그대로 둠
 - 업데이트: `npm i -g --allow-scripts=opencode-ai opencode-ai@latest`
+
+
+## 백업 대상
+
+- `~\.ssh\` (`C:\Users\<사용자>\.ssh\`): 장비 접속용 ssh 키(`id_rsa`, `id_rsa.pub`, `id_rsa.putty.pub`, `id_rsa.ppk`), 장비별 접속 설정(`config`), 장비 서버 키 목록(`known_hosts`)
+  - 개인 키가 들어 있으므로 암호화된 위치에만 백업하고, 이 저장소에는 올리지 말 것
+- `devices\desktop\.env` (전체 Setup 기준 `C:\silent_sdk\devices\desktop\.env`): 텔레그램 봇 토큰, OpenRouter·Gemini API 키, 원격 OpenClaw Gateway 주소·token·ssh 대상 ([.env.example](.env.example) 참고)
+  - git에 올라가지 않으므로 직접 백업하고, 위와 같이 암호화된 위치에만 둘 것

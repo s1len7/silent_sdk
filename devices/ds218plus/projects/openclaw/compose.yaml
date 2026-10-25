@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  openclaw:
+    image: ghcr.io/openclaw/openclaw:latest
+    container_name: openclaw
+    user: "0:0"
+    environment:
+      - TZ=Asia/Seoul
+      - HOME=/home/node
+      - OPENCLAW_GATEWAY_TOKEN=${OPENCLAW_GATEWAY_TOKEN} # ./.env
+    volumes:
+      - ./home/node/.openclaw:/home/node/.openclaw
+    ports:
+      - "18789:18789"
+    restart: unless-stopped

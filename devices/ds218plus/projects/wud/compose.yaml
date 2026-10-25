@@ -1,0 +1,27 @@
+# What's Up Docker (WUD): 새 이미지가 나온 컨테이너를 보여 주고 ntfy로 알림, 업데이트는 하지 않음
+# 웹 화면: http://<NAS>:33002 (admin / .env의 WUD_AUTH_ADMIN_PASSWORD)
+services:
+  wud:
+    image: getwud/wud:latest
+    container_name: wud
+    environment:
+      - TZ=Asia/Seoul
+      - WUD_AUTH_ADMIN_USER=${WUD_AUTH_ADMIN_USER}
+      - WUD_AUTH_ADMIN_PASSWORD=${WUD_AUTH_ADMIN_PASSWORD}
+      # Docker Hub 요청 한도를 넉넉히 지키도록 매일 05:00에 한 번 검사
+      - WUD_WATCHER_LOCAL_CRON=0 5 * * *
+      # 멈춘 컨테이너도 검사
+      - WUD_WATCHER_LOCAL_WATCHALL=true
+      # 대부분 latest 태그라서 버전 번호가 없는 태그는 이미지 지문(digest)으로 비교 (Docker Hub 포함)
+      - WUD_WATCHER_LOCAL_WATCHDIGESTDEFAULT=true
+      # 새 버전을 하루 한 번 묶어서 ntfy(주제 nas-updates)로 보냄, 주소와 토큰은 .env에서 읽음
+      - WUD_TRIGGER_NTFY_NAS_URL=${WUD_NTFY_URL}
+      - WUD_TRIGGER_NTFY_NAS_TOPIC=nas-updates
+      - WUD_TRIGGER_NTFY_NAS_AUTH_TOKEN=${WUD_NTFY_TOKEN}
+      - WUD_TRIGGER_NTFY_NAS_MODE=batch
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./store:/store
+    ports:
+      - 33002:3000
+    restart: unless-stopped

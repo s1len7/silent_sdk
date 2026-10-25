@@ -5,13 +5,54 @@
 - CLI로 한 모든 작업은 DSM GUI에서 문제가 없을 것
   - CLI로 만들거나 바꾼 Container Manager 프로젝트·컨테이너는 DSM의 Container Manager 화면에서도 그대로 보이고, 화면에서 시작·중지·수정할 수 있어야 함
   - DSM이 관리하는 파일·설정을 CLI로 직접 고쳐 DSM 화면과 실제 상태가 어긋나게 하지 말 것
-- 대상: Synology DS218+ (Intel Celeron J3355 2코어, RAM 12GB(기본 2GB에서 업그레이드), 2베이), DSM 7
+- 대상: Synology DS218+ (Intel Celeron J3355 2코어, RAM 12GB(기본 2GB에서 업그레이드), 2베이), DSM 7.4
 - 용도: Container Manager(Docker) 프로젝트 관리
   - 장비 재설치 자동화보다 Container Manager 프로젝트의 생성·수정·업데이트를 중심으로 할 것
   - 프로젝트 하나당 `projects/<프로젝트>/` 폴더 하나로 두고, `compose.yaml`과 값이 빈 `.env.example`을 함께 둘 것
   - NAS의 프로젝트 위치는 `/volume1/docker/<프로젝트>`로 통일할 것
+    - 단, Home Assistant와 함께 쓰는 서비스(음성 인식·합성, MQTT 브로커, Music Assistant, ESPHome 등)는 별도 프로젝트로 만들지 말고 home-assistant 프로젝트에 서비스로 넣을 것 (데이터는 `home-assistant/<서비스>/` 아래)
 - 제어는 저장소를 받은 PC에서 ssh(키 인증)로 NAS에 접속해 실행할 것
   - 비밀번호를 묻는 대화형 입력 없이 실행되게 할 것 (ssh `BatchMode=yes`)
-  - 이미지 업데이트는 `docker compose pull` 후 `up -d`로 하고, 바뀐 것이 없으면 SKIP할 것
+- 프로젝트의 생성·수정·빌드·시작·중지·삭제는 `docker compose`가 아니라 Container Manager가 쓰는 DSM API(`SYNO.Docker.Project`)로 할 것
+  - 도우미 스크립트 [scripts/synoproj.py](scripts/synoproj.py)를 쓸 것 (예: `ssh SiLENT_NAS 'python3 - list' < scripts/synoproj.py`)
+  - 호출: `sudo /usr/syno/bin/synowebapi --exec api=SYNO.Docker.Project method=<동작> version=1 <인자>=<JSON 값>`
+    - 인자 값은 JSON으로 넣음 (문자열도 따옴표 포함, 예: `id='"<프로젝트 ID>"'`)
+    - 결과는 출력 마지막의 JSON(`success`, `error.code`, `data`)으로 판단할 것 (`*_stream` 동작은 진행 로그 뒤에 JSON이 옴)
+  - 조회: `list`(인자 없음, `data`가 ID별 프로젝트), `get`(`id`, compose 내용 `content`와 상태 `status`)
+  - 생성: `/volume1/docker/<프로젝트>` 폴더를 먼저 만들고 `create`(`name`, `share_path`=`/docker/<프로젝트>`, `content`=compose 내용, `enable_service_portal`=false, `service_portal_name`="", `service_portal_port`=0, `service_portal_protocol`="")
+  - 수정: `update`(`id`, `content`) — 폴더의 `compose.yaml`도 함께 바뀜
+  - 빌드(컨테이너 다시 만들기·시작): 반드시 `build_stream`(`id`)을 쓸 것
+    - `build`는 컨테이너를 실행하지만 Container Manager의 컨테이너 프로필을 만들지 않아, 이후 `start`·`stop`·`restart`가 실패함 (`container ... profile should exist`, 오류 코드 1202)
+    - 기존 프로젝트에 서비스를 새로 넣으면 첫 `build_stream`이 컨테이너는 띄우고 1202로 끝날 수 있음, 이때 `build_stream`을 한 번 더 실행하면 프로필이 만들어짐
+    - `build_stream`은 이미지를 새로 받지 않음 (`docker compose up`과 같음), 이미지 업데이트는 `docker pull` 후 `build_stream`
+  - 실행 중인 프로젝트에는 시험 삼아 `stop`·`restart`를 하지 말 것 (Home Assistant 등 서비스가 끊김)
+  - 시작·중지·재시작: `start`, `stop`, `restart`(`id`)
+  - 삭제: `delete`(`id`) — 프로젝트·컨테이너와 **그 프로젝트가 쓰던 이미지까지** 지우고, 폴더와 `compose.yaml`은 남김
+    - 폴더를 옮기거나 이름을 바꿀 때는 `delete` → 폴더 이동 → `create` → `build_stream` 순서 (이미지는 `build_stream`이 다시 받음)
+  - 오류 원인은 NAS의 `/var/log/messages`에서 `synowebapi_SYNO.Docker.Project`로 찾을 것
+- compose 작성 규칙
+  - 이미지는 공식 이미지를 쓰고, 공식 이미지가 없으면 가장 많이 쓰여 자료를 찾기 쉬운 이미지(예: `linuxserver/*`)를 쓸 것
+  - 볼륨의 NAS 쪽 경로는 프로젝트 폴더 기준 상대 경로로, 컨테이너 경로에서 맨 앞 `/`만 뺀 것과 같게 할 것
+    - 예: `./config:/config`, `./app/data:/app/data`, `./etc/letsencrypt:/etc/letsencrypt`
+    - 서비스가 여러 개인 프로젝트는 앞에 서비스 이름 폴더를 붙일 것 (예: `./postgresql/var/lib/postgresql/data:/var/lib/postgresql/data`)
+      - 단, 여러 서비스가 함께 쓰는 폴더는 붙이지 않음 (예: authentik의 server·worker가 함께 쓰는 `./data`)
+    - 파일 하나를 넣을 때도 같은 규칙 (예: `./vector/etc/vector/vector.yaml:/etc/vector/vector.yaml:ro`)
+    - NAS 자체 자원은 절대 경로 그대로 둠 (`/var/run/docker.sock`, `/etc/localtime`, `/dev/...`, `/lib/modules`, 공유 폴더 `/volume1/music` 등)
+  - 포트 규칙
+    - 서비스의 기본 포트를 쓸 수 있으면 기본 포트를 그대로 쓸 것
+    - 기본 포트가 다른 서비스와 겹치면 먼저 쓰던 서비스가 기본 포트를 유지하고 (단, 3000은 사용자 지정으로 adguardhome이 가짐, grafana는 `33000:3000`), 나중 서비스는 NAS 쪽 포트를 `3` + 기본 포트로 둘 것 (예: `33000:3000`, `38080:8080`, `30080:80`)
+      - 그 포트도 쓰이고 있으면 1씩 올림 (예: ntfy `30081:80`, Homepage `33003:3000`)
+    - 예외: DSM이 쓰는 포트(22, 80, 443, 5000, 5001)는 쓰지 않음, host 네트워크 서비스는 기본 포트를 그대로 씀, 공유기 포트포워딩이나 외부 기기가 가리키는 포트(nginx-proxy-manager 8080·8181·4443, vector 1514/udp·8899)는 바꾸지 않음
+  - 비밀번호·토큰은 compose에 직접 쓰지 말고 프로젝트 폴더의 `.env`에 두고 `${변수}`로 읽을 것 (저장소에는 값이 빈 `.env.example`만 둠)
+- 프로젝트를 추가·삭제하거나 포트를 바꾸면 두 상태판도 함께 고칠 것
+  - Homepage: [projects/homepage/app/config/services.yaml](projects/homepage/app/config/services.yaml) (NAS에 복사한 뒤 homepage 프로젝트를 `restart`해야 처음 그려지는 화면까지 바뀜)
+  - Grafana: [nas-services.json](projects/grafana/grafana/etc/grafana/provisioning/dashboards/json/nas-services.json)의 포트 표(`묶음,컨테이너,포트`)
+  - README의 프로젝트 목록 표
+- 이미지 새 버전 확인은 WUD 프로젝트([projects/wud](projects/wud/compose.yaml))로 함, 자동 업데이트는 하지 않음
+  - 메이저 버전이 바뀌는 업데이트(예: postgres 16 → 18)는 데이터 마이그레이션이 필요하므로 그대로 올리지 말 것
+- Home Assistant 설정을 고칠 때
+  - `configuration.yaml`·`automations.yaml`은 NAS 홈에 백업한 뒤 고치고, `docker exec home-assistant python3 -m homeassistant --script check_config -c /config`로 검사할 것 (반영은 HA 재시작)
+  - `.storage/` 파일은 HA가 실행 중이면 덮어쓰므로, HA 컨테이너를 멈춘 상태에서만 고칠 것 (`SYNO.Docker.Container` `stop`·`start`, 인자 `name`)
+  - HA를 재시작하면 nginx-proxy-manager를 거친 외부 접속이 되는지 확인할 것
 - DSM 설정(공유 폴더, 사용자, 권한 등)은 스크립트로 바꾸지 말 것
 - 예외: 재설치 자동화가 목적이 아니므로 전체 설치 진입점(`setup`)을 두지 않음

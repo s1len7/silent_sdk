@@ -1,0 +1,23 @@
+# wg-easy v15 (공식 이미지). 설정이 환경 변수에서 웹 화면으로 옮겨짐:
+# 처음 켤 때 설정 마법사에서 "기존 설정이 있음"을 고르고
+# ./etc/wireguard-v14-backup/wg0.json (업그레이드 전 v14 설정 백업)을 올림
+services:
+  wg-easy:
+    image: ghcr.io/wg-easy/wg-easy:15
+    container_name: wg-easy
+    environment:
+      # 웹 화면을 내부망에서 HTTP로 엶
+      - INSECURE=true
+    volumes:
+      - ./etc/wireguard:/etc/wireguard
+      - /lib/modules:/lib/modules:ro
+    ports:
+      - 51820:51820/udp
+      - 51821:51821/tcp
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    sysctls:
+      - net.ipv4.ip_forward=1
+      - net.ipv4.conf.all.src_valid_mark=1
+    restart: unless-stopped

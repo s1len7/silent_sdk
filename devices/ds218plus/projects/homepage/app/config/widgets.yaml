@@ -1,0 +1,7 @@
+- greeting:
+    text_size: md
+    text: "첫째 점 = 컨테이너 (초록 실행 중 · 주황 멈춤 · 빨강 상태 확인 불가) · 둘째 점 = 웹 응답 (초록 응답 · 빨강 응답 없음)"
+- resources:
+    cpu: true
+    memory: true
+    uptime: true

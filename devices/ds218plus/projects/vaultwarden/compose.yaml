@@ -1,0 +1,27 @@
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: always
+
+    ports:
+      - "30080:80"
+
+    volumes:
+      - ./data:/data
+
+    environment:
+      TZ: Asia/Seoul
+      WEBSOCKET_ENABLED: "true"
+      SIGNUPS_ALLOWED: "true"
+      # 외부 접속 주소 (https), .env에서 읽음
+      DOMAIN: ${VW_DOMAIN}
+
+# --- Authentik SSO 연동 설정 (authentik 애플리케이션 slug: vaultwarden, 내부망에서만 동작) ---
+      SSO_ENABLED: "true"
+      # authentik 주소 끝의 / 는 꼭 있어야 함 (vaultwarden 위키의 Authentik 안내)
+      SSO_AUTHORITY: ${VW_SSO_AUTHORITY}
+      SSO_CLIENT_ID: ${VW_SSO_CLIENT_ID}
+      SSO_CLIENT_SECRET: ${VW_SSO_CLIENT_SECRET}
+      # offline_access: 새로 고침 토큰을 받기 위해 필요
+      SSO_SCOPES: "openid profile email offline_access"

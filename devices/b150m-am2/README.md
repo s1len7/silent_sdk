@@ -110,7 +110,7 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150
 ### OpenClaw 온보딩 (VM)
 
 - Setup: [vm/ubuntu-server/scripts/setup_openclaw_onboard.sh](vm/ubuntu-server/scripts/setup_openclaw_onboard.sh) (공식 `openclaw onboard`를 비대화형으로 실행)
-  - 다시 실행 시: Gateway 서비스 파일이 있고, 랜 공개(`gateway.bind=lan`)이고, 기본 모델이 OpenRouter 무료 라우터이고, `.env`에 값이 있으면 OpenRouter 키·리버스 프록시 설정도 돼 있을 때 건너뜀. 빠진 것만 설정함
+  - 다시 실행 시: Gateway 서비스 파일이 있고, 랜 공개(`gateway.bind=lan`)이고, 기본 모델이 OpenRouter 무료 라우터이고, `.env`에 값이 있으면 OpenRouter·Gemini 키·리버스 프록시 설정도 돼 있을 때 건너뜀. 빠진 것만 설정함
 - Gateway를 사용자 systemd 서비스(`openclaw-gateway`)로 등록함 (랜 공개, token 인증, 포트 18789)
   - 예전에 VM 안에서만 열리게(loopback) 설치한 VM도 다시 실행하면 랜 공개로 바뀜
 - 기본 모델은 무료인 OpenRouter 무료 라우터 (`openrouter/openrouter/free`)

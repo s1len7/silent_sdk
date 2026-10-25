@@ -1,0 +1,13 @@
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    network_mode: bridge
+    ports:
+      - "8000:8000/tcp"
+      - "9000:9000/tcp"
+      #- "9443:9443/tcp"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data:/data
+    restart: unless-stopped

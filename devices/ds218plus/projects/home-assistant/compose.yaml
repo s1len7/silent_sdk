@@ -1,0 +1,94 @@
+services:
+  homeassistant: 
+    image: homeassistant/home-assistant:stable
+    container_name: home-assistant
+    network_mode: host
+    # network_mode: bridge
+    # ports:
+    #   - "8123:8123"
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+    volumes:
+      - ./config:/config
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - TZ=Asia/Seoul
+
+    restart: unless-stopped
+
+  # HA 음성 비서의 음성 인식 (Wyoming 연동 localhost:10300)
+  whisper:
+    image: rhasspy/wyoming-whisper
+    container_name: whisper
+    restart: unless-stopped
+    ports:
+      - "10300:10300"
+    volumes:
+      - ./whisper/data:/data
+    command:
+      - "--language"
+      - "ko"
+      - "--model"
+      - "tiny-int8"
+
+  # HA 음성 비서의 음성 합성, 한국어 음성 (Wyoming 연동 localhost:10200)
+  piper:
+    image: rhasspy/wyoming-piper
+    container_name: piper
+    restart: unless-stopped
+    ports:
+      - "10200:10200"
+    volumes:
+      - ./piper/data:/data
+    command:
+      - "--voice"
+      - "ko_KR-kss-medium"
+
+  # 음악 스트리밍 (데이터는 ./music-assistant/data)
+  music-assistant:
+    image: ghcr.io/music-assistant/server:latest # <<< Desired release version here (or use beta to get the latest beta version)
+    container_name: music-assistant-server
+    restart: unless-stopped
+    # Network mode must be set to host for MA to discover and stream to players (see networking note below)
+    network_mode: host
+    volumes:
+      - ./music-assistant/data:/data/
+      # Optional: expose local music to MA by bind-mounting it read-only
+      - /volume1/music:/media:ro
+      #- /volume1/homes/silent/Musics:/media/Musics:ro
+
+    environment:
+      - PUID=1026
+      - PGID=100
+      # Provide logging level as environment variable.
+      # default=info, possible=(critical, error, warning, info, debug)
+      - LOG_LEVEL=info
+    cap_add:
+      - SYS_ADMIN
+
+  # MQTT 브로커 (HA의 MQTT 연동이 localhost:1883으로 접속)
+  eclipse-mosquitto:
+    image: eclipse-mosquitto:latest
+    container_name: eclipse-mosquitto
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./eclipse-mosquitto/mosquitto/config:/mosquitto/config
+      - ./eclipse-mosquitto/mosquitto/data:/mosquitto/data
+      - ./eclipse-mosquitto/mosquitto/log:/mosquitto/log
+
+  # ESP 기기 펌웨어 관리 대시보드
+  esphome:
+    image: esphome/esphome:latest
+    container_name: esphome
+    restart: unless-stopped
+    ports:
+      - "6052:6052"
+    volumes:
+      - ./esphome/config:/config
+    environment:
+      - TZ=Asia/Seoul
+      - ESPHOME_DASHBOARD_USE_PING=true
+    privileged: true  # USB 장치 접근 권한 부여
+    network_mode: host # host 모드로 변경

@@ -1,0 +1,18 @@
+# Homepage: NAS 서비스 전체의 이름·포트·상태 점을 한 화면에 보여 줌 (내부망 전용, nginx-proxy-manager로 공개하지 않음)
+# 웹 화면: http://<NAS>:33003
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    environment:
+      - TZ=Asia/Seoul
+      # 페이지를 열 수 있는 주소 (예: <NAS IP>:33003), .env에서 읽음
+      - HOMEPAGE_ALLOWED_HOSTS=${HOMEPAGE_ALLOWED_HOSTS}
+      # app/config/services.yaml의 바로가기·웹 응답 검사에 쓰는 NAS 주소
+      - HOMEPAGE_VAR_NAS=${HOMEPAGE_VAR_NAS}
+    volumes:
+      - ./app/config:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - 33003:3000
+    restart: unless-stopped

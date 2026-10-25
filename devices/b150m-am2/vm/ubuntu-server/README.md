@@ -38,9 +38,10 @@ sudo bash ~/silent_sdk/devices/b150m-am2/vm/ubuntu-server/setup_vm.sh
 ### OpenClaw 온보딩
 
 - Setup: [scripts/setup_openclaw_onboard.sh](scripts/setup_openclaw_onboard.sh) (Gateway 서비스 등록, 기본 모델 `openrouter/openrouter/free`)
-  - 다시 실행 시: Gateway 서비스 파일이 있고, 랜 공개(`gateway.bind=lan`)이고, 기본 모델이 OpenRouter 무료 라우터이고, `.env`에 값이 있으면 OpenRouter 키·리버스 프록시 설정도 돼 있을 때 건너뜀
+  - 다시 실행 시: Gateway 서비스 파일이 있고, 랜 공개(`gateway.bind=lan`)이고, 기본 모델이 OpenRouter 무료 라우터이고, `.env`에 값이 있으면 OpenRouter·Gemini 키·리버스 프록시 설정도 돼 있을 때 건너뜀
 - 설정: `.env` ([.env.example](.env.example) 참고, git에 올라가지 않음)
   - `OPENROUTER_API_KEY`: OpenRouter API 키
+  - `GEMINI_API_KEY`: Gemini API 키 (비우면 Gemini 연결 안 함, `google/*` 모델을 고를 수 있게 됨)
   - `OPENCLAW_TRUSTED_PROXY`, `OPENCLAW_PUBLIC_ORIGIN`: 리버스 프록시 IP와 외부 https 주소 (프록시로 `wss://` 주소를 쓸 때만)
 - Gateway는 랜에 열려 있음 (`ws://192.168.0.22:18789`, token 인증)
 - 데스크탑 OpenClaw 트레이 앱 연결: 새 연결에 Gateway URL과 공유 토큰을 넣음

@@ -1,0 +1,19 @@
+title: DS218+ 서비스 상태
+language: ko
+headerStyle: clean
+hideVersion: true
+# 상태를 글자 대신 색 점으로 표시 (초록 실행 중, 주황 멈춤, 빨강 오류)
+statusStyle: dot
+layout:
+  스마트홈:
+    style: row
+    columns: 3
+  네트워크·보안:
+    style: row
+    columns: 3
+  모니터링·관리:
+    style: row
+    columns: 3
+  앱:
+    style: row
+    columns: 3

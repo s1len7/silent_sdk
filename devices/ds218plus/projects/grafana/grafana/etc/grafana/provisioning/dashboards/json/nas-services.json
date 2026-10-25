@@ -1,0 +1,634 @@
+{
+  "uid": "nas-services",
+  "title": "NAS 서비스 상태",
+  "tags": [
+    "nas"
+  ],
+  "timezone": "browser",
+  "refresh": "30s",
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "schemaVersion": 39,
+  "version": 2,
+  "editable": false,
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "🟢 정상 (실행 중)",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "wud-infinity"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "wud-infinity"
+          },
+          "type": "json",
+          "source": "url",
+          "format": "table",
+          "parser": "backend",
+          "url": "/api/containers",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "",
+          "columns": [
+            {
+              "selector": "name",
+              "text": "컨테이너",
+              "type": "string"
+            },
+            {
+              "selector": "status",
+              "text": "상태",
+              "type": "string"
+            },
+            {
+              "selector": "updateAvailable",
+              "text": "새 버전",
+              "type": "boolean"
+            }
+          ]
+        }
+      ],
+      "transformations": [
+        {
+          "id": "filterByValue",
+          "options": {
+            "type": "include",
+            "match": "any",
+            "filters": [
+              {
+                "fieldName": "상태",
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": "running"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "count"
+          ],
+          "fields": "/^컨테이너$/",
+          "values": false
+        },
+        "colorMode": "background",
+        "graphMode": "none",
+        "textMode": "value"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          },
+          "noValue": "0"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "🟡 멈춤",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "wud-infinity"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 0
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "wud-infinity"
+          },
+          "type": "json",
+          "source": "url",
+          "format": "table",
+          "parser": "backend",
+          "url": "/api/containers",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "",
+          "columns": [
+            {
+              "selector": "name",
+              "text": "컨테이너",
+              "type": "string"
+            },
+            {
+              "selector": "status",
+              "text": "상태",
+              "type": "string"
+            },
+            {
+              "selector": "updateAvailable",
+              "text": "새 버전",
+              "type": "boolean"
+            }
+          ]
+        }
+      ],
+      "transformations": [
+        {
+          "id": "filterByValue",
+          "options": {
+            "type": "include",
+            "match": "any",
+            "filters": [
+              {
+                "fieldName": "상태",
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": "exited"
+                  }
+                }
+              },
+              {
+                "fieldName": "상태",
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": "paused"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "count"
+          ],
+          "fields": "/^컨테이너$/",
+          "values": false
+        },
+        "colorMode": "background",
+        "graphMode": "none",
+        "textMode": "value"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "yellow"
+          },
+          "noValue": "0"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 3,
+      "type": "stat",
+      "title": "🔴 오류",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "wud-infinity"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 0
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "wud-infinity"
+          },
+          "type": "json",
+          "source": "url",
+          "format": "table",
+          "parser": "backend",
+          "url": "/api/containers",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "",
+          "columns": [
+            {
+              "selector": "name",
+              "text": "컨테이너",
+              "type": "string"
+            },
+            {
+              "selector": "status",
+              "text": "상태",
+              "type": "string"
+            },
+            {
+              "selector": "updateAvailable",
+              "text": "새 버전",
+              "type": "boolean"
+            }
+          ]
+        }
+      ],
+      "transformations": [
+        {
+          "id": "filterByValue",
+          "options": {
+            "type": "include",
+            "match": "any",
+            "filters": [
+              {
+                "fieldName": "상태",
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": "created"
+                  }
+                }
+              },
+              {
+                "fieldName": "상태",
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": "restarting"
+                  }
+                }
+              },
+              {
+                "fieldName": "상태",
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": "dead"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "count"
+          ],
+          "fields": "/^컨테이너$/",
+          "values": false
+        },
+        "colorMode": "background",
+        "graphMode": "none",
+        "textMode": "value"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "red"
+          },
+          "noValue": "0"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 4,
+      "type": "stat",
+      "title": "새 버전 있음",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "wud-infinity"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 0
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "wud-infinity"
+          },
+          "type": "json",
+          "source": "url",
+          "format": "table",
+          "parser": "backend",
+          "url": "/api/containers",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "",
+          "columns": [
+            {
+              "selector": "name",
+              "text": "컨테이너",
+              "type": "string"
+            },
+            {
+              "selector": "status",
+              "text": "상태",
+              "type": "string"
+            },
+            {
+              "selector": "updateAvailable",
+              "text": "새 버전",
+              "type": "boolean"
+            }
+          ]
+        }
+      ],
+      "transformations": [
+        {
+          "id": "filterByValue",
+          "options": {
+            "type": "include",
+            "match": "any",
+            "filters": [
+              {
+                "fieldName": "새 버전",
+                "config": {
+                  "id": "equal",
+                  "options": {
+                    "value": true
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "count"
+          ],
+          "fields": "/^컨테이너$/",
+          "values": false
+        },
+        "colorMode": "background",
+        "graphMode": "none",
+        "textMode": "value"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "orange"
+          },
+          "noValue": "0"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 5,
+      "type": "table",
+      "title": "서비스 상태 (상태는 Docker 이벤트로 바로 반영, 새 버전은 매일 05:00 검사)",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "wud-infinity"
+      },
+      "gridPos": {
+        "h": 24,
+        "w": 24,
+        "x": 0,
+        "y": 4
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "wud-infinity"
+          },
+          "type": "json",
+          "source": "url",
+          "format": "table",
+          "parser": "backend",
+          "url": "/api/containers",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "",
+          "columns": [
+            {
+              "selector": "name",
+              "text": "컨테이너",
+              "type": "string"
+            },
+            {
+              "selector": "status",
+              "text": "상태",
+              "type": "string"
+            },
+            {
+              "selector": "updateAvailable",
+              "text": "새 버전",
+              "type": "boolean"
+            }
+          ]
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "wud-infinity"
+          },
+          "type": "csv",
+          "source": "inline",
+          "format": "table",
+          "parser": "backend",
+          "data": "묶음,컨테이너,포트\n1 스마트홈,home-assistant,8123\n1 스마트홈,whisper,10300\n1 스마트홈,piper,10200\n1 스마트홈,music-assistant-server,8095\n1 스마트홈,esphome,6052\n1 스마트홈,eclipse-mosquitto,1883\n2 네트워크·보안,nginx-proxy-manager,8080·8181·4443\n2 네트워크·보안,vaultwarden,30080\n2 네트워크·보안,tailscale,-\n2 네트워크·보안,adguard-home,53·3000\n2 네트워크·보안,authentik-server-1,39000\n2 네트워크·보안,authentik-worker-1,-\n2 네트워크·보안,authentik-postgresql-1,-\n2 네트워크·보안,wg-easy,51820/udp·51821\n2 네트워크·보안,wireguard,51820/udp\n3 모니터링·관리,uptime-kuma,3001\n3 모니터링·관리,wud,33002\n3 모니터링·관리,ntfy,30081\n3 모니터링·관리,homepage,33003\n3 모니터링·관리,dozzle,38082\n3 모니터링·관리,grafana,33000\n3 모니터링·관리,loki,3100\n3 모니터링·관리,vector,1514/udp·8899\n3 모니터링·관리,promtail,-\n3 모니터링·관리,portainer,9000·8000\n4 앱,metabase,33001\n4 앱,code-server,38081\n4 앱,open-webui,38080\n4 앱,openclaw,18789"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "joinByField",
+          "options": {
+            "byField": "컨테이너",
+            "mode": "outer"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "indexByName": {
+              "묶음": 0,
+              "컨테이너": 1,
+              "포트": 2,
+              "상태": 3,
+              "새 버전": 4
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "sort": [
+              {
+                "field": "묶음"
+              }
+            ]
+          }
+        }
+      ],
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "left"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "상태"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "running": {
+                        "text": "🟢 정상",
+                        "color": "green",
+                        "index": 0
+                      },
+                      "exited": {
+                        "text": "🟡 멈춤",
+                        "color": "yellow",
+                        "index": 1
+                      },
+                      "created": {
+                        "text": "🔴 오류(시작 안 됨)",
+                        "color": "red",
+                        "index": 2
+                      },
+                      "restarting": {
+                        "text": "🔴 오류(재시작 반복)",
+                        "color": "red",
+                        "index": 3
+                      },
+                      "dead": {
+                        "text": "🔴 오류",
+                        "color": "red",
+                        "index": 4
+                      },
+                      "paused": {
+                        "text": "🟡 일시정지",
+                        "color": "yellow",
+                        "index": 5
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "⚪ 컨테이너 없음",
+                        "color": "text",
+                        "index": 6
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background",
+                  "mode": "basic"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "새 버전"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "true": {
+                        "text": "새 버전 있음",
+                        "color": "orange",
+                        "index": 0
+                      },
+                      "false": {
+                        "text": "최신",
+                        "color": "green",
+                        "index": 1
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "묶음"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 160
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

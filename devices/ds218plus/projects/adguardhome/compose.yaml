@@ -1,0 +1,13 @@
+services:
+  adguardhome:
+    image: adguard/adguardhome:latest
+    container_name: adguard-home
+    network_mode: bridge
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "3000:3000/tcp"
+    volumes:
+      - ./opt/adguardhome/conf:/opt/adguardhome/conf
+      - ./opt/adguardhome/work:/opt/adguardhome/work
+    restart: unless-stopped

@@ -1,0 +1,2 @@
+nas:
+  socket: /var/run/docker.sock

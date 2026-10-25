@@ -1,0 +1,162 @@
+# 서비스마다 container(컨테이너 상태 점)를 두고, 실행 중이어야 하는 웹 서비스에는 siteMonitor(웹 응답 점)도 둠
+# {{HOMEPAGE_VAR_NAS}}는 .env의 NAS 주소로 바뀜
+- 스마트홈:
+    - Home Assistant:
+        icon: home-assistant.png
+        href: http://{{HOMEPAGE_VAR_NAS}}:8123
+        description: "포트 8123 · home-assistant"
+        server: nas
+        container: home-assistant
+        siteMonitor: http://{{HOMEPAGE_VAR_NAS}}:8123
+    - Whisper (음성 인식):
+        icon: home-assistant.png
+        description: "포트 10300 · home-assistant"
+        server: nas
+        container: whisper
+    - Piper (음성 합성):
+        icon: home-assistant.png
+        description: "포트 10200 · home-assistant"
+        server: nas
+        container: piper
+    - Music Assistant:
+        icon: music-assistant.png
+        href: http://{{HOMEPAGE_VAR_NAS}}:8095
+        description: "포트 8095 · home-assistant"
+        server: nas
+        container: music-assistant-server
+        siteMonitor: http://{{HOMEPAGE_VAR_NAS}}:8095
+    - ESPHome:
+        icon: esphome.png
+        href: http://{{HOMEPAGE_VAR_NAS}}:6052
+        description: "포트 6052 · home-assistant"
+        server: nas
+        container: esphome
+        siteMonitor: http://{{HOMEPAGE_VAR_NAS}}:6052
+    - Mosquitto (MQTT):
+        icon: mosquitto.png
+        description: "포트 1883 · home-assistant"
+        server: nas
+        container: eclipse-mosquitto
+
+- 네트워크·보안:
+    - Nginx Proxy Manager:
+        icon: nginx-proxy-manager.png
+        href: http://{{HOMEPAGE_VAR_NAS}}:8181
+        description: "포트 8080·8181(관리)·4443 · nginx-proxy-manager"
+        server: nas
+        container: nginx-proxy-manager
+        siteMonitor: http://{{HOMEPAGE_VAR_NAS}}:8181
+    - Vaultwarden:
+        icon: vaultwarden.png
+        href: http://{{HOMEPAGE_VAR_NAS}}:30080
+        description: "포트 30080 · vaultwarden"
+        server: nas
+        container: vaultwarden
+        siteMonitor: http://{{HOMEPAGE_VAR_NAS}}:30080
+    - Tailscale:
+        icon: tailscale.png
+        description: "포트 없음 · tailscale"
+        server: nas
+        container: tailscale
+    - AdGuard Home:
+        icon: adguard-home.png
+        href: http://{{HOMEPAGE_VAR_NAS}}:3000
+        description: "포트 53·3000 · adguardhome"
+        server: nas
+        container: adguard-home
+    - Authentik:
+        icon: authentik.png
+        href: http://{{HOMEPAGE_VAR_NAS}}:39000
+        description: "포트 39000 · authentik"
+        server: nas
+        container: authentik-server-1
+    - wg-easy:
+        icon: wireguard.png
+        href: http://{{HOMEPAGE_VAR_NAS}}:51821
+        description: "포트 51820/udp·51821 · wg-easy"
+        server: nas
+        container: wg-easy
+    - WireGuard:
+        icon: wireguard.png
+        description: "포트 51820/udp · wireguard"
+        server: nas
+        container: wireguard
+
+- 모니터링·관리:
+    - Uptime Kuma:
+        icon: uptime-kuma.png
+        href: http://{{HOMEPAGE_VAR_NAS}}:3001
+        description: "포트 3001 · uptime-kuma"
+        server: nas
+        container: uptime-kuma
+        siteMonitor: http://{{HOMEPAGE_VAR_NAS}}:3001
+    - WUD (새 버전 확인):
+        icon: whats-up-docker.png
+        href: http://{{HOMEPAGE_VAR_NAS}}:33002
+        description: "포트 33002 · wud"
+        server: nas
+        container: wud
+        siteMonitor: http://{{HOMEPAGE_VAR_NAS}}:33002
+    - ntfy (알림):
+        icon: ntfy.png
+        href: http://{{HOMEPAGE_VAR_NAS}}:30081
+        description: "포트 30081 · ntfy"
+        server: nas
+        container: ntfy
+        siteMonitor: http://{{HOMEPAGE_VAR_NAS}}:30081/v1/health
+    - Dozzle (로그):
+        icon: dozzle.png
+        href: http://{{HOMEPAGE_VAR_NAS}}:38082
+        description: "포트 38082 · dozzle"
+        server: nas
+        container: dozzle
+        siteMonitor: http://{{HOMEPAGE_VAR_NAS}}:38082
+    - Grafana:
+        icon: grafana.png
+        href: http://{{HOMEPAGE_VAR_NAS}}:33000
+        description: "포트 33000 · grafana"
+        server: nas
+        container: grafana
+        siteMonitor: http://{{HOMEPAGE_VAR_NAS}}:33000/api/health
+    - Loki:
+        icon: loki.png
+        description: "포트 3100 · grafana"
+        server: nas
+        container: loki
+    - Vector:
+        icon: vector.png
+        description: "포트 1514/udp·8899 · grafana"
+        server: nas
+        container: vector
+    - Portainer:
+        icon: portainer.png
+        href: http://{{HOMEPAGE_VAR_NAS}}:9000
+        description: "포트 9000·8000 · portainer"
+        server: nas
+        container: portainer
+
+- 앱:
+    - Metabase:
+        icon: metabase.png
+        href: http://{{HOMEPAGE_VAR_NAS}}:33001
+        description: "포트 33001 · metabase"
+        server: nas
+        container: metabase
+        siteMonitor: http://{{HOMEPAGE_VAR_NAS}}:33001
+    - code-server:
+        icon: code-server.png
+        href: http://{{HOMEPAGE_VAR_NAS}}:38081
+        description: "포트 38081 · code-server"
+        server: nas
+        container: code-server
+    - Open WebUI:
+        icon: open-webui.png
+        href: http://{{HOMEPAGE_VAR_NAS}}:38080
+        description: "포트 38080 · open-webui"
+        server: nas
+        container: open-webui
+    - OpenClaw:
+        icon: mdi-robot
+        description: "포트 18789 · openclaw (예비 Gateway)"
+        server: nas
+        container: openclaw

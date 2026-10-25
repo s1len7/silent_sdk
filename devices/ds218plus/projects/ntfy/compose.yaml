@@ -1,0 +1,30 @@
+# ntfy: 폰·PC로 보내는 푸시 알림 (예: WUD 새 버전 알림)
+# 웹 화면: http://<NAS>:30081 (로그인 필요: admin 계정, 비밀번호는 .env)
+services:
+  ntfy:
+    image: binwiederhier/ntfy:latest
+    container_name: ntfy
+    command: serve
+    environment:
+      - TZ=Asia/Seoul
+      # 폰과 웹 화면이 이 서버에 접속하는 주소, .env에서 읽음
+      - NTFY_BASE_URL=${NTFY_BASE_URL}
+      - NTFY_CACHE_FILE=/var/lib/ntfy/cache.db
+      - NTFY_ATTACHMENT_CACHE_DIR=/var/lib/ntfy/attachments
+      - NTFY_AUTH_FILE=/var/lib/ntfy/auth.db
+      # 로그인한 사용자만 보내기·구독 가능
+      - NTFY_AUTH_DEFAULT_ACCESS=deny-all
+      - NTFY_ENABLE_LOGIN=true
+      # iOS 즉시 알림은 ntfy.sh를 거침 (ntfy.sh에는 메시지 ID만 가고 내용은 이 서버에 남음)
+      - NTFY_UPSTREAM_BASE_URL=https://ntfy.sh
+    volumes:
+      - ./var/lib/ntfy:/var/lib/ntfy
+    ports:
+      - 30081:80
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:80/v1/health"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
