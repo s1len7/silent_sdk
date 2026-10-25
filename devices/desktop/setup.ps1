@@ -10,7 +10,15 @@ $dir  = "$HOME\silent_sdk"
 $principal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
 if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     $run = if ($PSCommandPath) { "-File `"$PSCommandPath`"" } else { "-Command irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/setup.ps1 | iex" }
-    Start-Process powershell.exe -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass $run"
+    try {
+        Start-Process powershell.exe -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass $run"
+    } catch {
+        # Elevation is refused e.g. over SSH (no UAC prompt) or when the account is not an administrator.
+        # return, not exit: under irm | iex, exit would close the window before the message can be read
+        Write-Host "ERROR: could not restart as administrator: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host 'Open PowerShell as administrator (Win+X > Terminal (Admin)) and run the same command again.'
+        return
+    }
     exit
 }
 
