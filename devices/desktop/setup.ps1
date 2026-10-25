@@ -22,6 +22,10 @@ if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administra
     exit
 }
 
+# Allow the step .ps1 files in this session only: an admin window opened by hand skips the
+# re-launch above and keeps the default policy, which blocks them (Restricted on Windows 10)
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
+
 # Log everything from here; the log moves into <repo>\logs once the repo is available
 $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $bootstrapLog = "$env:TEMP\silent_sdk-desktop-$stamp.log"
