@@ -3,7 +3,7 @@
 
 $ErrorActionPreference = 'Stop'
 
-# Power setting GUIDs (powercfg /aliases); the lid setting is listed only on devices with a lid
+# Power setting GUIDs (powercfg /aliases)
 $settings = @(
     @{ Name = 'Lid close action'; Sub = '4f971e89-eebd-4455-a8de-9e59040e7347'; Setting = '5ca83367-6e45-459f-a27b-476b1d01c936'; Value = 0 }  # SUB_BUTTONS LIDACTION, 0 = do nothing
     @{ Name = 'Sleep after';      Sub = '238c9fa8-0aad-41ed-83f4-97be242c8f20'; Setting = '29f6c1db-86da-48c5-9fdb-f2b67b1f44da'; Value = 0 }  # SUB_SLEEP STANDBYIDLE, 0 = never
@@ -11,9 +11,10 @@ $settings = @(
 )
 
 # Current AC value of a setting in the active plan.
-# powercfg /q labels are localized, but the last two hex values are always the AC and DC indexes.
+# powercfg labels are localized, but the last two hex values are always the AC and DC indexes.
+# /qh, not /q: /q leaves out hidden settings, and the lid setting can be hidden even on a laptop
 function Get-AcValue($s) {
-    $hex = @(powercfg /q SCHEME_CURRENT $s.Sub $s.Setting | Select-String '0x([0-9a-fA-F]{8})\s*$' |
+    $hex = @(powercfg /qh SCHEME_CURRENT $s.Sub $s.Setting | Select-String '0x([0-9a-fA-F]{8})\s*$' |
         ForEach-Object { $_.Matches[0].Groups[1].Value })
     if ($LASTEXITCODE -ne 0 -or $hex.Count -lt 2) { throw "Power setting not found: $($s.Name)" }
     [Convert]::ToInt64($hex[-2], 16)
