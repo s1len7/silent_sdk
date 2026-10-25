@@ -1,4 +1,4 @@
-# AI 에이전트 지시사항
+# AI 에이전트 지침서
 
 ## 공통
 
@@ -8,6 +8,8 @@
 - 모든 수정은 요청한 범위만 하고, 불필요한 수정은 최대한 피할 것
   - 작업 중 발견한 다른 문제는 고치지 말고 보고만 할 것
   - 커밋·푸시는 요청받았을 때만 할 것
+    - 푸시 전에는 가능하면 `git pull`(또는 `git fetch` 후 `git merge`)로 원격의 최신 내용을 받아 합친 뒤 올릴 것
+    - merge 중 충돌이 나면 임의로 해결하지 말고 충돌 내용을 사용자에게 보고한 뒤 확인받을 것
 - 모든 설계와 구현은 오캄의 면도날(Occam's razor)을 따라 가능한 간단하게 할 것
   - 단, 예외처리는 항상 고려하고 꼼꼼하게 할 것
 
@@ -62,12 +64,12 @@
 - 장비의 전체 설치 진입점은 모든 장비에서 이름을 `setup`으로 통일해 장비 폴더 바로 아래에 둘 것 (`devices/<장비>/setup.ps1` 또는 `devices/<장비>/setup.sh`), 저장소 루트나 `scripts/` 안에는 두지 않을 것
   - 단, Proxmox처럼 호스트와 VM이 나뉘는 장비는 호스트용 `setup_host`, VM용 `vm/<VM 이름>/setup_vm`으로 둠 (장비 AGENTS.md 참고)
   - 단, 재설치 자동화가 목적이 아닌 장비(ds218plus)는 진입점을 두지 않음 (장비 AGENTS.md 참고)
-- 새 장비는 `devices/<장비>/` 폴더에 AGENTS.md(규칙), CLAUDE.md, README.md를 만들고, 루트 README.md의 장비 목록과 구조에 추가할 것
+- 새 장비는 `devices/<장비>/` 폴더에 AGENTS.md(규칙), CLAUDE.md, GEMINI.md, README.md를 만들고, 루트 README.md의 장비 목록과 구조에 추가할 것
   - 장비에 전체 설치 진입점(`setup`)을 만들거나 설치 명령을 바꾸면, 루트 README.md `## 전체 설치`에도 같은 한 줄 명령을 추가·수정할 것
 - 규칙은 모든 폴더에서 AGENTS.md에 쓸 것 (Claude 외의 AI 에이전트도 읽는 공통 파일)
   - 하위 폴더의 AGENTS.md는 첫 줄에 함께 따라야 하는 상위·형제 AGENTS.md를 일반 문장과 링크로 적을 것 (예: `> 이 파일의 규칙은 [공통 규칙](../../AGENTS.md)에 더해 적용됨`)
-  - `@경로` 불러오기는 Claude Code 전용 문법이므로 AGENTS.md에는 쓰지 않을 것
-- CLAUDE.md에는 Claude Code용 불러오기만 둘 것: 자기 폴더의 `@./AGENTS.md`와, 그 AGENTS.md가 따르라고 한 상위·형제 AGENTS.md (루트 AGENTS.md는 루트 CLAUDE.md로 항상 읽히므로 제외)
+  - `@경로` 불러오기는 Claude Code·Gemini CLI 전용 문법이므로 AGENTS.md에는 쓰지 않을 것
+- CLAUDE.md(Claude Code용)와 GEMINI.md(Gemini CLI용)에는 불러오기만 두고, 두 파일의 내용을 같게 유지할 것: 자기 폴더의 `@./AGENTS.md`와, 그 AGENTS.md가 따르라고 한 상위·형제 AGENTS.md (루트 AGENTS.md는 루트 CLAUDE.md·GEMINI.md로 항상 읽히므로 제외)
 - 줄바꿈은 .gitattributes를 따름 (`.sh`는 LF, `.ps1`은 CRLF)
 
 
