@@ -26,13 +26,13 @@
 - 순서: Proxmox VE 9 설치 → 호스트 Setup (저장소 설정, Wi-Fi 연결(선택), Ubuntu Server 24.04 LTS VM 생성, 첫 부팅 때 VM Setup 자동 실행: OpenClaw 설치·온보딩) → VM에 OpenRouter API 키 등록
 - 전체 셋업 스크립트: 호스트는 [setup_host.sh](setup_host.sh) (`scripts/host/` 모듈), VM은 [vm/ubuntu-server/setup_vm.sh](vm/ubuntu-server/setup_vm.sh) (`vm/ubuntu-server/scripts/` 모듈)
 - VM 사양·접속 방법: [vm/ubuntu-server/README.md](vm/ubuntu-server/README.md)
-- 호스트 Setup: Proxmox 셸(root)에서 이 한 줄만 실행 (저장소를 `~/silent_sdk`에 새로 받아 전체 설치):
+- 호스트 Setup: Proxmox 셸(root)에서 이 한 줄만 실행 (git 설치 → 저장소를 `~/silent_sdk`에 clone → 전체 설치):
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150m-am2/setup_host.sh | bash
 ```
 
-  - 다시 실행하면 `~/silent_sdk`를 지우고 최신 저장소로 새로 받음. `.env`와 `logs/`는 옮겨 와서 유지됨 (`~/silent_sdk`가 git clone이면 지우지 않고 중단)
+  - 다시 실행하면 `~/silent_sdk`를 `git pull`로 최신으로 받음. git clone이 아니면(예전에 압축 파일로 받은 폴더) 새로 clone해서 교체하고, `.env`와 `logs/`는 옮겨 와서 유지됨
 
 - VM Setup: 호스트 Setup이 만든 VM은 첫 부팅 때 자동으로 실행됨. 직접 만든 VM이면 **VM 안에서** OpenClaw를 쓸 사용자 계정으로 이 한 줄만 실행 (git이 없으면 설치 → 저장소 클론 → 전체 설치):
 

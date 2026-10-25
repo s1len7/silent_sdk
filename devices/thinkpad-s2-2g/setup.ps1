@@ -19,29 +19,35 @@ $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $bootstrapLog = "$env:TEMP\silent_sdk-thinkpad-s2-2g-$stamp.log"
 Start-Transcript -Path $bootstrapLog | Out-Null
 
-# Get repo (git if available, otherwise zip)
+# Get repo with git: install Git first, then pull, or clone when the folder is missing or not a git clone
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 try {
+    # Full path: a session opened before Git was installed does not have it on PATH
+    $git = "$env:ProgramFiles\Git\cmd\git.exe"
+    if (-not (Test-Path $git)) {
+        # The Git step script is not on disk yet; run it from GitHub as a script block,
+        # which also works when the execution policy blocks .ps1 files
+        $gitSetup = Invoke-RestMethod 'https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/scripts/setup-git.ps1' -UseBasicParsing
+        & ([scriptblock]::Create($gitSetup)) | Out-Host
+        # The installer adds Git to the system PATH, but this session still has the old one
+        $env:Path = [Environment]::GetEnvironmentVariable('Path', 'Machine') + ';' + [Environment]::GetEnvironmentVariable('Path', 'User')
+    }
     if (Test-Path "$dir\.git") {
-        git -C $dir pull --ff-only | Out-Host
+        & $git -C $dir pull --ff-only | Out-Host
         if ($LASTEXITCODE -ne 0) { throw "git pull failed: exit code $LASTEXITCODE" }
-    } elseif ((Get-Command git -ErrorAction SilentlyContinue) -and -not (Test-Path $dir)) {
-        git clone $repo $dir | Out-Host
-        if ($LASTEXITCODE -ne 0) { throw "git clone failed: exit code $LASTEXITCODE" }
     } else {
-        # Zip: replace the folder so files removed from the repo do not linger,
-        # but keep what is not in git (logs, .env) from the old folder
-        $zip = "$env:TEMP\silent_sdk.zip"
-        $extract = "$env:TEMP\silent_sdk-extract"
+        # Clone next to the folder, then swap: a folder from an older zip download is replaced,
+        # but what is not in git (logs, .env) is kept from the old folder
+        $new = "$dir.new"
         $old = "$dir.old"
-        Invoke-WebRequest "$repo/archive/refs/heads/main.zip" -OutFile $zip -UseBasicParsing
-        Remove-Item $extract, $old -Recurse -Force -ErrorAction SilentlyContinue
-        Expand-Archive $zip $extract -Force
+        Remove-Item $new, $old -Recurse -Force -ErrorAction SilentlyContinue
+        & $git clone $repo $new | Out-Host
+        if ($LASTEXITCODE -ne 0) { throw "git clone failed: exit code $LASTEXITCODE" }
         Set-Location $env:TEMP
         # Rename first: if the folder is in use this fails and the old files stay intact
         if (Test-Path $dir) { Rename-Item $dir (Split-Path $old -Leaf) }
         try {
-            Move-Item "$extract\silent_sdk-main" $dir
+            Move-Item $new $dir
         } catch {
             if (Test-Path $old) { Rename-Item $old (Split-Path $dir -Leaf) }
             throw

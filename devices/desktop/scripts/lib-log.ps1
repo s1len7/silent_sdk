@@ -20,11 +20,14 @@ function Start-SetupLog([string]$Repo, [string]$Platform, [string]$Stamp, [strin
 
     $os = Get-CimInstance Win32_OperatingSystem
     $edition = (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').EditionID
+    # Full path: a session opened before Git was installed does not have it on PATH
+    $git = "$env:ProgramFiles\Git\cmd\git.exe"
     $commit = 'unknown (no git)'
-    if ((Test-Path "$Repo\.git") -and (Get-Command git -ErrorAction SilentlyContinue)) {
-        $commit = git -C $Repo rev-parse --short HEAD
-    } elseif (-not (Test-Path "$Repo\.git")) {
-        $commit = 'zip download'
+    if (-not (Test-Path "$Repo\.git")) {
+        # Only when getting the repo failed and an older zip download is used as is
+        $commit = 'not a git clone (older zip download)'
+    } elseif (Test-Path $git) {
+        $commit = & $git -C $Repo rev-parse --short HEAD
     }
     Write-Host "Platform:   $Platform"
     Write-Host "Hostname:   $env:COMPUTERNAME / User: $env:USERNAME"

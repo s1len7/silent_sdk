@@ -5,8 +5,8 @@
 # 로그: 저장소 logs/b150m-am2-host-<시각>/setup.log
 # 사용법: bash setup_host.sh
 #   curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150m-am2/setup_host.sh | bash
-#   처럼 파일 없이 실행하면 저장소를 ~/silent_sdk에 새로 받은 뒤 그 안의 setup_host.sh를 실행함
-#   (저장소 설정 전에는 apt-get update가 실패해 git을 설치할 수 없으므로 압축 파일로 받음)
+#   처럼 파일 없이 실행하면 git을 설치하고 저장소를 ~/silent_sdk에 git으로 받은 뒤 그 안의 setup_host.sh를 실행함
+#   (저장소 설정 전에는 apt-get update가 실패해 git을 설치할 수 없으므로 저장소 설정 모듈을 먼저 실행함)
 set -uo pipefail
 
 if [[ $EUID -ne 0 ]]; then
@@ -19,33 +19,64 @@ if ! command -v pveversion >/dev/null; then
     exit 1
 fi
 
-# 파일 없이(curl | bash) 실행된 경우: 저장소를 새로 받아 교체하고, 받은 setup_host.sh로 다시 실행
+# 파일 없이(curl | bash) 실행된 경우: git을 설치하고 저장소를 git으로 받은 뒤(이미 git clone이면 pull),
+# 받은 setup_host.sh로 다시 실행
 if [[ ! -f "${BASH_SOURCE[0]:-}" ]]; then
     install_dir="$HOME/silent_sdk"
+
+    if ! command -v git >/dev/null; then
+        # 저장소 설정 모듈은 아직 디스크에 없으므로, 모듈이 불러오는 lib.sh와 같은 상대 경로로 임시 폴더에 받아 실행
+        module_dir="$(mktemp -d)"
+        raw_url=https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150m-am2/scripts
+        mkdir -p "$module_dir/host"
+        if ! curl -fsSL "$raw_url/lib.sh" -o "$module_dir/lib.sh" \
+            || ! curl -fsSL "$raw_url/host/setup_pve_repo.sh" -o "$module_dir/host/setup_pve_repo.sh"; then
+            rm -rf "$module_dir"
+            echo "Failed to download the repository setup module" >&2
+            exit 1
+        fi
+        bash "$module_dir/host/setup_pve_repo.sh"
+        code=$?
+        rm -rf "$module_dir"
+        # 3: 이미 설정돼 있음 (SKIP)
+        if (( code != 0 && code != 3 )); then
+            echo "Repository setup failed (exit $code)" >&2
+            exit 1
+        fi
+        echo "Installing git"
+        if ! { apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y git; }; then
+            echo "Failed to install git" >&2
+            exit 1
+        fi
+    fi
+
     if [[ -d "$install_dir/.git" ]]; then
-        echo "$install_dir is a git clone. Update it with git pull, then run: bash $install_dir/devices/b150m-am2/setup_host.sh" >&2
-        exit 1
-    fi
-    new_dir="$(mktemp -d)"
-    echo "Downloading the repository to $install_dir"
-    if ! curl -fsSL https://github.com/s1len7/silent_sdk/archive/refs/heads/main.tar.gz \
-        | tar xz --strip-components=1 -C "$new_dir"; then
-        rm -rf "$new_dir"
-        echo "Failed to download the repository" >&2
-        exit 1
-    fi
-    # git에 없는 .env(설정)와 logs(이전 실행 기록)는 이전 폴더에서 옮겨 옴
-    if [[ -d "$install_dir" ]]; then
-        if [[ -f "$install_dir/devices/b150m-am2/.env" ]]; then
-            cp -p "$install_dir/devices/b150m-am2/.env" "$new_dir/devices/b150m-am2/.env"
+        echo "Updating the repository in $install_dir"
+        if ! git -C "$install_dir" pull --ff-only; then
+            echo "git pull failed. Continuing with the existing files in $install_dir" >&2
         fi
-        if [[ -d "$install_dir/logs" ]]; then
-            cp -a "$install_dir/logs/." "$new_dir/logs/"
+    else
+        # 새로 clone한 뒤 교체: 예전에 압축 파일로 받은 폴더도 git clone으로 바뀜
+        new_dir="$(mktemp -d)"
+        echo "Cloning the repository to $install_dir"
+        if ! git clone https://github.com/s1len7/silent_sdk.git "$new_dir"; then
+            rm -rf "$new_dir"
+            echo "Failed to clone the repository" >&2
+            exit 1
         fi
-        rm -rf "$install_dir"
+        # git에 없는 .env(설정)와 logs(이전 실행 기록)는 이전 폴더에서 옮겨 옴
+        if [[ -d "$install_dir" ]]; then
+            if [[ -f "$install_dir/devices/b150m-am2/.env" ]]; then
+                cp -p "$install_dir/devices/b150m-am2/.env" "$new_dir/devices/b150m-am2/.env"
+            fi
+            if [[ -d "$install_dir/logs" ]]; then
+                cp -a "$install_dir/logs/." "$new_dir/logs/"
+            fi
+            rm -rf "$install_dir"
+        fi
+        mv "$new_dir" "$install_dir"
+        chmod 755 "$install_dir"
     fi
-    mv "$new_dir" "$install_dir"
-    chmod 755 "$install_dir"
     exec bash "$install_dir/devices/b150m-am2/setup_host.sh"
 fi
 
