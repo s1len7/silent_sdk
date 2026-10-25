@@ -92,7 +92,7 @@ $t = "$dir\devices\thinkpad-s2-2g\scripts"
 $w = "$dir\devices\desktop\scripts"
 $results = @()
 # Hostname first: it asks for the new name, so the rest runs without waiting for input
-$results += Invoke-Step 'hostname'       { & "$w\setup-hostname.ps1" -Default 'thinkpad-s2-2g' }
+$results += Invoke-Step 'hostname'       { & "$w\setup-hostname.ps1" -Default '20J3A002CD' }
 # Windows updates early, so the following installers run on an up-to-date system
 $results += Invoke-Step 'windows-update' { & "$w\setup-windows-update.ps1" }
 # RDP and power settings right after: no download, so remote access works early and the lid can be closed

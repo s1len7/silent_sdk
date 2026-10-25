@@ -36,7 +36,7 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/thinkpad-s2
 
 ### hostname 설정
 
-- Setup: [desktop/scripts/setup-hostname.ps1](../desktop/scripts/setup-hostname.ps1) (새 hostname을 물어봄, 엔터를 누르면 기본값 `thinkpad-s2-2g`, 적용 후 재부팅)
+- Setup: [desktop/scripts/setup-hostname.ps1](../desktop/scripts/setup-hostname.ps1) (새 hostname을 물어봄, 엔터를 누르면 기본값 `20J3A002CD`, 적용 후 재부팅)
   - 다시 실행 시: 고른 hostname이 지금 hostname과 같거나, 변경 후 재부팅 대기 중이면 건너뜀
 
 
