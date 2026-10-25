@@ -27,10 +27,10 @@
 irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/thinkpad-s2-2g/setup.ps1 | iex
 ```
 
-- 저장소: 실행할 때마다 `C:\silent_sdk`에 최신 버전을 받음 (Git이 없으면 먼저 설치, git clone이면 `git pull`, 아니면 새로 clone해서 폴더를 교체하고 `logs`와 `.env`는 유지)
+- 저장소: 실행할 때마다 `~\silent_sdk`에 최신 버전을 받음 (Git이 없으면 먼저 설치, git clone이면 `git pull`, 아니면 새로 clone해서 폴더를 교체하고 `logs`와 `.env`는 유지)
 - 실패한 단계가 있어도 나머지 단계는 계속 진행하고, 끝에 단계별 결과(OK/SKIP/FAIL) 요약을 보여줌
 - 다시 실행: 같은 명령을 다시 실행하면 이미 설정된 단계는 SKIP하고, 실패했거나 안 된 단계만 다시 진행함 (단계별 확인 기준은 아래 각 기능의 "다시 실행 시" 참고)
-- 로그: `C:\silent_sdk\logs\thinkpad-s2-2g-<시각>\` (`setup.log` 전체 실행 기록, `*-install.log` 설치 프로그램 로그)
+- 로그: `~\silent_sdk\logs\thinkpad-s2-2g-<시각>\` (`setup.log` 전체 실행 기록, `*-install.log` 설치 프로그램 로그)
 - 공통 스크립트(`desktop/scripts/`)의 자세한 설명은 [desktop README](../desktop/README.md) 참고
 
 

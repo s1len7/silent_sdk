@@ -1,10 +1,10 @@
-# titan-s260 full setup: get silent_sdk into C:\silent_sdk, then run every titan-s260 setup step.
+# titan-s260 full setup: get silent_sdk into ~\silent_sdk, then run every titan-s260 setup step.
 #   irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/titan-s260/setup.ps1 | iex
 # ASCII-only so it works both via `irm | iex` and `-File` on Windows PowerShell 5.1.
 
 $ErrorActionPreference = 'Stop'
 $repo = 'https://github.com/s1len7/silent_sdk'
-$dir  = 'C:\silent_sdk'
+$dir  = "$HOME\silent_sdk"
 
 # Re-launch as admin
 $principal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())

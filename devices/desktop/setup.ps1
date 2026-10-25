@@ -1,10 +1,10 @@
-# silent_sdk full setup: get this repo into C:\silent_sdk, then run every setup step.
+# silent_sdk full setup: get this repo into ~\silent_sdk, then run every setup step.
 #   irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/setup.ps1 | iex
 # ASCII-only so it works both via `irm | iex` and `-File` on Windows PowerShell 5.1.
 
 $ErrorActionPreference = 'Stop'
 $repo = 'https://github.com/s1len7/silent_sdk'
-$dir  = 'C:\silent_sdk'
+$dir  = "$HOME\silent_sdk"
 
 # Re-launch as admin
 $principal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
