@@ -3,7 +3,11 @@
 # -> ~/.config/opencode/opencode-fallback.json (fallback models) -> Gemini API key from devices/desktop/.env
 # (GEMINI_API_KEY; skipped when empty). The free opencode/* models need no login.
 # Needs winget: setup-winget.ps1 runs before this step and installs it when missing.
+# -UserScope skips winget and installs Node.js from the official win-x64 zip into
+# %LOCALAPPDATA%\Programs\nodejs, then adds that folder and the npm global bin to the user PATH
+# (no admin). The config and auth files are already per-user either way.
 # Docs: https://opencode.ai/docs/
+param([switch]$UserScope)
 
 $ErrorActionPreference = 'Stop'
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -31,7 +35,8 @@ if (Test-Path $envFile) {
 $apiKey = $values['GEMINI_API_KEY']
 
 # Node.js and npm global bin in this session too (a fresh install only updates PATH for new processes)
-foreach ($dir in "$env:ProgramFiles\nodejs", "$env:APPDATA\npm") {
+$nodeDir = if ($UserScope) { "$env:LOCALAPPDATA\Programs\nodejs" } else { "$env:ProgramFiles\nodejs" }
+foreach ($dir in $nodeDir, "$env:APPDATA\npm") {
     if (($env:Path -split ';') -notcontains $dir) { $env:Path = "$dir;$env:Path" }
 }
 
@@ -78,17 +83,49 @@ if ((Test-Cli) -and (Test-Config) -and (Test-Fallback) -and (Test-Key)) {
 }
 
 if (-not (Test-Cli)) {
-    # 1. Node.js: install, or upgrade to the newest release
-    $winget = "$env:LOCALAPPDATA\Microsoft\WindowsApps\winget.exe"
-    if (-not (Test-Path $winget)) { $winget = (Get-Command winget -ErrorAction SilentlyContinue).Source }
-    if (-not $winget) { throw 'winget not found. Run setup-winget.ps1 first' }
-    & $winget list --id OpenJS.NodeJS --exact --accept-source-agreements | Out-Null
-    $verb = if ($LASTEXITCODE -eq 0) { 'upgrade' } else { 'install' }
-    Write-Host "[1/5] Node.js: winget $verb"
-    & $winget $verb --id OpenJS.NodeJS --exact -s winget --silent --accept-package-agreements --accept-source-agreements
-    # -1978335189 (0x8A15002B): no newer version, -1978335135 (0x8A150061): already installed
-    if ($LASTEXITCODE -notin 0, -1978335189, -1978335135) { throw "Node.js $verb failed: exit code $LASTEXITCODE" }
-    & node --version
+    if ($UserScope) {
+        # 1. Node.js: user-level zip install (the MSI installers need admin)
+        if (-not (Test-Path "$nodeDir\node.exe")) {
+            Write-Host "[1/5] Node.js: user-level zip install ($nodeDir)"
+            $index = Invoke-RestMethod 'https://nodejs.org/dist/index.json' -UseBasicParsing
+            $release = $index | Where-Object { $_.lts -and $_.files -contains 'win-x64-zip' } | Select-Object -First 1
+            if (-not $release) { throw 'no Node.js LTS release with win-x64-zip found' }
+            $url = "https://nodejs.org/dist/$($release.version)/node-$($release.version)-win-x64.zip"
+            $zip = "$env:TEMP\node-$($release.version)-win-x64.zip"
+            $extract = "$env:TEMP\node-extract"
+            Invoke-WebRequest $url -OutFile $zip -UseBasicParsing
+            Remove-Item $extract -Recurse -Force -ErrorAction SilentlyContinue
+            Expand-Archive $zip $extract -Force
+            $inner = "$extract\node-$($release.version)-win-x64"
+            if (-not (Test-Path "$inner\node.exe")) { throw "node.exe not found in $zip" }
+            Remove-Item $nodeDir -Recurse -Force -ErrorAction SilentlyContinue
+            New-Item -ItemType Directory -Force (Split-Path $nodeDir) | Out-Null
+            Move-Item $inner $nodeDir
+            Remove-Item $extract, $zip -Recurse -Force -ErrorAction SilentlyContinue
+            Write-Host "Node.js $(& "$nodeDir\node.exe" --version) installed"
+        }
+        # opencode.cmd lands in the npm global bin, which is not on PATH by default
+        foreach ($dir in $nodeDir, "$env:APPDATA\npm") {
+            $userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
+            $entries = @($userPath -split ';' | Where-Object { $_ })
+            if ($entries -notcontains $dir) {
+                [Environment]::SetEnvironmentVariable('Path', (($entries + $dir) -join ';'), 'User')
+                Write-Host "Added to user PATH: $dir"
+            }
+        }
+    } else {
+        # 1. Node.js: install, or upgrade to the newest release
+        $winget = "$env:LOCALAPPDATA\Microsoft\WindowsApps\winget.exe"
+        if (-not (Test-Path $winget)) { $winget = (Get-Command winget -ErrorAction SilentlyContinue).Source }
+        if (-not $winget) { throw 'winget not found. Run setup-winget.ps1 first' }
+        & $winget list --id OpenJS.NodeJS --exact --accept-source-agreements | Out-Null
+        $verb = if ($LASTEXITCODE -eq 0) { 'upgrade' } else { 'install' }
+        Write-Host "[1/5] Node.js: winget $verb"
+        & $winget $verb --id OpenJS.NodeJS --exact -s winget --silent --accept-package-agreements --accept-source-agreements
+        # -1978335189 (0x8A15002B): no newer version, -1978335135 (0x8A150061): already installed
+        if ($LASTEXITCODE -notin 0, -1978335189, -1978335135) { throw "Node.js $verb failed: exit code $LASTEXITCODE" }
+        & node --version
+    }
 
     # 2. OpenCode CLI (latest); its install script fetches the platform binary, so it must be allowed
     Write-Host '[2/5] Installing the OpenCode CLI (npm, latest)'

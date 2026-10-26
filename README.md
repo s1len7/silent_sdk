@@ -5,6 +5,8 @@
 | 장비 | 대상 | 문서 |
 |---|---|---|
 | desktop | Windows 10 이상 데스크탑 | [devices/desktop/README.md](devices/desktop/README.md) |
+| generic-windows | Windows 10 이상 (빌려쓰는 PC용, 최소 설치) | [devices/generic-windows/README.md](devices/generic-windows/README.md) |
+| generic-ubuntu | Ubuntu/Debian 계열 (빌려쓰는 PC용, 최소 설치) | [devices/generic-ubuntu/README.md](devices/generic-ubuntu/README.md) |
 | raspberrypi4-8gb | Raspberry Pi 4 (RAM 8GB), Raspberry Pi OS 64-bit (Trixie) | [devices/raspberrypi4-8gb/README.md](devices/raspberrypi4-8gb/README.md) |
 | raspberrypi4-2gb | Raspberry Pi 4 (RAM 2GB), Raspberry Pi OS **Lite** 64-bit (Trixie) | [devices/raspberrypi4-2gb/README.md](devices/raspberrypi4-2gb/README.md) |
 | titan-s260 | SAM4S TITAN-S260 POS, Windows 10 IoT LTSC 2021 | [devices/titan-s260/README.md](devices/titan-s260/README.md) |
@@ -21,6 +23,8 @@
 silent_sdk/
 ├─ devices/          장비별 폴더 (각 폴더에 README.md, AGENTS.md(규칙), CLAUDE.md, GEMINI.md, 설치 스크립트)
 │  ├─ desktop/       Windows 데스크탑, Windows 공통 스크립트 (titan-s260도 사용)
+│  ├─ generic-windows/  빌려쓰는 Windows PC용 최소 설치 (desktop 스크립트 재사용)
+│  ├─ generic-ubuntu/   빌려쓰는 Ubuntu/Debian PC용 최소 설치
 │  ├─ titan-s260/
 │  ├─ raspberrypi4-8gb/
 │  ├─ raspberrypi4-2gb/
@@ -41,6 +45,16 @@ silent_sdk/
 desktop (PowerShell):
 ```powershell
 irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/setup.ps1 | iex
+```
+
+generic-windows (PowerShell, borrowed PC):
+```powershell
+irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/generic-windows/setup.ps1 | iex
+```
+
+generic-ubuntu (bash, borrowed PC):
+```bash
+(command -v git >/dev/null || sudo apt-get update && sudo apt-get install -y git) && git clone https://github.com/s1len7/silent_sdk.git ~/silent_sdk && bash ~/silent_sdk/devices/generic-ubuntu/setup.sh
 ```
 
 TITAN-S260 (PowerShell):

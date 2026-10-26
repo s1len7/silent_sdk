@@ -1,0 +1,31 @@
+# generic-ubuntu
+
+제조사/모델: 임의 Linux PC (빌려쓰는 PC용)
+지원 OS: Ubuntu/Debian 계열
+사양: 최소 사양 (AI 코딩 CLI 설치용)
+
+## 기능
+
+- Setup: [setup.sh](setup.sh) (전체 모듈 실행)
+- 다시 실행 시: 이미 설정된 모듈은 건너뛰고, 실패/누락된 부분만 진행
+- 로그: `logs/generic-ubuntu-<yyyyMMdd-HHmmss>/` (`setup.log`, `*-install.log`)
+
+### git
+- Setup: [modules/setup_git.sh](modules/setup_git.sh) (사용자 범위 위주 설정)
+- 다시 실행 시: git 설치 및 사용자 정보 설정 여부 확인
+
+### vscode
+- Setup: [modules/setup_vscode.sh](modules/setup_vscode.sh) (가능하면 사용자 단위로 설치)
+- 다시 실행 시: `code` 명령 사용 가능 여부 확인
+
+### opencode
+- Setup: [modules/setup_opencode.sh](modules/setup_opencode.sh) (OpenCode CLI, 사용자 범위 우선)
+- 다시 실행 시: `opencode` 명령 사용 가능 여부 확인
+
+### korean-input
+- Setup: [modules/setup_korean_input.sh](modules/setup_korean_input.sh) (Ubuntu 한글 입력: 빠진 패키지만 설치 후 입력 소스에 hangul 추가)
+- 다시 실행 시: ibus/ibus-hangul/fonts-nanum 설치 여부와 GNOME 입력 소스(`org.gnome.desktop.input-sources`)에 hangul이 있는지 확인
+
+```bash
+(command -v git >/dev/null || sudo apt-get update && sudo apt-get install -y git) && git clone https://github.com/s1len7/silent_sdk.git ~/silent_sdk && bash ~/silent_sdk/devices/generic-ubuntu/setup.sh
+```
