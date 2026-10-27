@@ -20,9 +20,11 @@
 - 전체 Setup: 호스트의 [Ubuntu VM 생성](../../README.md#ubuntu-vm-생성-호스트)으로 만든 VM은 첫 부팅 때 [setup_vm.sh](setup_vm.sh)가 자동으로 실행됨. 직접 실행하려면 VM 안에서:
 
 ```bash
-sudo bash ~/silent_sdk/devices/b150m-am2/vm/ubuntu-server/setup_vm.sh
+curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150m-am2/vm/ubuntu-server/setup_vm.sh | sudo bash
 ```
 
+- 이미 클론되어 있으면: `sudo bash ~/silent_sdk/devices/b150m-am2/vm/ubuntu-server/setup_vm.sh`
+- 파일 없이 실행하면 git을 설치하고 저장소를 받은 뒤(이미 받았으면 `git pull`) 그 안의 `setup_vm.sh`를 실행함
 - 다시 실행: 같은 명령을 다시 실행하면 이미 설정된 모듈은 SKIP하고, 실패했거나 안 된 모듈만 다시 진행함
 - 로그: `~/silent_sdk/logs/b150m-am2-ubuntu-server-<시각>/setup.log`
 - 모듈별 자세한 설명은 [장비 README](../../README.md)의 `(VM)` 기능 참고

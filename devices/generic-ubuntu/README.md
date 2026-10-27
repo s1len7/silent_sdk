@@ -7,6 +7,8 @@
 ## 기능
 
 - Setup: [setup.sh](setup.sh) (전체 모듈 실행)
+- 파일 없이 실행하면 git을 설치하고 저장소를 `~/silent_sdk`에 받은 뒤(이미 받았으면 `git pull`) 그 안의 `setup.sh`를 실행
+- 이미 클론되어 있으면: `bash ~/silent_sdk/devices/generic-ubuntu/setup.sh`
 - 다시 실행 시: 이미 설정된 모듈은 건너뛰고, 실패/누락된 부분만 진행
 - 로그: `logs/generic-ubuntu-<yyyyMMdd-HHmmss>/` (`setup.log`, `*-install.log`)
 
@@ -27,5 +29,6 @@
 - 다시 실행 시: ibus/ibus-hangul/fonts-nanum 설치 여부와 GNOME 입력 소스(`org.gnome.desktop.input-sources`)에 hangul이 있는지 확인
 
 ```bash
-(command -v git >/dev/null || sudo apt-get update && sudo apt-get install -y git) && git clone https://github.com/s1len7/silent_sdk.git ~/silent_sdk && bash ~/silent_sdk/devices/generic-ubuntu/setup.sh
+curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/generic-ubuntu/setup.sh | bash
 ```
+

@@ -20,10 +20,10 @@
 
 ## 기능
 
-- 전체 Setup: Raspberry Pi OS Lite 64-bit 클린설치 직후 이 한 줄만 실행 ([setup.sh](setup.sh)) (git이 없으면 설치 → 저장소 클론 → 전체 설치):
+- 전체 Setup: Raspberry Pi OS Lite 64-bit 클린설치 직후 이 한 줄만 실행 ([setup.sh](setup.sh)). 파일 없이 실행하면 git을 설치하고 저장소를 받은 뒤(이미 받았으면 `git pull`) 그 안의 `setup.sh`로 전체 설치:
 
 ```bash
-(command -v git >/dev/null || (sudo apt-get update && sudo apt-get install -y git)) && git clone https://github.com/s1len7/silent_sdk.git ~/silent_sdk && sudo bash ~/silent_sdk/devices/raspberrypi4-2gb/setup.sh
+curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/raspberrypi4-2gb/setup.sh | sudo bash
 ```
 
 - 이미 클론되어 있으면: `sudo bash ~/silent_sdk/devices/raspberrypi4-2gb/setup.sh` (`setup.sh`의 `modules` 목록 순서대로 실행)

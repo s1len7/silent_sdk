@@ -56,7 +56,7 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/generic-win
 
 generic-ubuntu (bash, borrowed PC):
 ```bash
-(command -v git >/dev/null || sudo apt-get update && sudo apt-get install -y git) && git clone https://github.com/s1len7/silent_sdk.git ~/silent_sdk && bash ~/silent_sdk/devices/generic-ubuntu/setup.sh
+curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/generic-ubuntu/setup.sh | bash
 ```
 
 TITAN-S260 (PowerShell):
@@ -71,22 +71,27 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/thinkpad-s2
 
 Raspberry Pi 4 (8GB):
 ```bash
-(command -v git >/dev/null || (sudo apt-get update && sudo apt-get install -y git)) && git clone https://github.com/s1len7/silent_sdk.git ~/silent_sdk && sudo bash ~/silent_sdk/devices/raspberrypi4-8gb/setup.sh
+curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/raspberrypi4-8gb/setup.sh | sudo bash
 ```
 
 Raspberry Pi 4 (2GB):
 ```bash
-(command -v git >/dev/null || (sudo apt-get update && sudo apt-get install -y git)) && git clone https://github.com/s1len7/silent_sdk.git ~/silent_sdk && sudo bash ~/silent_sdk/devices/raspberrypi4-2gb/setup.sh
+curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/raspberrypi4-2gb/setup.sh | sudo bash
 ```
 
 Jetson Nano B01:
 ```bash
-(command -v git >/dev/null || (sudo apt-get update && sudo apt-get install -y git)) && git clone https://github.com/s1len7/silent_sdk.git ~/silent_sdk && sudo bash ~/silent_sdk/devices/jetson-nano-b01/setup.sh
+curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/jetson-nano-b01/setup.sh | sudo bash
 ```
 
 ASUS B150M-A/M.2 (Proxmox 호스트 셸, root):
 ```bash
 curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150m-am2/setup_host.sh | bash
+```
+
+ASUS B150M-A/M.2의 Ubuntu VM (VM 안에서, sudo):
+```bash
+curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150m-am2/vm/ubuntu-server/setup_vm.sh | sudo bash
 ```
 
 
