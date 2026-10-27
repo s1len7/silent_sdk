@@ -20,15 +20,18 @@
 ```text
 gmk87/
 ├── README.md
+├── AGENTS.md
+├── CLAUDE.md
+├── GEMINI.md
 └── backup/
-    └── ZUOYA/
-        ├── GMK87-2.4G.JSON
-        └── GMK87-USB.JSON
+    ├── ZUOYA GMK87-2.4G.JSON
+    └── ZUOYA GMK87-USB.JSON
 ```
 
 - `README.md`: 장비 사양, 연결 방법, VIA 설정 및 참고 자료
-- `backup/ZUOYA/GMK87-2.4G.JSON`: 2.4 GHz 모드용 VIA 키보드 정의 파일
-- `backup/ZUOYA/GMK87-USB.JSON`: USB 유선 모드용 VIA 키보드 정의 파일
+- `backup/ZUOYA GMK87-2.4G.JSON`: 2.4 GHz 모드용 VIA 키보드 정의 파일
+- `backup/ZUOYA GMK87-USB.JSON`: USB 유선 모드용 VIA 키보드 정의 파일
+
 
 
 ## 연결 방법
@@ -126,8 +129,8 @@ LCD 시계의 시간 동기화와 사용자 이미지 변경은 VIA 키 매핑 �
 
 다음 파일을 제조사 또는 배포처에서 받은 원본 그대로 보관합니다.
 
-- `backup/ZUOYA/GMK87-2.4G.JSON`
-- `backup/ZUOYA/GMK87-USB.JSON`
+- `backup/ZUOYA GMK87-2.4G.JSON`
+- `backup/ZUOYA GMK87-USB.JSON`
 
 ## 참고 자료
 
