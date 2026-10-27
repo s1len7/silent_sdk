@@ -15,4 +15,5 @@
     - 일부만 돼 있으면 빠진 부분만 처리할 것 (예: 설치는 돼 있고 설정만 빠짐)
     - README 해당 기능에 `다시 실행 시:` 줄로 확인 기준을 적을 것
   - 설치 프로그램 로그는 `$env:SILENT_SDK_LOG_DIR`(없으면 `$env:TEMP`)에 `<기능>-install.log`로 남길 것
-- 진입점(`setup.ps1`)은 각 단계를 `devices/desktop/scripts/lib-log.ps1`의 `Invoke-Step`으로 실행함 (실패해도 다음 단계 진행, 로그는 저장소 `logs/<플랫폼>-<시각>/`)
+- 진입점(`setup.ps1`)은 각 단계를 `devices/generic-windows/scripts/lib-log.ps1`의 `Invoke-Step`으로 실행함 (실패해도 다음 단계 진행, 로그는 저장소 `logs/<플랫폼>-<시각>/`)
+- Windows 공통 모듈(git, vscode, winget, opencode)은 `devices/generic-windows/scripts/`에 있고 desktop도 그것을 호출함 (수정 시 titan-s260·thinkpad-s2-2g에 미치는 영향도 확인할 것)

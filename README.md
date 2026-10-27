@@ -23,8 +23,8 @@
 ```text
 silent_sdk/
 ├─ devices/          장비별 폴더 (각 폴더에 README.md, AGENTS.md(규칙), CLAUDE.md, GEMINI.md, 설치 스크립트)
-│  ├─ desktop/       Windows 데스크탑, Windows 공통 스크립트 (titan-s260도 사용)
-│  ├─ generic-windows/  빌려쓰는 Windows PC용 최소 설치 (desktop 스크립트 재사용)
+│  ├─ desktop/       Windows 데스크탑, Windows 공통 스크립트 (titan-s260·thinkpad-s2-2g도 사용)
+│  ├─ generic-windows/  빌려쓰는 Windows PC용 최소 설치, Windows 공통 스크립트(git·vscode·winget·opencode) 보관
 │  ├─ generic-ubuntu/   빌려쓰는 Ubuntu/Debian PC용 최소 설치
 │  ├─ titan-s260/
 │  ├─ raspberrypi4-8gb/

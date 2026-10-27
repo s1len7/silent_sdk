@@ -75,7 +75,7 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
 
 ### WinGet
 
-- Setup: [scripts/setup-winget.ps1](scripts/setup-winget.ps1) (winget이 없거나 실행되지 않을 때 설치, LTSC/IoT처럼 Microsoft Store가 없는 환경용)
+- Setup: [../generic-windows/scripts/setup-winget.ps1](../generic-windows/scripts/setup-winget.ps1) (Windows 공통 스크립트, winget이 없거나 실행되지 않을 때 설치, LTSC/IoT처럼 Microsoft Store가 없는 환경용)
   - winget GitHub 릴리스의 설치 파일, 의존 패키지, 라이선스 파일로 PC 전체에 등록 (`Add-AppxProvisionedPackage -LicensePath`) 후 현재 사용자에 바로 연결
   - 라이선스 없이 설치하면 "관련 앱 라이선스를 찾을 수 없습니다" 오류로 winget이 실행되지 않음
   - 다시 실행 시: `winget --version`이 실행되면 건너뜀
@@ -107,7 +107,7 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
 
 ### Git
 
-- Setup: [scripts/setup-git.ps1](scripts/setup-git.ps1) (Git for Windows 최신 64-bit, 기본 옵션 무인 설치)
+- Setup: [../generic-windows/scripts/setup-git.ps1](../generic-windows/scripts/setup-git.ps1) (Windows 공통 스크립트, Git for Windows 최신 64-bit, 기본 옵션 무인 설치)
   - 다시 실행 시: Git이 설치돼 있고 user.name/user.email이 같으면 건너뜀. 설치만 돼 있으면 사용자 정보만 설정
   - 전역 `user.name`, `user.email` 설정 (이메일은 GitHub noreply 주소로 비식별화)
 
@@ -144,7 +144,7 @@ event="done"
 
 ### Visual Studio Code
 
-- Setup: [scripts/setup-vscode.ps1](scripts/setup-vscode.ps1) (System Installer x64 최신 버전, PATH 추가, 탐색기 "Code로 열기" 메뉴)
+- Setup: [../generic-windows/scripts/setup-vscode.ps1](../generic-windows/scripts/setup-vscode.ps1) (Windows 공통 스크립트, System Installer x64 최신 버전, PATH 추가, 탐색기 "Code로 열기" 메뉴)
   - 다시 실행 시: VS Code가 설치돼 있으면(PC 전체 또는 사용자 단위) 건너뜀
 
 
@@ -183,7 +183,7 @@ event="done"
 
 ### OpenCode
 
-- Setup: [scripts/setup-opencode.ps1](scripts/setup-opencode.ps1) (Node.js(winget) 최신, OpenCode CLI(npm `opencode-ai`) 최신, 기본 모델 `opencode/deepseek-v4.1-flash-free`, 실패 시 `opencode-runtime-fallback` 플러그인으로 `opencode/glm-5.3-flash-free` → `opencode/beam-free` 순으로 전환)
+- Setup: [../generic-windows/scripts/setup-opencode.ps1](../generic-windows/scripts/setup-opencode.ps1) (Windows 공통 스크립트, Node.js(winget) 최신, OpenCode CLI(npm `opencode-ai`) 최신, 기본 모델 `opencode/deepseek-v4.1-flash-free`, 실패 시 `opencode-runtime-fallback` 플러그인으로 `opencode/glm-5.3-flash-free` → `opencode/beam-free` 순으로 전환)
   - 다시 실행 시: `opencode` 명령이 있고, `~\.config\opencode\opencode.json`의 기본 모델과 플러그인, `~\.config\opencode\opencode-fallback.json`의 대체 모델이 모두 같고, `.env`에 키가 있으면 Gemini 키도 등록돼 있을 때 건너뜀. CLI만 설치돼 있으면 설정만 적용
 - 설정: `.env`의 `GEMINI_API_KEY` ([.env.example](.env.example) 참고, 비우면 Gemini 연결 없이 설치만 함), `opencode run -m google/gemini-3.6-flash "..."`로 사용 (`gemini-3.8-flash`는 첫 응답까지 1~3분 걸려 대체 모델 플러그인의 30초 제한에 중단됨)
 - 무료 `opencode/` 모델은 로그인 없이 사용 가능

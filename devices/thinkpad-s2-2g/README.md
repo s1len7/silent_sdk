@@ -31,7 +31,7 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/thinkpad-s2
 - 실패한 단계가 있어도 나머지 단계는 계속 진행하고, 끝에 단계별 결과(OK/SKIP/FAIL) 요약을 보여줌
 - 다시 실행: 같은 명령을 다시 실행하면 이미 설정된 단계는 SKIP하고, 실패했거나 안 된 단계만 다시 진행함 (단계별 확인 기준은 아래 각 기능의 "다시 실행 시" 참고)
 - 로그: `~\silent_sdk\logs\thinkpad-s2-2g-<시각>\` (`setup.log` 전체 실행 기록, `*-install.log` 설치 프로그램 로그)
-- 공통 스크립트(`desktop/scripts/`)의 자세한 설명은 [desktop README](../desktop/README.md) 참고
+- 공통 스크립트(`desktop/scripts/`, `generic-windows/scripts/`)의 자세한 설명은 [desktop README](../desktop/README.md) 참고
 
 
 ### hostname 설정
@@ -73,7 +73,7 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/thinkpad-s2
 
 ### WinGet
 
-- Setup: [desktop/scripts/setup-winget.ps1](../desktop/scripts/setup-winget.ps1) (winget이 없거나 실행되지 않을 때 설치)
+- Setup: [generic-windows/scripts/setup-winget.ps1](../generic-windows/scripts/setup-winget.ps1) (winget이 없거나 실행되지 않을 때 설치)
   - 다시 실행 시: `winget --version`이 실행되면 건너뜀
 
 
@@ -97,7 +97,7 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/thinkpad-s2
 
 ### Git
 
-- Setup: [desktop/scripts/setup-git.ps1](../desktop/scripts/setup-git.ps1) (Git for Windows 최신 64-bit, 기본 옵션 무인 설치)
+- Setup: [generic-windows/scripts/setup-git.ps1](../generic-windows/scripts/setup-git.ps1) (Git for Windows 최신 64-bit, 기본 옵션 무인 설치)
   - 다시 실행 시: Git이 설치돼 있고 user.name/user.email이 같으면 건너뜀. 설치만 돼 있으면 사용자 정보만 설정
 
 
@@ -109,13 +109,13 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/thinkpad-s2
 
 ### Visual Studio Code
 
-- Setup: [desktop/scripts/setup-vscode.ps1](../desktop/scripts/setup-vscode.ps1) (System Installer x64 최신 버전, PATH 추가, 탐색기 "Code로 열기" 메뉴)
+- Setup: [generic-windows/scripts/setup-vscode.ps1](../generic-windows/scripts/setup-vscode.ps1) (System Installer x64 최신 버전, PATH 추가, 탐색기 "Code로 열기" 메뉴)
   - 다시 실행 시: VS Code가 설치돼 있으면(PC 전체 또는 사용자 단위) 건너뜀
 
 
 ### OpenCode
 
-- Setup: [desktop/scripts/setup-opencode.ps1](../desktop/scripts/setup-opencode.ps1) (Node.js(winget) 최신, OpenCode CLI(npm) 최신, 무료 기본 모델 `opencode/deepseek-v4.1-flash-free`와 대체 모델 설정)
+- Setup: [generic-windows/scripts/setup-opencode.ps1](../generic-windows/scripts/setup-opencode.ps1) (Node.js(winget) 최신, OpenCode CLI(npm) 최신, 무료 기본 모델 `opencode/deepseek-v4.1-flash-free`와 대체 모델 설정)
   - 다시 실행 시: `opencode` 명령이 있고 기본 모델·플러그인·대체 모델 설정이 모두 같고, `.env`에 키가 있으면 Gemini 키도 등록돼 있을 때 건너뜀. CLI만 설치돼 있으면 설정만 적용
 - 설정: `devices/desktop/.env`의 `GEMINI_API_KEY` (비우면 Gemini 연결 없이 설치만 함)
 

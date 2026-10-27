@@ -39,7 +39,7 @@ try {
     if (-not (Test-Path $git)) {
         # The Git step script is not on disk yet; run it from GitHub as a script block,
         # which also works when the execution policy blocks .ps1 files
-        $gitSetup = Invoke-RestMethod 'https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/scripts/setup-git.ps1' -UseBasicParsing
+        $gitSetup = Invoke-RestMethod 'https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/generic-windows/scripts/setup-git.ps1' -UseBasicParsing
         & ([scriptblock]::Create($gitSetup)) | Out-Host
         # The installer adds Git to the system PATH, but this session still has the old one
         $env:Path = [Environment]::GetEnvironmentVariable('Path', 'Machine') + ';' + [Environment]::GetEnvironmentVariable('Path', 'User')
@@ -76,7 +76,7 @@ try {
     }
 } catch {
     Write-Host "ERROR: getting the repo failed: $($_.Exception.Message)" -ForegroundColor Red
-    if (-not (Test-Path "$dir\devices\desktop\scripts\lib-log.ps1")) {
+    if (-not (Test-Path "$dir\devices\generic-windows\scripts\lib-log.ps1")) {
         Stop-Transcript | Out-Null
         Read-Host "Setup aborted. Log: $bootstrapLog. Press Enter to exit"
         exit 1
@@ -84,11 +84,13 @@ try {
     Write-Warning "Continuing with the existing files in $dir"
 }
 
-. "$dir\devices\desktop\scripts\lib-log.ps1"
+. "$dir\devices\generic-windows\scripts\lib-log.ps1"
 $logDir = Start-SetupLog $dir 'desktop' $stamp $bootstrapLog
 
 # Setup steps: a failed step is logged and the next one still runs
 $s = "$dir\devices\desktop\scripts"
+# Shared modules used by every Windows device (winget/git/vscode/opencode) live in generic-windows
+$g = "$dir\devices\generic-windows\scripts"
 $results = @()
 # Hostname first: it asks for the new name, so the rest runs without waiting for input
 $results += Invoke-Step 'hostname'     { & "$s\setup-hostname.ps1" -Default 'silent-desktop' }
@@ -100,21 +102,21 @@ $results += Invoke-Step 'desktop-icons' { & "$s\setup-desktop-icons.ps1" }
 $results += Invoke-Step 'chrome'       { & "$s\setup-chrome.ps1" }
 # $results += Invoke-Step 'zoomit'     { & "$s\setup-zoomit.ps1" }  # PowerToys includes ZoomIt
 $results += Invoke-Step 'powertoys'    { & "$s\setup-powertoys.ps1" }
-$results += Invoke-Step 'winget'       { & "$s\setup-winget.ps1" }
+$results += Invoke-Step 'winget'       { & "$g\setup-winget.ps1" }
 $results += Invoke-Step 'pcmanager'    { & "$s\setup-pcmanager.ps1" }
 $results += Invoke-Step 'sysinternals' { & "$s\setup-sysinternals.ps1" }
 # Autologon right after Sysinternals, which provides Autologon64.exe; asks for the account password
 $results += Invoke-Step 'autologon'    { & "$s\setup-autologon.ps1" }
-$results += Invoke-Step 'git'          { & "$s\setup-git.ps1" }
+$results += Invoke-Step 'git'          { & "$g\setup-git.ps1" }
 # After Git: the Claude Code hook runs with Git Bash
 $results += Invoke-Step 'claude-telegrambot' { & "$s\setup-claude-telegrambot.ps1" }
 $results += Invoke-Step 'python'       { & "$s\setup-python.ps1" }
-$results += Invoke-Step 'vscode'       { & "$s\setup-vscode.ps1" }
+$results += Invoke-Step 'vscode'       { & "$g\setup-vscode.ps1" }
 $results += Invoke-Step 'docker'       { & "$s\setup-docker.ps1" }
 $results += Invoke-Step 'openclaw-gateway' { & "$s\setup-openclaw-gateway.ps1" }
 # After the local Gateway, which the tray app connects to
 $results += Invoke-Step 'openclaw-companion' { & "$s\setup-openclaw-companion.ps1" }
-$results += Invoke-Step 'opencode'     { & "$s\setup-opencode.ps1" }
+$results += Invoke-Step 'opencode'     { & "$g\setup-opencode.ps1" }
 
 Write-SetupSummary $results $logDir
 Stop-Transcript | Out-Null

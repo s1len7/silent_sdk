@@ -4,7 +4,7 @@
 
 - 대상: Windows 10 이상 (빌려쓰는 PC용), Windows PowerShell 5.1
 - 빌려쓰는 PC용이므로 사용자 범위 설치를 우선하고, 도구에 필요한 최소한만 설정할 것
-- 공통 스크립트는 `devices/desktop/scripts/`의 것을 재사용 (git/vscode/opencode). 필요 시 수정은 사용자 확인 후 진행
+- Windows 공통 스크립트(git/vscode/winget/opencode, 로깅 `lib-log.ps1`)는 `devices/generic-windows/scripts/`에 두고 desktop·titan-s260·thinkpad-s2-2g도 이 파일을 사용 (수정은 사용자 확인 후 진행)
 - Windows 전용 모듈은 `devices/generic-windows/scripts/`에 `setup-<기능>.ps1` 형태로 둘 것
 - 새 모듈은 `devices/generic-windows/setup.ps1`에 순서대로 추가하고, `devices/generic-windows/README.md`에도 해당 기능 섹션을 추가할 것
 - `.ps1` 파일은 ASCII만 사용할 것 (주석 포함). `irm | iex` 및 BOM 없는 실행(PowerShell 5.1) 때문

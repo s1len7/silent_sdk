@@ -1,6 +1,7 @@
 # Setup the latest Git for Windows (64-bit) from GitHub releases, then set the global commit identity.
 # -UserScope installs for the current user only (%LOCALAPPDATA%\Programs\Git, no admin needed).
-# Without -UserScope the machine-wide installer runs (needs admin; used by desktop/titan-s260/thinkpad-s2-2g).
+# Without -UserScope the machine-wide installer runs (needs admin; used by desktop/titan-s260/thinkpad-s2-2g);
+# generic-windows passes -UserScope so a borrowed PC needs no admin.
 param([switch]$UserScope)
 
 $ErrorActionPreference = 'Stop'

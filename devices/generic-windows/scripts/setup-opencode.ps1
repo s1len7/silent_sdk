@@ -13,7 +13,8 @@ $ErrorActionPreference = 'Stop'
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 $logDir = if ($env:SILENT_SDK_LOG_DIR) { $env:SILENT_SDK_LOG_DIR } else { $env:TEMP }
-$envFile = Join-Path (Split-Path $PSScriptRoot) '.env'
+# This module lives in devices/generic-windows/scripts; the shared .env stays in devices/desktop
+$envFile = Join-Path $PSScriptRoot '..\..\desktop\.env'
 $configDir = "$env:USERPROFILE\.config\opencode"
 $configFile = "$configDir\opencode.json"
 $fallbackFile = "$configDir\opencode-fallback.json"

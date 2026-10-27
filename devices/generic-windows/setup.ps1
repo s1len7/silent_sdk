@@ -21,7 +21,7 @@ try {
     if (-not $git) {
         $gitCmd = Get-Command git -ErrorAction SilentlyContinue
         if (-not $gitCmd) {
-            $gitSetup = Invoke-RestMethod 'https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/scripts/setup-git.ps1' -UseBasicParsing
+            $gitSetup = Invoke-RestMethod 'https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/generic-windows/scripts/setup-git.ps1' -UseBasicParsing
             & ([scriptblock]::Create($gitSetup)) -UserScope | Out-Host
             $env:Path = [Environment]::GetEnvironmentVariable('Path', 'Machine') + ';' + [Environment]::GetEnvironmentVariable('Path', 'User')
             $git = "$env:LOCALAPPDATA\Programs\Git\cmd\git.exe"
@@ -59,7 +59,7 @@ try {
     }
 } catch {
     Write-Host "ERROR: getting the repo failed: $($_.Exception.Message)" -ForegroundColor Red
-    if (-not (Test-Path "$dir\devices\desktop\scripts\lib-log.ps1")) {
+    if (-not (Test-Path "$dir\devices\generic-windows\scripts\lib-log.ps1")) {
         Stop-Transcript | Out-Null
         Read-Host "Setup aborted. Log: $bootstrapLog. Press Enter to exit"
         exit 1
@@ -67,10 +67,10 @@ try {
     Write-Warning "Continuing with the existing files in $dir"
 }
 
-. "$dir\devices\desktop\scripts\lib-log.ps1"
+. "$dir\devices\generic-windows\scripts\lib-log.ps1"
 $logDir = Start-SetupLog $dir 'generic-windows' $stamp $bootstrapLog
 
-$d = "$dir\devices\desktop\scripts"
+$d = "$dir\devices\generic-windows\scripts"
 $results = @()
 $results += Invoke-Step 'git'      { & "$d\setup-git.ps1" }
 $results += Invoke-Step 'vscode'   { & "$d\setup-vscode.ps1" }

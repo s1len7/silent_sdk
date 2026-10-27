@@ -39,7 +39,7 @@ try {
     if (-not (Test-Path $git)) {
         # The Git step script is not on disk yet; run it from GitHub as a script block,
         # which also works when the execution policy blocks .ps1 files
-        $gitSetup = Invoke-RestMethod 'https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/scripts/setup-git.ps1' -UseBasicParsing
+        $gitSetup = Invoke-RestMethod 'https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/generic-windows/scripts/setup-git.ps1' -UseBasicParsing
         & ([scriptblock]::Create($gitSetup)) | Out-Host
         # The installer adds Git to the system PATH, but this session still has the old one
         $env:Path = [Environment]::GetEnvironmentVariable('Path', 'Machine') + ';' + [Environment]::GetEnvironmentVariable('Path', 'User')
@@ -76,7 +76,7 @@ try {
     }
 } catch {
     Write-Host "ERROR: getting the repo failed: $($_.Exception.Message)" -ForegroundColor Red
-    if (-not (Test-Path "$dir\devices\desktop\scripts\lib-log.ps1")) {
+    if (-not (Test-Path "$dir\devices\generic-windows\scripts\lib-log.ps1")) {
         Stop-Transcript | Out-Null
         Read-Host "Setup aborted. Log: $bootstrapLog. Press Enter to exit"
         exit 1
@@ -84,12 +84,15 @@ try {
     Write-Warning "Continuing with the existing files in $dir"
 }
 
-. "$dir\devices\desktop\scripts\lib-log.ps1"
+. "$dir\devices\generic-windows\scripts\lib-log.ps1"
 $logDir = Start-SetupLog $dir 'titan-s260' $stamp $bootstrapLog
 
-# Setup steps (shared Windows scripts from devices\desktop\scripts): a failed step is logged and the next one still runs
+# Setup steps (shared Windows scripts from devices\desktop\scripts and devices\generic-windows\scripts):
+# a failed step is logged and the next one still runs
 $t = "$dir\devices\titan-s260\scripts"
 $w = "$dir\devices\desktop\scripts"
+# Shared modules used by every Windows device (winget/git/vscode/opencode) live in generic-windows
+$g = "$dir\devices\generic-windows\scripts"
 $results = @()
 $results += Invoke-Step 'activation' {
     # The activation script reports failure by exit code, not by throwing
@@ -101,7 +104,7 @@ $results += Invoke-Step 'hostname'       { & "$w\setup-hostname.ps1" -Default 't
 $results += Invoke-Step 'windows-update' { & "$w\setup-windows-update.ps1" }
 # $results += Invoke-Step 'zoomit'       { & "$w\setup-zoomit.ps1" }  # PowerToys includes ZoomIt
 $results += Invoke-Step 'powertoys'      { & "$w\setup-powertoys.ps1" }
-$results += Invoke-Step 'winget'         { & "$w\setup-winget.ps1" }
+$results += Invoke-Step 'winget'         { & "$g\setup-winget.ps1" }
 $results += Invoke-Step 'pcmanager'      { & "$w\setup-pcmanager.ps1" }
 $results += Invoke-Step 'sysinternals'   { & "$w\setup-sysinternals.ps1" }
 # Autologon right after Sysinternals, which provides Autologon64.exe; asks for the account password

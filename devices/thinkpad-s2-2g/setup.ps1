@@ -39,7 +39,7 @@ try {
     if (-not (Test-Path $git)) {
         # The Git step script is not on disk yet; run it from GitHub as a script block,
         # which also works when the execution policy blocks .ps1 files
-        $gitSetup = Invoke-RestMethod 'https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/scripts/setup-git.ps1' -UseBasicParsing
+        $gitSetup = Invoke-RestMethod 'https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/generic-windows/scripts/setup-git.ps1' -UseBasicParsing
         & ([scriptblock]::Create($gitSetup)) | Out-Host
         # The installer adds Git to the system PATH, but this session still has the old one
         $env:Path = [Environment]::GetEnvironmentVariable('Path', 'Machine') + ';' + [Environment]::GetEnvironmentVariable('Path', 'User')
@@ -76,7 +76,7 @@ try {
     }
 } catch {
     Write-Host "ERROR: getting the repo failed: $($_.Exception.Message)" -ForegroundColor Red
-    if (-not (Test-Path "$dir\devices\desktop\scripts\lib-log.ps1")) {
+    if (-not (Test-Path "$dir\devices\generic-windows\scripts\lib-log.ps1")) {
         Stop-Transcript | Out-Null
         Read-Host "Setup aborted. Log: $bootstrapLog. Press Enter to exit"
         exit 1
@@ -84,12 +84,15 @@ try {
     Write-Warning "Continuing with the existing files in $dir"
 }
 
-. "$dir\devices\desktop\scripts\lib-log.ps1"
+. "$dir\devices\generic-windows\scripts\lib-log.ps1"
 $logDir = Start-SetupLog $dir 'thinkpad-s2-2g' $stamp $bootstrapLog
 
-# Setup steps (shared Windows scripts from devices\desktop\scripts): a failed step is logged and the next one still runs
+# Setup steps (shared Windows scripts from devices\desktop\scripts and devices\generic-windows\scripts):
+# a failed step is logged and the next one still runs
 $t = "$dir\devices\thinkpad-s2-2g\scripts"
 $w = "$dir\devices\desktop\scripts"
+# Shared modules used by every Windows device (winget/git/vscode/opencode) live in generic-windows
+$g = "$dir\devices\generic-windows\scripts"
 $results = @()
 # Hostname first: it asks for the new name, so the rest runs without waiting for input
 $results += Invoke-Step 'hostname'       { & "$w\setup-hostname.ps1" -Default '20J3A002CD' }
@@ -100,16 +103,16 @@ $results += Invoke-Step 'rdp'            { & "$w\setup-rdp.ps1" }
 $results += Invoke-Step 'power'          { & "$t\setup-power.ps1" }
 $results += Invoke-Step 'chrome'         { & "$w\setup-chrome.ps1" }
 $results += Invoke-Step 'powertoys'      { & "$w\setup-powertoys.ps1" }
-$results += Invoke-Step 'winget'         { & "$w\setup-winget.ps1" }
+$results += Invoke-Step 'winget'         { & "$g\setup-winget.ps1" }
 # After winget, which installs it
 $results += Invoke-Step 'lenovo-update'  { & "$t\setup-lenovo-update.ps1" }
 $results += Invoke-Step 'sysinternals'   { & "$w\setup-sysinternals.ps1" }
 # Autologon right after Sysinternals, which provides Autologon64.exe; asks for the account password
 $results += Invoke-Step 'autologon'      { & "$w\setup-autologon.ps1" }
-$results += Invoke-Step 'git'            { & "$w\setup-git.ps1" }
+$results += Invoke-Step 'git'            { & "$g\setup-git.ps1" }
 $results += Invoke-Step 'python'         { & "$w\setup-python.ps1" }
-$results += Invoke-Step 'vscode'         { & "$w\setup-vscode.ps1" }
-$results += Invoke-Step 'opencode'       { & "$w\setup-opencode.ps1" }
+$results += Invoke-Step 'vscode'         { & "$g\setup-vscode.ps1" }
+$results += Invoke-Step 'opencode'       { & "$g\setup-opencode.ps1" }
 # Tray app connected to the always-on Gateway on the b150m-am2 VM instead of a Gateway on this laptop
 $results += Invoke-Step 'openclaw-remote' { & "$w\setup-openclaw-remote.ps1" }
 
