@@ -110,8 +110,8 @@ $results += Invoke-Step 'sysinternals'   { & "$w\setup-sysinternals.ps1" }
 # Autologon right after Sysinternals, which provides Autologon64.exe; asks for the account password
 $results += Invoke-Step 'autologon'      { & "$w\setup-autologon.ps1" }
 $results += Invoke-Step 'performance'    { & "$t\setup-performance.ps1" }
-$results += Invoke-Step 'touch-keyboard' { & "$t\setup-touch-keyboard.ps1" }
 $results += Invoke-Step 'desktop-icons'  { & "$w\setup-desktop-icons.ps1" }
+$results += Invoke-Step 'touch-keyboard' { & "$t\setup-touch-keyboard.ps1" }
 
 Write-SetupSummary $results $logDir
 Stop-Transcript | Out-Null

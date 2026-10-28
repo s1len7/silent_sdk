@@ -92,18 +92,18 @@ summary=()
 failed=0
 # 실행할 모듈 (위에서부터 순서대로 실행, 새 모듈은 여기에 한 줄 추가)
 modules=(
-    setup_auto_rotate
+    setup_power_button
     setup_boot_beep
+    setup_sftp
+    setup_screen_blanking
+    setup_htop_autostart
+    setup_auto_rotate
     # Docker 컨테이너 모듈(dozzle, magic_mirror, theengs_gateway)보다 먼저
     setup_docker
     setup_dozzle
-    setup_htop_autostart
     setup_magic_mirror
-    setup_power_button
-    setup_screen_blanking
-    setup_sftp
-    setup_shairport_sync
     setup_theengs_gateway
+    setup_shairport_sync
     setup_uxplay
 )
 for name in "${modules[@]}"; do
