@@ -1,5 +1,3 @@
-const os = require("os");
-
 // 날씨 위치는 docker/magic_mirror/.env의 MM_LAT, MM_LON에서 읽음 (저장소에 좌표를 남기지 않기 위함)
 const weatherLat = parseFloat(process.env.MM_LAT);
 const weatherLon = parseFloat(process.env.MM_LON);
@@ -7,39 +5,10 @@ if (!Number.isFinite(weatherLat) || !Number.isFinite(weatherLon)) {
     throw new Error("MM_LAT and MM_LON must be set in docker/magic_mirror/.env");
 }
 
-function getLocalIpAddress() {
-    const interfaces = os.networkInterfaces();
-    
-    // 1순위: 192.168.x.x 대역의 실제 IPv4 주소 탐색
-    for (const name of Object.keys(interfaces)) {
-        for (const net of interfaces[name]) {
-            if (net.family === "IPv4" && !net.internal) {
-                if (net.address.startsWith("192.168.")) {
-                    return net.address;
-                }
-            }
-        }
-    }
-
-    // 2순위: 192.168 대역을 못 찾은 경우 Docker 가상 IP(172.19.x.x 등) 제외하고 탐색
-    for (const name of Object.keys(interfaces)) {
-        for (const net of interfaces[name]) {
-            if (net.family === "IPv4" && !net.internal) {
-                // Docker 기본 가상 브릿지 및 루프백 제외
-                if (!net.address.startsWith("172.19.") && !net.address.startsWith("127.")) {
-                    return net.address;
-                }
-            }
-        }
-    }
-
-    return "0.0.0.0";
-}
-
 let config = {
-    // address: "localhost",
-    // address: "0.0.0.0",
-    address: getLocalIpAddress(),
+    // 모든 인터페이스에 바인딩 (localhost와 LAN IP 모두 응답)
+    // 기기 IP에만 바인딩하면 이미지의 헬스체크(127.0.0.1:8080)가 실패해 unhealthy로 표시됨
+    address: "0.0.0.0",
     port: 8080,
 
     basePath: "/",
@@ -61,112 +30,77 @@ let config = {
 
     // https://docs.magicmirror.builders/modules/introduction.html
     modules: [
-        { 
+        // MMPM 웹UI에서 모듈 표시/숨김을 제어하기 위한 동반 모듈 (화면에는 아무것도 표시하지 않음)
+        {
             module: "MMM-mmpm",
         },
-        {
-            module: 'MMM-page-indicator',
-            position: 'bottom_bar',
-            config: {
-                activeBright: true,
-            }
-        },
 
-        {
-            module: "helloworld",
-            position: "middle_center",
-            classes: "screen_saver_text",
-            config: {
-                text: "screen_saver_text"
-            }
-        },
-
-        {
-            module: 'MMM-Remote-Control',
-            position: 'middle_center', // Required to show URL/QR code on mirror
-            // you can hide this module afterwards from the remote control itself
-            config: {
-                customCommand: {},  // Optional, See "Using Custom Commands" below
-                secureEndpoints: true, // Optional, See API/README.md
-                // uncomment any of the lines below if you're gonna use it
-                // customMenu: "custom_menu.json", // Optional, See "Custom Menu Items" below
-                // apiKey: "", // Optional, See API/README.md for details
-                // classes: {}, // Optional, See "Custom Classes" below
-                // showModuleApiMenu: false, // Optional, disable the Module Controls menu
-                // showNotificationMenu: false, // Optional, disable the Notification menu
-
-                // QR Code options (new!)
-                // showQRCode: true, // Optional, display QR code for easy mobile access (default: true)
-                // qrCodeSize: 150, // Optional, size of QR code in pixels (default: 150)
-                // qrCodePosition: "below" // Optional:
-                //   "below" - Show URL above, QR code below (default)
-                //   "above" - Show QR code above, URL below
-                //   "replace" - Show only QR code, no URL text
-            }
-        },
-
-        {
-            module: 'MMM-OnScreenMenu',
-            position: 'bottom_right',
-            /* Valid positions: 'top_right', 'top_left', 'bottom_right', 'bottom_left' */
-            config: {
-                touchMode: true,
-                enableKeyboard: true,
-                // ... see more options below
-            }
-        },
-
-        {
-            module: 'MMM-SmartTouch', 
-            position: 'bottom_center',    // This can be any of the regions.(bottom-center Recommended)
-            config:{ 
-                // None configuration options defined 
-            }
-        },
-        
+        // 800x480 화면에 한 페이지씩만 표시하고 2초마다 넘김
         {
             module: "MMM-pages",
             config: {
                 timings: {
-                    default: 2000,               // rotate every 5 seconds
-                    // 0: 5000,                    // page 0 rotates every 20 seconds
-                    // "admin": 30000               // admin hidden page auto-returns after 30 seconds
-			    },
+                    default: 2000,
+                },
                 modules: [
-                    ["title_current_time", "flipclock"],
-                    ["title_today_current_weather", "today_current_weather"],
-                    ["title_today_hourly_forecast_weather", "today_hourly_forecast_weather"],
-                    ["title_daily_forecast_weather", "daily_forecast_weather"],
-
+                    ["flipclock"],
+                    ["today_current_weather"],
+                    ["today_hourly_forecast_weather"],
+                    ["daily_forecast_weather"],
                 ],
                 fixed: [                         // modules that are always shown
                     "MMM-pages",
                     "MMM-page-indicator",
+                    "MMM-Modulebar",
                 ],
                 hiddenPages: {                   // modules that are only shown on specific pages
-                    "screenSaver": [
-                        "screen_saver_text",
-                    ],
                     "admin": [
                         "MMM-Remote-Control",
-                        "MMM-OnScreenMenu",
-                        "MMM-SmartTouch"
-                    ]
-                }
+                    ],
+                },
             },
         },
 
         {
-            module: "helloworld",
-            position: "top_bar",
-            classes: "title_current_time",
+            module: "MMM-page-indicator",
+            position: "bottom_bar",
             config: {
-                text: "current_time"
-            }
+                activeBright: true,
+            },
         },
+
+        // 화면을 터치해 모든 모듈을 가리거나 되돌림 (대기모드)
+        // MMM-SmartTouch, MMM-OnScreenMenu(모두 유지보수 중지)를 대체
+        {
+            module: "MMM-Modulebar",
+            position: "bottom_left",
+            config: {
+                showBorder: false,
+                direction: "row",
+                buttons: {
+                    "1": {
+                        module: "all",
+                        symbol: "eye",
+                        symbol2: "eye-slash",
+                        size: 2,
+                    },
+                },
+            },
+        },
+
+        // 관리자 페이지에서만 표시 (웹 리모컨 접속 URL/QR 코드)
+        {
+            module: "MMM-Remote-Control",
+            position: "middle_center",
+            config: {
+                secureEndpoints: true,
+            },
+        },
+
         {
             module: "MMM-FlipClock",
-			classes: "flipclock",
+            header: "시간",
+            classes: "flipclock",
             position: "middle_center",
             config: {
                 dateFormat: "YYYY/MM/DD",
@@ -177,74 +111,58 @@ let config = {
                 showDate: true,
                 timezone: "Asia/Seoul",
                 // showWeek: true,
-            }
+            },
         },
 
         {
-            module: "helloworld",
-            position: "top_bar",
-            classes: "title_today_current_weather",
+            module: "weather",
+            header: "현재 날씨",
+            classes: "today_current_weather",
+            position: "middle_center",
             config: {
-                text: "today_current_weather"
-            }
+                weatherProvider: "openmeteo",
+                type: "current",
+                lat: weatherLat,
+                lon: weatherLon,
+                degreeLabel: true,
+                showHumidity: "temp",
+                showUVIndex: true,
+                showPrecipitationProbability: true,
+            },
         },
-		{
-			module: "weather",
-			classes: "today_current_weather",
-			position: "middle_center",
-			config: {
-				weatherProvider: "openmeteo",
-				type: "current",
-				lat: weatherLat,
-				lon: weatherLon,
-				degreeLabel: true,
-				showHumidity: "temp",
-				showUVIndex: true,
-				showPrecipitationProbability: true,
-			}
-		},
-        
-        {
-            module: "helloworld",
-            position: "top_bar",
-            classes: "title_today_hourly_forecast_weather",
-            config: {
-                text: "today_hourly_forecast_weather"
-            }
-        },
-		{
-			module: "weather",
-			classes: "today_hourly_forecast_weather",
-			position: "middle_center",
-			config: {
-				weatherProvider: "openmeteo",
-				type: "hourly",
-				lat: weatherLat,
-				lon: weatherLon,
-			}
-		},
 
         {
-            module: "helloworld",
-            position: "top_bar",
-            classes: "title_daily_forecast_weather",
+            module: "weather",
+            header: "시간별 예보",
+            classes: "today_hourly_forecast_weather",
+            position: "middle_center",
             config: {
-                text: "daily_forecast_weather"
-            }
+                weatherProvider: "openmeteo",
+                type: "hourly",
+                lat: weatherLat,
+                lon: weatherLon,
+                // MagicMirror 기본값은 5개. 800x480 높이에 8개까지 들어감
+                maxEntries: 8,
+            },
         },
-		{
-			module: "weather",
-			classes: "daily_forecast_weather",
-			position: "middle_center",
-			config: {
-				weatherProvider: "openmeteo",
-				type: "forecast",
-				lat: weatherLat,
-				lon: weatherLon,
-				colored: true,
-				tableClass: "small",
-			}
-		},
+
+        {
+            module: "weather",
+            header: "주간 예보",
+            classes: "daily_forecast_weather",
+            position: "middle_center",
+            config: {
+                weatherProvider: "openmeteo",
+                type: "forecast",
+                lat: weatherLat,
+                lon: weatherLon,
+                // MagicMirror 기본값은 5일. "주간 예보" 제목에 맞춰 7일 표시
+                // (forecast 템플릿은 maxEntries가 아니라 maxNumberOfDays를 씀)
+                maxNumberOfDays: 7,
+                colored: true,
+                tableClass: "small",
+            },
+        },
 
     ]
 };

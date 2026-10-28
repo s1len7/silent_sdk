@@ -5,10 +5,8 @@
  * Beware that properties cannot be unitless, so for example write '--gap-body: 0px;' instead of just '--gap-body: 0;'
  */
 
-/* Uncomment and adjust accordingly if you want to import another font from the google-fonts-api: */
-/* @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;700&display=swap'); */
-
-/* :root {
+/* 800x480 패널에 맞춘 크기 (MagicMirror 기본값: 글자 20px, 바깥 여백 60px) */
+:root {
   --color-text: #999;
   --color-text-dimmed: #666;
   --color-text-bright: #fff;
@@ -17,25 +15,58 @@
   --font-primary: "Roboto Condensed";
   --font-secondary: "Roboto";
 
-  --font-size: 20px;
-  --font-size-small: 0.75rem;
+  --font-size: 15px;
+  --font-size-xsmall: 0.7rem;
+  --font-size-small: 0.9rem;
+  --font-size-medium: 1.4rem;
+  --font-size-large: 2.6rem;
+  --font-size-xlarge: 3rem;
 
-  --gap-body-top: 60px;
-  --gap-body-right: 60px;
-  --gap-body-bottom: 60px;
-  --gap-body-left: 60px;
+  --gap-body-top: 10px;
+  --gap-body-right: 12px;
+  --gap-body-bottom: 10px;
+  --gap-body-left: 12px;
 
-  --gap-modules: 30px;
-} */
+  --gap-modules: 8px;
+}
 
 body {
     /* transform: rotate(180deg); */
 }
 
+/* FlipClock은 scaleX(2.0) scaleY(1.5)를 쓰면 화면 밖으로 잘리므로 변형 대신 글자 크기로 키움 */
 .MMM-FlipClock {
-    /* transform: scale(1.75); */
-    transform: scaleX(2.0) scaleY(1.5);
     font-family: "Roboto Condensed", sans-serif;
+}
+
+.region.middle.center .module {
+    /* 800x480에서 내용과 헤더 구분선이 화면 끝까지 늘어나지 않게 폭을 제한 */
+    width: 100%;
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* 날씨 표(시간별·주간)는 내용 폭에 맞춰 가운데 정렬 */
+.weather .weather-forecast,
+.weather .weather-hourly {
+    margin: 0 auto;
+}
+
+/* 좁은 화면에서 표의 열 간격을 넓혀 읽기 쉽게 함 */
+.weather .weather-forecast-row,
+.weather .weather-hourly-row {
+    column-gap: 40px;
+}
+
+/* 현재 날씨의 UV 지수가 화면 오른쪽 끝에 떨어져 보이지 않게 가운데로 모음 */
+.weather .uv-index {
+    text-align: center;
+}
+
+/* 시계를 멀리서도 읽을 수 있게 키움 (기본 1rem) */
+.MMM-FlipClock .tick {
+    font-size: 1.5rem;
 }
 
 
