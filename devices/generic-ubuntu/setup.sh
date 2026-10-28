@@ -94,7 +94,7 @@ modules=(
 )
 
 for name in "${modules[@]}"; do
-    module="$device_dir/modules/$name.sh"
+    module="$device_dir/scripts/$name.sh"
     echo
     echo "=== [$name] started $(date +%H:%M:%S)"
     start=$SECONDS

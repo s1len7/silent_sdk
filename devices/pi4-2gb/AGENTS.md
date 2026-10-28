@@ -1,8 +1,10 @@
 > 이 파일의 규칙은 [공통 규칙](../../AGENTS.md)에 더해 적용됨 (공통 규칙도 함께 읽고 따를 것)
 
-## raspberrypi4-8gb 전용
+## pi4-2gb 전용
 
-- 대상: Raspberry Pi 4 Model B (RAM 8GB), Raspberry Pi OS Trixie 이상 (labwc / Wayland)
+- 대상: Raspberry Pi 4 Model B (RAM 2GB), Raspberry Pi OS Lite 64-bit (Trixie)
+  - 데스크탑이 없으므로 GUI·자동실행(autostart) 기반 기능은 만들지 말 것
+  - RAM이 2GB이므로 무거운 상주 프로그램은 피할 것
 - 기능 하나당 `scripts/setup_<기능>.sh` 모듈 하나로 만들고, README.md `## 기능` 아래에 `### <기능>` 섹션과 `- Setup: [scripts/setup_<기능>.sh](...)` 줄을 추가할 것
   - 새 모듈은 `setup.sh`의 `modules` 목록에 실행 순서에 맞게 한 줄 추가할 것 (와일드카드로 모아 실행하지 않음)
 - 스크립트 공통 형식
@@ -14,3 +16,7 @@
     - 일부만 돼 있으면 빠진 부분만 처리할 것
     - README 해당 기능에 `다시 실행 시:` 줄로 확인 기준을 적을 것
   - Windows에서 편집한 파일을 복사할 때는 CR을 제거할 것
+
+<!-- 
+TODO: ultrafeeder
+ -->

@@ -2,9 +2,9 @@
 # 전체 설치 스크립트: modules 목록의 모듈을 순서대로 실행
 # 실패한 모듈이 있어도 다음 모듈을 계속 실행하고, 끝에 모듈별 결과(OK / SKIP / FAIL)를 요약함
 # 모듈은 이미 설정돼 있으면 종료 코드 3으로 끝나며 SKIP으로 표시됨 (다시 실행하면 실패한 모듈만 다시 설치됨)
-# 로그: 저장소 logs/raspberrypi4-8gb-<시각>/setup.log
+# 로그: 저장소 logs/pi4-2gb-<시각>/setup.log
 # 사용법: sudo bash setup.sh
-#   curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/raspberrypi4-8gb/setup.sh | sudo bash
+#   curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/pi4-2gb/setup.sh | sudo bash
 #   처럼 파일 없이 실행하면 git을 설치하고 저장소를 ~/silent_sdk에 받은 뒤 그 안의 setup.sh를 실행함
 set -uo pipefail
 
@@ -70,12 +70,12 @@ if [[ ! -f "${BASH_SOURCE[0]:-}" ]]; then
         chown -R "$SUDO_USER:" "$install_dir"
     fi
 
-    exec bash "$install_dir/devices/raspberrypi4-8gb/setup.sh"
+    exec bash "$install_dir/devices/pi4-2gb/setup.sh"
 fi
 
 device_dir="$(cd "$(dirname "$0")" && pwd)"
 repo="$(cd "$device_dir/../.." && pwd)"
-log_dir="$repo/logs/raspberrypi4-8gb-$(date +%Y%m%d-%H%M%S)"
+log_dir="$repo/logs/pi4-2gb-$(date +%Y%m%d-%H%M%S)"
 mkdir -p "$log_dir"
 # 저장소 소유자가 로그를 읽고 지울 수 있게 함
 chown -R "${SUDO_USER:-root}:" "$repo/logs"
@@ -92,19 +92,10 @@ summary=()
 failed=0
 # 실행할 모듈 (위에서부터 순서대로 실행, 새 모듈은 여기에 한 줄 추가)
 modules=(
-    setup_auto_rotate
-    setup_boot_beep
-    # Docker 컨테이너 모듈(dozzle, magic_mirror, theengs_gateway)보다 먼저
+    # 피더 컨테이너보다 Docker 설치와 DVB 드라이버 차단이 먼저
     setup_docker
-    setup_dozzle
-    setup_htop_autostart
-    setup_magic_mirror
-    setup_power_button
-    setup_screen_blanking
-    setup_sftp
-    setup_shairport_sync
-    setup_theengs_gateway
-    setup_uxplay
+    setup_dvb_blacklist
+    setup_flight_feeder
 )
 for name in "${modules[@]}"; do
     module="$device_dir/scripts/$name.sh"

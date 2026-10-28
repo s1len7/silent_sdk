@@ -1,4 +1,4 @@
-# Raspberry Pi 4 Model B (8GB)
+# pi4-display
 
 - 제조사: [Raspberry Pi Ltd](https://www.raspberrypi.com/)
 - 모델명: [Raspberry Pi 4 Model B](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/), RAM 8GB 모델
@@ -15,8 +15,11 @@
 | 무선 | Wi-Fi 802.11ac (2.4/5GHz), Bluetooth 5.0 BLE |
 | 포트 | USB 3.0 x2, USB 2.0 x2, 기가비트 LAN, micro HDMI x2 (최대 4Kp60), MIPI DSI, MIPI CSI, 오디오/컴포지트 |
 | GPIO | 40핀 헤더 |
+| 디스플레이 | [Raspberry Pi 7인치 터치 디스플레이](https://www.raspberrypi.com/products/raspberry-pi-touch-display/) 800×480 (24-bit RGB), 유효 영역 154.08 × 85.92mm, 밝기 250cd/m², 명암비 500, 외형 192.96 × 110.76mm |
+| 터치 | 정전식 멀티터치 최대 10점 (온스크린 키보드 지원) |
+| 디스플레이 연결 | DSI (15-way FFC) + GPIO 헤더로 전원 공급 (별도 전원 불필요, 최대 밝기에서 5V 200mA) |
 | 전원 | USB-C 5V 3A 이상 (GPIO 5V, PoE HAT도 가능) |
-| 동작 온도 | 0~50°C |
+| 동작 온도 | 0~50°C (디스플레이는 -20~+70°C) |
 
 
 ## 기능
@@ -24,14 +27,14 @@
 - 전체 Setup: 순정 OS 클린설치 직후 이 한 줄만 실행 ([setup.sh](setup.sh)). 파일 없이 실행하면 git을 설치하고 저장소를 받은 뒤(이미 받았으면 `git pull`) 그 안의 `setup.sh`로 전체 설치:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/raspberrypi4-8gb/setup.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/pi4-display/setup.sh | sudo bash
 ```
 
-- 이미 클론되어 있으면: `sudo bash ~/silent_sdk/devices/raspberrypi4-8gb/setup.sh` (`setup.sh`의 `modules` 목록 순서대로 실행)
-- 개별 기능만 설치: 이 폴더(`~/silent_sdk/devices/raspberrypi4-8gb`)에서 `sudo bash scripts/setup_<기능>.sh`
+- 이미 클론되어 있으면: `sudo bash ~/silent_sdk/devices/pi4-display/setup.sh` (`setup.sh`의 `modules` 목록 순서대로 실행)
+- 개별 기능만 설치: 이 폴더(`~/silent_sdk/devices/pi4-display`)에서 `sudo bash scripts/setup_<기능>.sh`
 - 실패한 모듈이 있어도 나머지 모듈은 계속 진행하고, 끝에 모듈별 결과(OK/SKIP/FAIL) 요약을 보여줌
 - 다시 실행: 같은 명령을 다시 실행하면 이미 설정된 모듈은 SKIP하고, 실패했거나 안 된 모듈만 다시 진행함 (모듈별 확인 기준은 아래 각 기능의 "다시 실행 시" 참고)
-- 로그: `~/silent_sdk/logs/raspberrypi4-8gb-<시각>/setup.log`
+- 로그: `~/silent_sdk/logs/pi4-display-<시각>/setup.log`
 
 
 ### 전원 끄기 버튼

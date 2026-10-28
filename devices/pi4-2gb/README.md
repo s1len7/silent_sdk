@@ -1,4 +1,4 @@
-# Raspberry Pi 4 Model B (2GB)
+# pi4-2gb
 
 - 제조사: [Raspberry Pi Ltd](https://www.raspberrypi.com/)
 - 모델명: [Raspberry Pi 4 Model B](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/), RAM 2GB 모델
@@ -23,14 +23,14 @@
 - 전체 Setup: Raspberry Pi OS Lite 64-bit 클린설치 직후 이 한 줄만 실행 ([setup.sh](setup.sh)). 파일 없이 실행하면 git을 설치하고 저장소를 받은 뒤(이미 받았으면 `git pull`) 그 안의 `setup.sh`로 전체 설치:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/raspberrypi4-2gb/setup.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/pi4-2gb/setup.sh | sudo bash
 ```
 
-- 이미 클론되어 있으면: `sudo bash ~/silent_sdk/devices/raspberrypi4-2gb/setup.sh` (`setup.sh`의 `modules` 목록 순서대로 실행)
-- 개별 기능만 설치: 이 폴더(`~/silent_sdk/devices/raspberrypi4-2gb`)에서 `sudo bash scripts/setup_<기능>.sh`
+- 이미 클론되어 있으면: `sudo bash ~/silent_sdk/devices/pi4-2gb/setup.sh` (`setup.sh`의 `modules` 목록 순서대로 실행)
+- 개별 기능만 설치: 이 폴더(`~/silent_sdk/devices/pi4-2gb`)에서 `sudo bash scripts/setup_<기능>.sh`
 - 실패한 모듈이 있어도 나머지 모듈은 계속 진행하고, 끝에 모듈별 결과(OK/SKIP/FAIL) 요약을 보여줌
 - 다시 실행: 같은 명령을 다시 실행하면 이미 설정된 모듈은 SKIP하고, 실패했거나 안 된 모듈만 다시 진행함 (모듈별 확인 기준은 아래 각 기능의 "다시 실행 시" 참고)
-- 로그: `~/silent_sdk/logs/raspberrypi4-2gb-<시각>/setup.log`
+- 로그: `~/silent_sdk/logs/pi4-2gb-<시각>/setup.log`
 
 처음 설치 순서:
 1. 전체 Setup 실행 → Docker 설치, DVB 드라이버 차단, `docker/flight_feeder/.env` 생성 (ADS-B 피더는 SKIP)
@@ -63,7 +63,7 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/rasp
 - 필요한 장비: RTL-SDR USB 동글 1개, 1090MHz 안테나
 - 설정: `docker/flight_feeder/.env` ([.env.example](docker/flight_feeder/.env.example) 참고, git에 올라가지 않음)
 - compose 파일: [docker/flight_feeder/docker-compose.yml](docker/flight_feeder/docker-compose.yml) ([sdr-enthusiasts](https://sdr-enthusiasts.gitbook.io/ads-b) 컨테이너)
-- `.env`를 고친 뒤 실행 중인 컨테이너에 반영하려면: `sudo docker compose -f ~/silent_sdk/devices/raspberrypi4-2gb/docker/flight_feeder/docker-compose.yml up -d`
+- `.env`를 고친 뒤 실행 중인 컨테이너에 반영하려면: `sudo docker compose -f ~/silent_sdk/devices/pi4-2gb/docker/flight_feeder/docker-compose.yml up -d`
 
 ```text
 RTL-SDR 동글 → ultrafeeder (수신·디코딩, 지도) ─ BEAST 30005 ─┬─ fr24feed    → Flightradar24

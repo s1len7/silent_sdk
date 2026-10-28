@@ -7,8 +7,8 @@
 | desktop | Windows 10 이상 데스크탑 | [devices/desktop/README.md](devices/desktop/README.md) |
 | generic-windows | Windows 10 이상 (빌려쓰는 PC용, 최소 설치) | [devices/generic-windows/README.md](devices/generic-windows/README.md) |
 | generic-ubuntu | Ubuntu/Debian 계열 (빌려쓰는 PC용, 최소 설치) | [devices/generic-ubuntu/README.md](devices/generic-ubuntu/README.md) |
-| raspberrypi4-8gb | Raspberry Pi 4 (RAM 8GB), Raspberry Pi OS 64-bit (Trixie) | [devices/raspberrypi4-8gb/README.md](devices/raspberrypi4-8gb/README.md) |
-| raspberrypi4-2gb | Raspberry Pi 4 (RAM 2GB), Raspberry Pi OS **Lite** 64-bit (Trixie) | [devices/raspberrypi4-2gb/README.md](devices/raspberrypi4-2gb/README.md) |
+| pi4-display | Raspberry Pi 4 (RAM 8GB), Raspberry Pi OS 64-bit (Trixie) | [devices/pi4-display/README.md](devices/pi4-display/README.md) |
+| pi4-2gb | Raspberry Pi 4 (RAM 2GB), Raspberry Pi OS **Lite** 64-bit (Trixie) | [devices/pi4-2gb/README.md](devices/pi4-2gb/README.md) |
 | titan-s260 | SAM4S TITAN-S260 POS, Windows 10 IoT LTSC 2021 | [devices/titan-s260/README.md](devices/titan-s260/README.md) |
 | byt-t1 | PEGATRON BYT-T1 Mini-ITX 보드 (Intel Pentium J2900), Ubuntu Server 24.04 LTS | [devices/byt-t1/README.md](devices/byt-t1/README.md) |
 | jetson-nano-b01 | NVIDIA Jetson Nano Developer Kit B01, JetPack 4.6.6 (Ubuntu 18.04) | [devices/jetson-nano-b01/README.md](devices/jetson-nano-b01/README.md) |
@@ -27,8 +27,8 @@ silent_sdk/
 │  ├─ generic-windows/  빌려쓰는 Windows PC용 최소 설치, Windows 공통 스크립트(git·vscode·winget·opencode) 보관
 │  ├─ generic-ubuntu/   빌려쓰는 Ubuntu/Debian PC용 최소 설치
 │  ├─ titan-s260/
-│  ├─ raspberrypi4-8gb/
-│  ├─ raspberrypi4-2gb/
+│  ├─ pi4-display/
+│  ├─ pi4-2gb/
 │  ├─ byt-t1/
 │  ├─ jetson-nano-b01/
 │  ├─ b150m-am2/
@@ -69,14 +69,14 @@ ThinkPad S2 2G(2nd Gen) (PowerShell):
 irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/thinkpad-s2-2g/setup.ps1 | iex
 ```
 
-Raspberry Pi 4 (8GB):
+pi4-display (Raspberry Pi 4, 8GB):
 ```bash
-curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/raspberrypi4-8gb/setup.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/pi4-display/setup.sh | sudo bash
 ```
 
-Raspberry Pi 4 (2GB):
+pi4-2gb (Raspberry Pi 4, 2GB):
 ```bash
-curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/raspberrypi4-2gb/setup.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/pi4-2gb/setup.sh | sudo bash
 ```
 
 Jetson Nano B01:
