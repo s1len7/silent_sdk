@@ -87,6 +87,17 @@ sudo systemctl start ssh
 - `~/.config/autostart/htop.desktop` 설정 파일로 부팅 시 자동실행
 
 
+### 런처 전원 끄기 아이콘
+
+- Setup: [scripts/setup_shutdown_shortcut.sh](scripts/setup_shutdown_shortcut.sh)
+  - 다시 실행 시: `launchers` 목록에 항목이 있고 찾을 수 있는 `pishutdown.desktop` 파일이 있으면 건너뜀
+- 작업표시줄(패널)에 전원 끄기 아이콘을 추가함. 아이콘을 터치하면 라즈베리파이 아이콘 → Shutdown과 마찬가지로 Shutdown Options 창(재부팅 / 게시 중지 / 로그아웃)이 열리고, 창에서 다시 눌러야 실제로 꺼짐
+- Trixie Shutdown 메뉴와 같은 프로그램(`pishutdown`)을 실행함. `pishutdown`이 설치돼 있지 않으면 apt로 설치함
+- 적용 방법: `~/.config/wf-panel-pi/wf-panel-pi.ini`의 `[panel]` `launchers=` 목록 끝에 `pishutdown`을 추가함. 사용자 파일이 없으면 시스템 기본 파일(`/etc/xdg/wf-panel-pi/wf-panel-pi.ini`)에서 시작
+- 시스템 어디에도 `pishutdown.desktop`이 없으면 `~/.local/share/applications/pishutdown.desktop`을 새로 만듦
+- 아이콘이 바로 나오지 않으면 다시 로그인
+
+
 ### toggle_rotate
 
 - Setup: [scripts/setup_auto_rotate.sh](scripts/setup_auto_rotate.sh)

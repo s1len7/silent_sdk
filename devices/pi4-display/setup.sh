@@ -97,6 +97,7 @@ modules=(
     setup_sftp
     setup_screen_blanking
     setup_htop_autostart
+    setup_shutdown_shortcut
     setup_auto_rotate
     # Docker 컨테이너 모듈(dozzle, magic_mirror, theengs_gateway)보다 먼저
     setup_docker

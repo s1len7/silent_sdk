@@ -1,5 +1,6 @@
 [Desktop Entry]
 Type=Application
 Name=Auto Rotate
+Icon=object-flip-vertical
 Exec=python3 @HOME@/toggle_rotate/auto_rotate.py
 Terminal=false

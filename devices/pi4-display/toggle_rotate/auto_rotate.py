@@ -18,7 +18,10 @@ RC_XML = Path.home() / ".config/labwc/rc.xml"
 SYSTEM_RC_XML = Path("/etc/xdg/labwc/rc.xml")
 
 # 트레이 아이콘 (StatusNotifierItem D-Bus 규격)
-TRAY_ICON_NAME = "object-rotate-right"
+# object-flip-vertical: 위/아래 양방향 화살표(pixtrix-icons가 의존하는 AdwaitaLegacy에 포함).
+# 0도 <-> 180도 뒤집기를 나타내며, 기존 object-rotate-right(한 방향 곡선 화살표)보다
+# 화면이 뒤집힌다는 동작이 분명함
+TRAY_ICON_NAME = "object-flip-vertical"
 SNI_PATH = "/StatusNotifierItem"
 SNI_WATCHER = "org.kde.StatusNotifierWatcher"
 SNI_XML = """
