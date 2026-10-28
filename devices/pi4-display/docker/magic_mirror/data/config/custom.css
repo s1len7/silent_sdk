@@ -15,12 +15,12 @@
   --font-primary: "Roboto Condensed";
   --font-secondary: "Roboto";
 
-  --font-size: 15px;
-  --font-size-xsmall: 0.7rem;
-  --font-size-small: 0.9rem;
-  --font-size-medium: 1.4rem;
-  --font-size-large: 2.6rem;
-  --font-size-xlarge: 3rem;
+  --font-size: 16px;
+  --font-size-xsmall: 0.8rem;
+  --font-size-small: 0.95rem;
+  --font-size-medium: 1.45rem;
+  --font-size-large: 2.8rem;
+  --font-size-xlarge: 3.2rem;
 
   --gap-body-top: 10px;
   --gap-body-right: 12px;
@@ -34,20 +34,69 @@ body {
     /* transform: rotate(180deg); */
 }
 
-/* FlipClock은 scaleX(2.0) scaleY(1.5)를 쓰면 화면 밖으로 잘리므로 변형 대신 글자 크기로 키움 */
-.MMM-FlipClock {
-    font-family: "Roboto Condensed", sans-serif;
-}
-
+/* 한 페이지에 모듈 하나만 보이므로 화면 폭을 최대한 사용 */
 .region.middle.center .module {
-    /* 800x480에서 내용과 헤더 구분선이 화면 끝까지 늘어나지 않게 폭을 제한 */
     width: 100%;
-    max-width: 640px;
+    max-width: 760px;
     margin-left: auto;
     margin-right: auto;
 }
 
-/* 날씨 표(시간별·주간)는 내용 폭에 맞춰 가운데 정렬 */
+/* 기본 헤더는 0.8rem이라 800x480에서 너무 작음 */
+header {
+    font-size: 1.15rem;
+    line-height: 1.25;
+    padding-bottom: 4px;
+    margin-bottom: 6px;
+}
+
+/* --- 시계 페이지 --- */
+
+/* scaleX(2.0) scaleY(1.5)는 화면 밖으로 잘리므로 글자 크기로 키움 */
+.MMM-FlipClock {
+    font-family: "Roboto Condensed", sans-serif;
+}
+
+.flipclock .tick {
+    font-size: 2.2rem;
+}
+
+.flipclock .date {
+    font-size: 1.5rem;
+}
+
+/* 시계 페이지: 콜론을 1초마다 깜빡이게 (pqina/flip의 tick-text-inline separator) */
+.flipclock [data-key="sep"] {
+    animation: flipclock-colon-blink 1s step-end infinite;
+}
+
+@keyframes flipclock-colon-blink {
+    0%, 49.99% { opacity: 1; }
+    50%, 100% { opacity: 0.15; }
+}
+
+/* --- 현재 날씨 페이지 --- */
+
+.today_current_weather .type-temp {
+    font-size: 4.4rem;
+}
+
+.today_current_weather .medium {
+    font-size: 1.6rem;
+}
+
+.today_current_weather .feelslike {
+    margin-top: 6px;
+}
+
+/* UV 지수가 화면 오른쪽 끝에 떨어져 보이지 않게 가운데로 모음 */
+.today_current_weather .uv-index {
+    text-align: center;
+}
+
+/* --- 시간별 / 주간 예보 페이지 --- */
+
+/* 표는 내용 폭에 맞춰 가운데 정렬 */
 .weather .weather-forecast,
 .weather .weather-hourly {
     margin: 0 auto;
@@ -56,25 +105,50 @@ body {
 /* 좁은 화면에서 표의 열 간격을 넓혀 읽기 쉽게 함 */
 .weather .weather-forecast-row,
 .weather .weather-hourly-row {
-    column-gap: 40px;
+    column-gap: 56px;
 }
 
-/* 현재 날씨의 UV 지수가 화면 오른쪽 끝에 떨어져 보이지 않게 가운데로 모음 */
-.weather .uv-index {
-    text-align: center;
+/* 한 페이지에 표 하나만 나오므로 표 글자를 키움 */
+.today_hourly_forecast_weather .weather-hourly,
+.daily_forecast_weather .weather-forecast {
+    font-size: 1.45rem;
 }
 
-/* 시계를 멀리서도 읽을 수 있게 키움 (기본 1rem) */
-.MMM-FlipClock .tick {
-    font-size: 1.5rem;
+.today_hourly_forecast_weather .weather-hourly-row,
+.daily_forecast_weather .weather-forecast-row {
+    padding: 5px 0;
 }
 
+/* --- 하단 컨트롤 (페이지 점 / 관리자 버튼) --- */
+/* 기본 점은 터치하기에 너무 작아 클릭 영역을 넓힘 */
+.MMM-page-indicator .indicator {
+    font-size: 0.85em;
+    padding: 12px;
+}
+
+.MMM-page-indicator .circle-wrapper {
+    margin: 0 6px;
+}
+
+/* MMM-TouchButton 기본 버튼 모양을 없애고 아이콘만 표시 */
+.MMM-TouchButton button {
+    background: none;
+    border: none;
+    color: var(--color-text);
+}
+
+.MMM-TouchButton .button-admin,
+.MMM-TouchButton .button-leave {
+    font-size: 2rem;
+    padding: 8px 14px;
+}
+
+/* --- 기존 설정 유지 --- */
 
 .weather {
     /* transform: scale(0.75); */
     /* transform-origin: top right; */
 }
-
 
 .CX3 {
     transform: scaleX(1) scaleY(0.5);

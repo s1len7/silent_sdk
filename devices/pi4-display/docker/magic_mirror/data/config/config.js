@@ -40,7 +40,9 @@ let config = {
             module: "MMM-pages",
             config: {
                 timings: {
-                    default: 2000,
+                    default: 5000,
+                    // 숨김 페이지는 30초 뒤 자동으로 돌아옴 (MMM-pages는 숨김 페이지에만 timings.<이름> 사용)
+                    admin: 30000,
                 },
                 modules: [
                     ["flipclock"],
@@ -52,10 +54,12 @@ let config = {
                     "MMM-pages",
                     "MMM-page-indicator",
                     "MMM-Modulebar",
+                    "MMM-TouchButton",
                 ],
                 hiddenPages: {                   // modules that are only shown on specific pages
                     "admin": [
                         "MMM-Remote-Control",
+                        "MMM-TouchButton",
                     ],
                 },
             },
@@ -88,12 +92,36 @@ let config = {
             },
         },
 
+        // 관리자(웹 리모컨 QR) 숨김 페이지를 열고 닫는 터치 버튼
+        // MMM-pages의 hiddenPages는 알림으로만 열 수 있어 화면에 진입 버튼이 필요함
+        {
+            module: "MMM-TouchButton",
+            position: "bottom_right",
+            config: {
+                buttons: [
+                    {
+                        name: "admin",
+                        icon: "fa fa-qrcode",
+                        notification: "SHOW_HIDDEN_PAGE",
+                        payload: "admin",
+                    },
+                    {
+                        name: "leave",
+                        icon: "fa fa-undo",
+                        notification: "LEAVE_HIDDEN_PAGE",
+                    },
+                ],
+            },
+        },
+
         // 관리자 페이지에서만 표시 (웹 리모컨 접속 URL/QR 코드)
         {
             module: "MMM-Remote-Control",
+            header: "관리자 (웹 리모컨)",
             position: "middle_center",
             config: {
                 secureEndpoints: true,
+                qrCodeSize: 200,
             },
         },
 
@@ -143,6 +171,8 @@ let config = {
                 lon: weatherLon,
                 // MagicMirror 기본값은 5개. 800x480 높이에 8개까지 들어감
                 maxEntries: 8,
+                // 시간대별 강수 확률 표시 (비 올 시간을 미리 알 수 있게)
+                showPrecipitationProbability: true,
             },
         },
 
