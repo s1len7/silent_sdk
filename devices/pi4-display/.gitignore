@@ -7,3 +7,5 @@ docker/theengs-gateway/data/
 docker/magic_mirror/data/modules/
 docker/magic_mirror/data/config/mmpm/log/
 docker/magic_mirror/data/config/*.bak
+# magicmirror 이미지가 기동할 때마다 다시 쓰는 파일
+docker/magic_mirror/data/config/basepath.js

@@ -186,8 +186,8 @@ docker run -d \
 #### dozzle
 
 - Setup: [scripts/setup_dozzle.sh](scripts/setup_dozzle.sh)
-  - 다시 실행 시: 컨테이너가 실행 중이고 `/data`가 `docker/dozzle/data` 폴더에 바인드돼 있으면 건너뜀. 마운트가 다르면 컨테이너를 다시 만들어 적용 (현재 docker-compose.yml의 마운트 줄은 주석 상태라 항상 실행됨)
-<!-- - 로그·설정이 `~/silent_sdk/devices/pi4-display/docker/dozzle/data`(`docker/dozzle/data`) 폴더에 저장됨 (docker-compose.yml `volumes`의 `./data:/data`, compose 파일 위치 기준 상대 경로) -->
+  - 다시 실행 시: 컨테이너가 실행 중이고 `/data`가 `docker/dozzle/data` 폴더에 바인드돼 있으면 건너뜀. 마운트가 다르면 컨테이너를 다시 만들어 적용
+- 로그·설정이 `~/silent_sdk/devices/pi4-display/docker/dozzle/data`(`docker/dozzle/data`) 폴더에 저장됨 (docker-compose.yml `volumes`의 `./data:/data`, compose 파일 위치 기준 상대 경로)
 
 <!-- portainer > docker-compose.yml -->
 compose 파일: `docker/dozzle/docker-compose.yml`
