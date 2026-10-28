@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# OpenCode CLI 설치 (사용자 범위 우선: npm 전역 설치가 권한 오류면 ~/.npm-global 사용)
+# OpenCode CLI 설치 (사용자 범위 우선: ~/.npm-global 사용)
 # PATH는 스크립트가 임의로 바꾸지 않고, 필요하면 추가할 줄을 안내만 함
 set -euo pipefail
 source "$(dirname "$0")/lib.sh"
@@ -32,14 +32,16 @@ if ! command -v npm >/dev/null 2>&1; then
     sudo apt-get install -y nodejs npm
 fi
 
-echo "Installing the OpenCode CLI (npm, latest)"
-if ! npm install -g opencode-ai@latest; then
-    echo "npm global install failed; retrying with the user prefix $user_prefix" >&2
-    mkdir -p "$user_prefix"
+# 사용자 범위 우선: npm 전역 prefix를 사용자 디렉토리로 설정 (권한 오류 방지)
+mkdir -p "$user_prefix"
+current_prefix="$(npm config get prefix 2>/dev/null || true)"
+if [[ "$current_prefix" != "$user_prefix" ]]; then
     npm config set prefix "$user_prefix"
-    npm install -g opencode-ai@latest
-    PATH="$user_prefix/bin:$PATH"
 fi
+export PATH="$user_prefix/bin:$PATH"
+
+echo "Installing the OpenCode CLI (npm, latest)"
+npm install -g opencode-ai@latest
 
 # 설치가 PATH 밖 사용자 prefix에 됐을 수 있으므로 후보 경로를 확인
 if ! command -v opencode >/dev/null 2>&1; then
