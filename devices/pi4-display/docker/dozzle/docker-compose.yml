@@ -5,6 +5,9 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      # 상대 경로(./data)는 이 compose 파일 위치를 기준으로 풀리므로
+      # 데이터는 이 폴더 하위의 data(docker-compose.yml 옆 data/)에 저장됨
+      # - ./data:/data
       # - /home/$user_home/dozzle/data:/data
     ports:
       - 38080:8080

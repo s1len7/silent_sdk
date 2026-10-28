@@ -7,7 +7,7 @@ services:
     privileged: true
     volumes:
       - /var/run/dbus:/var/run/dbus
-      # - /home/silent/docker/theengs-gateway/config:/opt/theengs_gateway/config
+      # - ./data/config:/opt/theengs_gateway/config
     environment:
       - MQTT_HOST=192.168.0.2
       - MQTT_PORT=1883

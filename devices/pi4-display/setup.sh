@@ -99,13 +99,13 @@ modules=(
     setup_htop_autostart
     setup_shutdown_shortcut
     setup_auto_rotate
+    setup_shairport_sync
+    setup_uxplay
     # Docker 컨테이너 모듈(dozzle, magic_mirror, theengs_gateway)보다 먼저
     setup_docker
     setup_dozzle
     setup_magic_mirror
     setup_theengs_gateway
-    setup_shairport_sync
-    setup_uxplay
 )
 for name in "${modules[@]}"; do
     module="$device_dir/scripts/$name.sh"

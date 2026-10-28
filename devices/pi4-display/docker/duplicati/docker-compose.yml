@@ -18,10 +18,10 @@ services:
 
     volumes:
       # Duplicati 설정
-      - /home/silent/docker/duplicati/config:/config
+      - ./data/config:/config
 
       # 임시 작업 공간
-      - /home/silent/docker/duplicati/backups:/backups
+      - ./data/backups:/backups
 
       # ===== 백업 대상 =====
 

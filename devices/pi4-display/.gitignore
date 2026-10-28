@@ -1,4 +1,9 @@
 .env
-docker/magic_mirror/config/mmpm/log/
-docker/magic_mirror/config/*.bak
-docker/magic_mirror/modules/
+# 컨테이너가 compose 파일 옆 data/ 에 만드는 런타임 데이터
+# (dozzle/data는 폴더 안 .gitignore에서 처리, magic_mirror/data의 설정 파일은 커밋해서 추적)
+docker/duplicati/data/
+docker/faster-whisper/data/
+docker/theengs-gateway/data/
+docker/magic_mirror/data/modules/
+docker/magic_mirror/data/config/mmpm/log/
+docker/magic_mirror/data/config/*.bak

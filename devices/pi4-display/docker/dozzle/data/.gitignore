@@ -1,0 +1,4 @@
+# dozzle 컨테이너가 실행 중에 만드는 파일(users.yml, 설정 등)은 커밋하지 않음
+*
+!.gitignore
+!.gitkeep

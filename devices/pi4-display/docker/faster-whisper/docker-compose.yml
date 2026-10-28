@@ -12,7 +12,7 @@ services:
       # - WHISPER_LANG=auto #optional
       # - WHISPER_MODEL=auto #optional
     volumes:
-      - /home/silent/docker/faster-whisper/config:/config
+      - ./data/config:/config
     ports:
       - 10300:10300
     restart: unless-stopped
