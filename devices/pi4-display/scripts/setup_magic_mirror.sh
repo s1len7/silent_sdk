@@ -15,9 +15,10 @@ repo="$(cd "$(dirname "$0")/.." && pwd)"
 env_file="$repo/docker/magic_mirror/.env"
 compose="$repo/docker/magic_mirror/docker-compose.yml"
 fonts=(fonts-nanum fonts-nanum-extra)
+power_rule=/etc/polkit-1/rules.d/50-magicmirror-power.rules
 
-# .env, 한글 폰트, 실행 중인 컨테이너가 모두 있으면 건너뜀 (위치를 다시 묻지 않음)
-if [[ -f "$env_file" ]] && pkgs_installed "${fonts[@]}" && compose_running "$compose"; then
+# .env, 한글 폰트, 전원 polkit 규칙, 실행 중인 컨테이너가 모두 있으면 건너뜀 (위치를 다시 묻지 않음)
+if [[ -f "$env_file" ]] && pkgs_installed "${fonts[@]}" && [[ -f "$power_rule" ]] && compose_running "$compose"; then
     skip_done "Magic Mirror is already running"
 fi
 
@@ -94,6 +95,29 @@ fi
 
 apt-get update
 apt-get install -y fonts-nanum fonts-nanum-extra
+
+# 웹 리모컨(MMM-Remote-Control)의 전원 끄기·재부팅은 컨테이너 안에서 systemctl poweroff/reboot으로 호스트 logind에 요청함
+# 컨테이너는 로그인 세션이 없어 polkit이 관리자 인증을 요구하므로, 장비 사용자에게 인증 없이 허용함
+# (inhibit 액션은 화면 세션이 종료 지연(inhibitor)을 걸어 둔 경우에도 끌 수 있게 함)
+user="${SUDO_USER:-root}"
+cat > "$power_rule" <<EOF
+// MagicMirror 웹 리모컨의 전원 끄기·재부팅 허용 (scripts/setup_magic_mirror.sh가 설치)
+polkit.addRule(function (action, subject) {
+  var actions = [
+    "org.freedesktop.login1.power-off",
+    "org.freedesktop.login1.power-off-multiple-sessions",
+    "org.freedesktop.login1.power-off-ignore-inhibit",
+    "org.freedesktop.login1.reboot",
+    "org.freedesktop.login1.reboot-multiple-sessions",
+    "org.freedesktop.login1.reboot-ignore-inhibit"
+  ];
+  if (subject.user === "$user" && actions.indexOf(action.id) >= 0) {
+    return polkit.Result.YES;
+  }
+});
+EOF
+chmod 644 "$power_rule"
+echo "Installed polkit rule: $power_rule (power off/reboot for $user)"
 
 docker compose -f "$repo/docker/magic_mirror/docker-compose.yml" up -d
 

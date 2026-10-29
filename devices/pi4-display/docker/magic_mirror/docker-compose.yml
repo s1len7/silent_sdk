@@ -2,7 +2,8 @@ services:
   magicmirror: # https://github.com/MagicMirrorOrg/MagicMirror
     container_name: magicmirror
     image: karsten13/magicmirror:latest
-    restart: "no"
+    # 웹 리모컨의 Restart는 Electron을 끝내므로 Docker가 다시 띄워야 함 (부팅 시 자동 시작도 됨)
+    restart: unless-stopped
     privileged: true
     network_mode: "host"
     # ports:
@@ -17,7 +18,9 @@ services:
       - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
       - /run/systemd/system:/run/systemd/system
       - /bin/systemctl:/bin/systemctl
-      
+      # 웹 리모컨의 모니터 켜기/끄기 기본 명령 (wlopm --on/--off)
+      - /usr/bin/wlopm:/usr/local/bin/wlopm:ro
+
       - ./data/config:/opt/magic_mirror/config
       - ./data/modules:/opt/magic_mirror/modules
       - ./data/css:/opt/magic_mirror/css
@@ -35,7 +38,8 @@ services:
   mmpm:  # https://github.com/bee-mar/mmpm
     container_name: mmpm
     image: karsten13/mmpm:latest
-    restart: "no"
+    # magicmirror와 같이 부팅 시 자동 시작
+    restart: unless-stopped
     # 브라우저(웹 UI)가 직접 접속하는 포트
     ports:
       - "7890:7890"  # 웹 UI

@@ -196,11 +196,18 @@ compose 파일: `docker/dozzle/docker-compose.yml`
 #### Magic Mirror & MMPM
 
 - Setup: [scripts/setup_magic_mirror.sh](scripts/setup_magic_mirror.sh)
-  - 다시 실행 시: `.env`, 한글 폰트, 실행 중인 컨테이너가 모두 있으면 건너뜀 (위치를 다시 묻지 않음)
+  - 다시 실행 시: `.env`, 한글 폰트, 전원 polkit 규칙(`/etc/polkit-1/rules.d/50-magicmirror-power.rules`), 실행 중인 컨테이너가 모두 있으면 건너뜀 (위치를 다시 묻지 않음)
+  - 웹 리모컨(`http://<장비 이름>.local:8080/remote.html`)의 전원 끄기·재부팅을 위해, 장비 사용자가 인증 없이 전원을 끄고 재부팅할 수 있는 polkit 규칙을 설치함 (집 안 네트워크에서 리모컨에 접속할 수 있으면 누구나 장비를 끌 수 있음)
   - 날씨 위치(`MM_LAT`, `MM_LON`)는 `docker/magic_mirror/.env`에서 읽음. 없으면 실행 중에 1) 공인 IP로 위치 추정(기본값, [ipinfo.io](https://ipinfo.io) 사용) 2) 좌표 직접 입력 3) 건너뛰기 중에서 선택 (직접 만들려면 `.env.example`을 `.env`로 복사해 채움)
 
 - MMPM 웹 UI: `http://<장비 주소>:7890` (로그 뷰어는 6789, MM 상태 표시와 모듈 표시/숨김은 8907 포트를 함께 사용)
   - MMPM 이미지에 `docker` 명령이 없어 UI의 MagicMirror 시작/중지/재시작은 동작하지 않음. 장비에서 `docker compose -f docker/magic_mirror/docker-compose.yml restart magicmirror`로 함
+- 업스트림 PR이 병합될 때까지 fork 브랜치로 바꿔 쓰는 모듈 (`data/modules/<모듈>`에서 `git remote add fork <fork 주소>` → `git fetch fork` → `git checkout -B <브랜치> --track fork/<브랜치>`, 병합되면 `git checkout master && git pull`로 되돌림)
+
+| 모듈 | fork 브랜치 | 이유 | 업스트림 PR |
+| --- | --- | --- | --- |
+| MMM-mmpm | [s1len7/MMM-mmpm](https://github.com/s1len7/MMM-mmpm) `fix/toggle-loop-const` | 모듈 표시/숨김 후 응답이 오지 않는 버그 수정 | [Bee-Mar/MMM-mmpm#2](https://github.com/Bee-Mar/MMM-mmpm/pull/2) |
+| MMM-Remote-Control | [s1len7/MMM-Remote-Control](https://github.com/s1len7/MMM-Remote-Control) `feat/qr-hostname` | 웹 리모컨 URL·QR에 IP 대신 호스트 이름 표시 (`useHostname`, `multicast-dns` 필요: 모듈 폴더에서 `npm install --omit=dev`) | [Jopyth/MMM-Remote-Control#430](https://github.com/Jopyth/MMM-Remote-Control/pull/430) |
 
 한글 폰트: `sudo apt install fonts-nanum fonts-nanum-extra`
 <!-- portainer > docker-compose.yml -->
