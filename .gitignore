@@ -224,3 +224,6 @@ logs/*
 # AI 에이전트가 테스트 등 작업 중에 만드는 임시 파일 (AGENTS.md 참고)
 tmp/*
 !tmp/.gitkeep
+
+# Claude Code 로컬 설정 (특정 파일을 올려야 하면 사용자에게 먼저 확인)
+.claude/
