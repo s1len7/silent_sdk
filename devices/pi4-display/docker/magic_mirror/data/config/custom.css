@@ -119,6 +119,26 @@ header {
     padding: 5px 0;
 }
 
+/* 기본 템플릿에 표 머리글이 없어 첫 행의 각 칸 위에 열 이름을 붙임
+   (열은 subgrid라 아래 값과 줄이 맞음, config에 표시할 열을 추가하면 여기도 추가할 것) */
+.today_hourly_forecast_weather .weather-hourly-row:first-child > div::before,
+.daily_forecast_weather .weather-forecast-row:first-child > div::before {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.6em;
+    color: var(--color-text-dimmed);
+}
+
+.today_hourly_forecast_weather .weather-hourly-row:first-child .time::before { content: "시간"; }
+.today_hourly_forecast_weather .weather-hourly-row:first-child .weather-icon::before { content: "날씨"; }
+.today_hourly_forecast_weather .weather-hourly-row:first-child .temperature::before { content: "기온"; }
+.today_hourly_forecast_weather .weather-hourly-row:first-child .precipitation-prob::before { content: "강수"; }
+
+.daily_forecast_weather .weather-forecast-row:first-child .day::before { content: "날짜"; }
+.daily_forecast_weather .weather-forecast-row:first-child .weather-icon::before { content: "날씨"; }
+.daily_forecast_weather .weather-forecast-row:first-child .min-temp::before { content: "최저"; }
+.daily_forecast_weather .weather-forecast-row:first-child .max-temp::before { content: "최고"; }
+
 /* --- 하단 컨트롤 (페이지 점 / 관리자 버튼) --- */
 /* 기본 점은 터치하기에 너무 작아 클릭 영역을 넓힘 */
 .MMM-page-indicator .indicator {
