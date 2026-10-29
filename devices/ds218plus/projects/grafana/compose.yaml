@@ -46,15 +46,9 @@ services:
           - loki
     volumes:
       - ./grafana/var/lib/grafana:/var/lib/grafana
-      # 파일로 등록하는 데이터 소스와 대시보드 (NAS 서비스 상태 대시보드, README 참고)
-      - ./grafana/etc/grafana/provisioning:/etc/grafana/provisioning
 
     environment:
       - TZ=Asia/Seoul
-      # NAS 서비스 상태 대시보드가 WUD API를 읽는 Infinity 플러그인
-      - GF_PLUGINS_PREINSTALL=yesoreyeram-infinity-datasource
-      - WUD_URL=${WUD_URL}
-      - WUD_PASSWORD=${WUD_PASSWORD}
       # authentik 로그인(SSO), 주소와 클라이언트 값은 .env에서 읽음 (authentik 애플리케이션 slug: grafana)
       - GF_SERVER_ROOT_URL=${GRAFANA_ROOT_URL}
       - GF_AUTH_GENERIC_OAUTH_ENABLED=true

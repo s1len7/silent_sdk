@@ -86,14 +86,6 @@ ssh SiLENT_NAS 'python3 - list' < devices/ds218plus/scripts/synoproj.py
 - 서비스 목록: [projects/homepage/app/config/services.yaml](projects/homepage/app/config/services.yaml) (NAS 주소는 `.env`의 `HOMEPAGE_VAR_NAS`)
 
 
-### Grafana 서비스 상태 대시보드
-
-- 위치: Grafana(`http://<NAS>:33000`) > 대시보드 > NAS > "NAS 서비스 상태" (Grafana 로그인 필요)
-- 정상·멈춤·오류·새 버전 개수와, 컨테이너별 포트·상태(칸 색)·새 버전 여부를 보여 줌
-- 데이터: WUD API (Infinity 플러그인), 포트 표는 대시보드 JSON 안에 있음
-- 설정 파일: [projects/grafana/grafana/etc/grafana/provisioning](projects/grafana/grafana/etc/grafana/provisioning) (`.env`의 `WUD_URL`, `WUD_PASSWORD`)
-
-
 ### authentik (SSO)
 
 - 프로젝트: [projects/authentik/compose.yaml](projects/authentik/compose.yaml) (내부망 전용, `http://<NAS>:39000`)

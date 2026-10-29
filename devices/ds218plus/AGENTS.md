@@ -44,9 +44,8 @@
       - 그 포트도 쓰이고 있으면 1씩 올림 (예: ntfy `30081:80`, Homepage `33003:3000`)
     - 예외: DSM이 쓰는 포트(22, 80, 443, 5000, 5001)는 쓰지 않음, host 네트워크 서비스는 기본 포트를 그대로 씀, 공유기 포트포워딩이나 외부 기기가 가리키는 포트(nginx-proxy-manager 8080·8181·4443, vector 1514/udp·8899)는 바꾸지 않음
   - 비밀번호·토큰은 compose에 직접 쓰지 말고 프로젝트 폴더의 `.env`에 두고 `${변수}`로 읽을 것 (저장소에는 값이 빈 `.env.example`만 둠)
-- 프로젝트를 추가·삭제하거나 포트를 바꾸면 두 상태판도 함께 고칠 것
-  - Homepage: [projects/homepage/app/config/services.yaml](projects/homepage/app/config/services.yaml) (NAS에 복사한 뒤 homepage 프로젝트를 `restart`해야 처음 그려지는 화면까지 바뀜)
-  - Grafana: [nas-services.json](projects/grafana/grafana/etc/grafana/provisioning/dashboards/json/nas-services.json)의 포트 표(`묶음,컨테이너,포트`)
+- 프로젝트를 추가·삭제하거나 포트를 바꾸면 아래도 함께 고칠 것
+  - Homepage 상태판: [projects/homepage/app/config/services.yaml](projects/homepage/app/config/services.yaml) (NAS에 복사한 뒤 homepage 프로젝트를 `restart`해야 처음 그려지는 화면까지 바뀜)
   - README의 프로젝트 목록 표
 - 이미지 새 버전 확인은 WUD 프로젝트([projects/wud](projects/wud/compose.yaml))로 함, 자동 업데이트는 하지 않음
   - 메이저 버전이 바뀌는 업데이트(예: postgres 16 → 18)는 데이터 마이그레이션이 필요하므로 그대로 올리지 말 것
