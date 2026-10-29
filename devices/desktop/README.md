@@ -112,26 +112,6 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
   - 전역 `user.name`, `user.email` 설정 (이메일은 GitHub noreply 주소로 비식별화)
 
 
-### Claude Code 텔레그램 알림
-
-- Setup: [scripts/setup-claude-telegrambot.ps1](scripts/setup-claude-telegrambot.ps1) (Claude Code 응답이 끝나거나 권한 승인을 기다리면 텔레그램으로 알림)
-  - 다시 실행 시: `.env`에 토큰·chat id가 없거나, hook 스크립트·`telegram.env`가 같고 `settings.json`에 UserPromptSubmit·Stop hook과 Notification hook(권한 요청만)이 있으면 건너뜀. 빠진 것만 다시 만듦
-- 설정: `devices/desktop/.env`의 `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` ([.env.example](.env.example) 참고, git에 올라가지 않음)
-  - 토큰: 텔레그램 @BotFather에게 `/newbot`
-  - chat id: @userinfobot에게 메시지를 보내면 알려 주는 숫자
-- [scripts/setup-claude-telegrambot.sh](scripts/setup-claude-telegrambot.sh)를 `~/.claude/hooks/telegram-notify.sh`로 복사하고, 토큰·chat id를 `~/.claude/telegram.env`에 쓰고, `~/.claude/settings.json`에 hook을 추가함 (기존 설정은 유지, 바꾸기 전 `settings.json.bak`으로 백업)
-- 메시지 형식 (항목마다 줄바꿈, `ai` 값으로 다른 알림과 구분, `request`는 마지막 질문의 앞 60자):
-
-```text
-[Info] ai="Claude Code",
-workspace="silent_sdk",
-request="텔레그램 알림봇에 질의내용 간단요약본 추가해서...",
-event="done"
-```
-
-- 적용: 설치 후 Claude Code를 다시 시작하거나 `/hooks`를 한 번 열기
-
-
 ### Python
 
 - Setup: [scripts/setup-python.ps1](scripts/setup-python.ps1) (현재 사용자용, `%LOCALAPPDATA%\Programs\Python\Python312`에 설치)
@@ -195,5 +175,5 @@ event="done"
 
 - `~\.ssh\` (`C:\Users\<사용자>\.ssh\`): 장비 접속용 ssh 키(`id_rsa`, `id_rsa.pub`, `id_rsa.putty.pub`, `id_rsa.ppk`), 장비별 접속 설정(`config`), 장비 서버 키 목록(`known_hosts`)
   - 개인 키가 들어 있으므로 암호화된 위치에만 백업하고, 이 저장소에는 올리지 말 것
-- `devices\desktop\.env` (전체 Setup 기준 `C:\silent_sdk\devices\desktop\.env`): 텔레그램 봇 토큰, OpenRouter·Gemini API 키, 원격 OpenClaw Gateway 주소·token·ssh 대상 ([.env.example](.env.example) 참고)
+- `devices\desktop\.env` (전체 Setup 기준 `C:\silent_sdk\devices\desktop\.env`): OpenRouter·Gemini API 키, 원격 OpenClaw Gateway 주소·token·ssh 대상 ([.env.example](.env.example) 참고)
   - git에 올라가지 않으므로 직접 백업하고, 위와 같이 암호화된 위치에만 둘 것
