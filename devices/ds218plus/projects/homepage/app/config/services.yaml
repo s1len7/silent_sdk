@@ -160,3 +160,10 @@
         description: "포트 18789 · openclaw (예비 Gateway)"
         server: nas
         container: openclaw
+    - Forgejo:
+        icon: forgejo.png
+        href: http://{{HOMEPAGE_VAR_NAS}}:30082
+        description: "포트 30082, 2223 · forgejo"
+        server: nas
+        container: forgejo
+        siteMonitor: http://{{HOMEPAGE_VAR_NAS}}:30082

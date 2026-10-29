@@ -467,7 +467,8 @@
           "source": "inline",
           "format": "table",
           "parser": "backend",
-          "data": "묶음,컨테이너,포트\n1 스마트홈,home-assistant,8123\n1 스마트홈,whisper,10300\n1 스마트홈,piper,10200\n1 스마트홈,music-assistant-server,8095\n1 스마트홈,esphome,6052\n1 스마트홈,eclipse-mosquitto,1883\n2 네트워크·보안,nginx-proxy-manager,8080·8181·4443\n2 네트워크·보안,vaultwarden,30080\n2 네트워크·보안,tailscale,-\n2 네트워크·보안,adguard-home,53·3000\n2 네트워크·보안,authentik-server-1,39000\n2 네트워크·보안,authentik-worker-1,-\n2 네트워크·보안,authentik-postgresql-1,-\n2 네트워크·보안,wg-easy,51820/udp·51821\n2 네트워크·보안,wireguard,51820/udp\n3 모니터링·관리,uptime-kuma,3001\n3 모니터링·관리,wud,33002\n3 모니터링·관리,ntfy,30081\n3 모니터링·관리,homepage,33003\n3 모니터링·관리,dozzle,38082\n3 모니터링·관리,grafana,33000\n3 모니터링·관리,loki,3100\n3 모니터링·관리,vector,1514/udp·8899\n3 모니터링·관리,promtail,-\n3 모니터링·관리,portainer,9000·8000\n4 앱,metabase,33001\n4 앱,code-server,38081\n4 앱,open-webui,38080\n4 앱,openclaw,18789"
+          "data": "묶음,컨테이너,포트\n1 스마트홈,home-assistant,8123\n1 스마트홈,whisper,10300\n1 스마트홈,piper,10200\n1 스마트홈,music-assistant-server,8095\n1 스마트홈,esphome,6052\n1 스마트홈,eclipse-mosquitto,1883\n2 네트워크·보안,nginx-proxy-manager,8080·8181·4443\n2 네트워크·보안,vaultwarden,30080\n2 네트워크·보안,tailscale,-\n2 네트워크·보안,adguard-home,53·3000\n2 네트워크·보안,authentik-server-1,39000\n2 네트워크·보안,authentik-worker-1,-\n2 네트워크·보안,authentik-postgresql-1,-\n2 네트워크·보안,wg-easy,51820/udp·51821\n2 네트워크·보안,wireguard,51820/udp\n3 모니터링·관리,uptime-kuma,3001\n3 모니터링·관리,wud,33002\n3 모니터링·관리,ntfy,30081\n3 모니터링·관리,homepage,33003\n3 모니터링·관리,dozzle,38082\n3 모니터링·관리,grafana,33000\n3 모니터링·관리,loki,3100\n3 모니터링·관리,vector,1514/udp·8899\n3 모니터링·관리,promtail,-\n3 모니터링·관리,portainer,9000·8000\n4 앱,metabase,33001\n4 앱,code-server,38081\n4 앱,open-webui,38080\n4 앱,openclaw,18789
+4 앱,forgejo,30082·2223"
         }
       ],
       "transformations": [

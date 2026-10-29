@@ -57,6 +57,7 @@ ssh SiLENT_NAS 'python3 - list' < devices/ds218plus/scripts/synoproj.py
 | wg-easy | wg-easy | WireGuard VPN (이 NAS 커널에서 동작 안 함) | 51820/udp, 51821 | [projects/wg-easy](projects/wg-easy/compose.yaml) |
 | wireguard | wireguard | WireGuard VPN (이 NAS 커널에서 동작 안 함) | 51820/udp | (비밀값 정리 전) |
 | wud | wud | 이미지 새 버전 확인 | 33002 | [projects/wud](projects/wud/compose.yaml) |
+| forgejo | forgejo | 자체 Git 호스팅 (로컬망) | 30082, 2223 | [projects/forgejo](projects/forgejo/compose.yaml) |
 
 - Home Assistant와 함께 쓰는 서비스(음성 인식·합성, 음악, MQTT, ESPHome)는 home-assistant 프로젝트 하나에 서비스로 둠 (데이터는 `home-assistant/<서비스>/` 아래)
 - "비밀값 정리 전"인 프로젝트는 NAS의 compose에 비밀값·주소가 직접 들어 있어 저장소에 넣지 않았음 (`.env`로 옮긴 뒤 추가)
