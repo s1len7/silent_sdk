@@ -220,3 +220,7 @@ __marimo__/
 # Setup logs (devices/desktop/setup.ps1, devices/titan-s260/setup.ps1, devices/pi4-display/setup.sh)
 logs/*
 !logs/.gitkeep
+
+# AI 에이전트가 테스트 등 작업 중에 만드는 임시 파일 (AGENTS.md 참고)
+tmp/*
+!tmp/.gitkeep
