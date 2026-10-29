@@ -199,6 +199,9 @@ compose 파일: `docker/dozzle/docker-compose.yml`
   - 다시 실행 시: `.env`, 한글 폰트, 실행 중인 컨테이너가 모두 있으면 건너뜀 (위치를 다시 묻지 않음)
   - 날씨 위치(`MM_LAT`, `MM_LON`)는 `docker/magic_mirror/.env`에서 읽음. 없으면 실행 중에 1) 공인 IP로 위치 추정(기본값, [ipinfo.io](https://ipinfo.io) 사용) 2) 좌표 직접 입력 3) 건너뛰기 중에서 선택 (직접 만들려면 `.env.example`을 `.env`로 복사해 채움)
 
+- MMPM 웹 UI: `http://<장비 주소>:7890` (로그 뷰어는 6789, MM 상태 표시와 모듈 표시/숨김은 8907 포트를 함께 사용)
+  - MMPM 이미지에 `docker` 명령이 없어 UI의 MagicMirror 시작/중지/재시작은 동작하지 않음. 장비에서 `docker compose -f docker/magic_mirror/docker-compose.yml restart magicmirror`로 함
+
 한글 폰트: `sudo apt install fonts-nanum fonts-nanum-extra`
 <!-- portainer > docker-compose.yml -->
 compose 파일: `docker/magic_mirror/docker-compose.yml`
