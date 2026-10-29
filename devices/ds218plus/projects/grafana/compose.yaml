@@ -49,6 +49,8 @@ services:
 
     environment:
       - TZ=Asia/Seoul
+      # 시작할 때마다 내장 플러그인(elasticsearch, zipkin)을 자동 갱신하려다 권한 오류가 나므로 끔 (업데이트는 이미지로 함)
+      - GF_PLUGINS_PREINSTALL_AUTO_UPDATE=false
       # authentik 로그인(SSO), 주소와 클라이언트 값은 .env에서 읽음 (authentik 애플리케이션 slug: grafana)
       - GF_SERVER_ROOT_URL=${GRAFANA_ROOT_URL}
       - GF_AUTH_GENERIC_OAUTH_ENABLED=true
