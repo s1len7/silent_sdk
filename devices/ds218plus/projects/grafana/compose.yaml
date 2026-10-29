@@ -23,18 +23,6 @@ services:
       - ./loki/etc/loki/local-config.yaml:/etc/loki/local-config.yaml:ro
     # restart: unless-stopped
 
-#  promtail:
-#    image: grafana/promtail:latest
-#    container_name: promtail
-#    network_mode: host
-#    volumes:
-#      - /var/log:/var/log
-#      - ./promtail/config.yml:/etc/promtail/config.yml
-#    command: -config.file=/etc/promtail/config.yml
-#    depends_on:
-#      - loki
-#    # restart: unless-stopped
-
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
