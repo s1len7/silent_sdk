@@ -30,3 +30,21 @@
 ```powershell
 irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/generic-windows/setup.ps1 | iex
 ```
+
+## 반납 전 정리 (Cleanup)
+
+설치된 프로그램(git, VS Code, OpenCode CLI 등)은 유지하고, `silent_sdk` 저장소와 개인/비공개 정보만 정리합니다.
+
+```powershell
+# 저장소 외부에서 실행 권장
+cd ..
+.\silent_sdk\devices\generic-windows\setup.ps1 -Cleanup
+
+# 실제 삭제 없이 확인만
+.\silent_sdk\devices\generic-windows\setup.ps1 -Cleanup -DryRun
+
+# 확인 없이 강제 실행 (주의)
+.\silent_sdk\devices\generic-windows\setup.ps1 -Cleanup -Force
+```
+
+주의: 저장소 루트 전체를 삭제합니다. 본 스크립트는 설치된 패키지는 제거하지 않습니다.

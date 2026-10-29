@@ -2,12 +2,118 @@
 #   irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/generic-windows/setup.ps1 | iex
 # ASCII-only so it works both via `irm | iex` and `-File` on Windows PowerShell 5.1.
 # Every step runs with -UserScope (no elevation); run it as the user who will use the tools.
+# Cleanup: .\setup.ps1 -Cleanup [-DryRun] [-Force]
+
+param(
+    [switch]$Cleanup,
+    [switch]$DryRun,
+    [switch]$Force
+)
 
 $ErrorActionPreference = 'Stop'
 $repo = 'https://github.com/s1len7/silent_sdk'
 $dir  = "$HOME\silent_sdk"
 
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
+
+if ($Cleanup) {
+    Write-Host "Cleanup mode: removing silent_sdk repository and related personal info" -ForegroundColor Yellow
+    Write-Host "Installed programs will NOT be removed." -ForegroundColor Yellow
+    Write-Host ""
+
+    $targets = @()
+    if (Test-Path $dir) {
+        $targets += $dir
+    }
+
+    # Check for other silent_sdk copies in HOME
+    try {
+        Get-ChildItem -Path $HOME -Directory -Force -ErrorAction SilentlyContinue | Where-Object { $_.Name -match '^silent_sdk' -and $_.FullName -ne $dir } | ForEach-Object {
+            $targets += $_.FullName
+        }
+    } catch {}
+
+    # Check for .env files that might be related copies (outside repo) - be conservative
+    try {
+        Get-ChildItem -Path $HOME -Recurse -Force -File -ErrorAction SilentlyContinue -Filter '.env' | Where-Object { $_.FullName -notmatch '\\\.git\\' -and $_.FullName -notlike "$dir\*" } | ForEach-Object {
+            $targets += $_.FullName
+        }
+    } catch {}
+
+    # Bootstrap/temp logs related to this setup
+    try {
+        Get-ChildItem -Path $env:TEMP -Force -ErrorAction SilentlyContinue | Where-Object { $_.Name -match 'silent_sdk.*generic-windows' } | ForEach-Object {
+            $targets += $_.FullName
+        }
+    } catch {}
+
+    if ($targets.Count -eq 0) {
+        Write-Host "No silent_sdk related files found to clean up." -ForegroundColor Green
+        exit 0
+    }
+
+    Write-Host "Targets to remove:" -ForegroundColor Cyan
+    $targets | ForEach-Object { Write-Host "  $_" }
+    Write-Host ""
+
+    if ($DryRun) {
+        Write-Host "DryRun: no changes made." -ForegroundColor Green
+        exit 0
+    }
+
+    if (-not $Force) {
+        $resp = Read-Host "Are you sure you want to delete these? This cannot be undone. (y/N)"
+        if ($resp -ne 'y' -and $resp -ne 'Y') {
+            Write-Host "Cancelled." -ForegroundColor Yellow
+            exit 0
+        }
+    }
+
+    # If we are running from inside the repo, use wrapper to self-delete
+    $scriptPath = $MyInvocation.MyCommand.Definition
+    if ($scriptPath -and $scriptPath -like "$dir\*") {
+        $wrapper = Join-Path $env:TEMP "silent_sdk_cleanup_wrapper_$(Get-Date -Format 'yyyyMMddHHmmss').ps1"
+        $targetsList = $targets | ForEach-Object { "'" + $_.Replace("'", "''") + "'" } | Join-String -Separator ','
+        $wrapperContent = @"
+# Cleanup wrapper
+`$ErrorActionPreference = 'SilentlyContinue'
+Start-Sleep -Seconds 2
+$targetsList | ForEach-Object {
+    `$p = [ScriptBlock]::Create(`$_).Invoke()
+    if (Test-Path `$p) {
+        try {
+            if ((Get-Item `$p) -is [System.IO.DirectoryInfo]) {
+                Remove-Item `$p -Recurse -Force -ErrorAction SilentlyContinue
+            } else {
+                Remove-Item `$p -Force -ErrorAction SilentlyContinue
+            }
+        } catch {}
+    }
+}
+"@
+        Set-Content -Path $wrapper -Value $wrapperContent -Encoding ASCII
+        Start-Process powershell -ArgumentList "-ExecutionPolicy Bypass -File `"$wrapper`"" -WindowStyle Hidden
+        Write-Host "Cleanup initiated. This window may close." -ForegroundColor Green
+        exit 0
+    }
+
+    foreach ($t in $targets) {
+        try {
+            if (Test-Path $t) {
+                if ((Get-Item $t) -is [System.IO.DirectoryInfo]) {
+                    Remove-Item $t -Recurse -Force -ErrorAction SilentlyContinue
+                } else {
+                    Remove-Item $t -Force -ErrorAction SilentlyContinue
+                }
+                Write-Host "Removed: $t" -ForegroundColor Green
+            }
+        } catch {
+            Write-Host "Failed to remove: $t - $($_.Exception.Message)" -ForegroundColor Red
+        }
+    }
+    Write-Host "Cleanup complete." -ForegroundColor Green
+    exit 0
+}
 
 $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $bootstrapLog = "$env:TEMP\silent_sdk-generic-windows-$stamp.log"
