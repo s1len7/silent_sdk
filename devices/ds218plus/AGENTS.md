@@ -14,7 +14,7 @@
 - 제어는 저장소를 받은 PC에서 ssh(키 인증)로 NAS에 접속해 실행할 것
   - 비밀번호를 묻는 대화형 입력 없이 실행되게 할 것 (ssh `BatchMode=yes`)
 - 프로젝트의 생성·수정·빌드·시작·중지·삭제는 `docker compose`가 아니라 Container Manager가 쓰는 DSM API(`SYNO.Docker.Project`)로 할 것
-  - 도우미 스크립트 [scripts/synoproj.py](scripts/synoproj.py)를 쓸 것 (예: `ssh SiLENT_NAS 'python3 - list' < scripts/synoproj.py`)
+  - 도우미 스크립트 [scripts/synoproj.py](scripts/synoproj.py)를 쓸 것 (예: `ssh silent-nas.local 'python3 - list' < scripts/synoproj.py`)
   - 호출: `sudo /usr/syno/bin/synowebapi --exec api=SYNO.Docker.Project method=<동작> version=1 <인자>=<JSON 값>`
     - 인자 값은 JSON으로 넣음 (문자열도 따옴표 포함, 예: `id='"<프로젝트 ID>"'`)
     - 결과는 출력 마지막의 JSON(`success`, `error.code`, `data`)으로 판단할 것 (`*_stream` 동작은 진행 로그 뒤에 JSON이 옴)

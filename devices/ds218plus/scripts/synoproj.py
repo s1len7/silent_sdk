@@ -3,7 +3,7 @@
 #   python3 synoproj.py <get|start|stop|restart|build_stream|delete> <프로젝트>
 #   python3 synoproj.py create <프로젝트> <compose 파일> [docker 폴더 기준 경로]
 #   python3 synoproj.py update <프로젝트> <compose 파일>
-# PC에서는 ssh로 보내 실행함: ssh SiLENT_NAS 'python3 - list' < synoproj.py
+# PC에서는 ssh로 보내 실행함: ssh silent-nas.local 'python3 - list' < synoproj.py
 import json
 import subprocess
 import sys

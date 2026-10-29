@@ -23,7 +23,7 @@
 - 프로젝트 제어: [scripts/synoproj.py](scripts/synoproj.py) (Container Manager가 쓰는 DSM API로 생성·수정·빌드·시작·중지, DSM 화면과 상태가 같게 유지됨)
 
 ```bash
-ssh SiLENT_NAS 'python3 - list' < devices/ds218plus/scripts/synoproj.py
+ssh silent-nas.local 'python3 - list' < devices/ds218plus/scripts/synoproj.py
 ```
 
 
