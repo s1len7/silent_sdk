@@ -1,6 +1,6 @@
 services:
   portainer:
-    image: portainer/portainer-ce:latest
+    image: portainer/portainer-ce:lts
     container_name: portainer
     network_mode: bridge
     ports:

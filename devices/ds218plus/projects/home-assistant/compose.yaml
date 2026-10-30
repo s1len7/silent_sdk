@@ -46,7 +46,7 @@ services:
 
   # 음악 스트리밍 (데이터는 ./music-assistant/data)
   music-assistant:
-    image: ghcr.io/music-assistant/server:latest # <<< Desired release version here (or use beta to get the latest beta version)
+    image: ghcr.io/music-assistant/server:stable # <<< Desired release version here (or use beta to get the latest beta version)
     container_name: music-assistant-server
     restart: unless-stopped
     # Network mode must be set to host for MA to discover and stream to players (see networking note below)
@@ -80,7 +80,7 @@ services:
 
   # ESP 기기 펌웨어 관리 대시보드
   esphome:
-    image: esphome/esphome:latest
+    image: esphome/esphome:stable
     container_name: esphome
     restart: unless-stopped
     ports:
