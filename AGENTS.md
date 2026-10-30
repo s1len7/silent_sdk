@@ -34,6 +34,11 @@
   - 이미 있는 `.gitattributes`는 그대로 따를 것
 - 마크다운 문서(`README.md`, `AGENTS.md` 등)는 한글로 작성할 것
 - 자산을 추가하거나 사용할 때는 반드시 라이선스를 확인할 것
+- 국내 법적 근거가 필요하면 아래 자료를 참고할 것
+  - [법령](https://legalize.kr/index.html)
+  - [판례](https://legalize.kr/precedents.html)
+  - [자치법규](https://legalize.kr/ordinances.html)
+  - [행정규칙](https://legalize.kr/admrules.html)
 - `AGENTS.md`가 너무 길어져 가독성이 떨어진다고 판단되면 압축을 요청할 것
 
 ### 설계
