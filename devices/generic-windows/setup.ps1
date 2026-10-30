@@ -47,14 +47,65 @@ if ($Cleanup) {
         }
     } catch {}
 
-    if ($targets.Count -eq 0) {
-        Write-Host "No silent_sdk related files found to clean up." -ForegroundColor Green
+    # Browser logout: remove only login data (cookies, sessions, saved passwords, account tokens,
+    # site storage) from each profile; bookmarks, history and extensions are the PC owner's data and are kept
+    $chromiumDirs = @(
+        "$env:LOCALAPPDATA\Google\Chrome\User Data",
+        "$env:LOCALAPPDATA\Microsoft\Edge\User Data",
+        "$env:LOCALAPPDATA\Chromium\User Data"
+    )
+    $chromiumLoginFiles = @(
+        'Cookies', 'Network\Cookies', 'Extension Cookies',
+        'Login Data', 'Login Data For Account', 'Web Data', 'Account Web Data',
+        'Sessions', 'Current Session', 'Current Tabs', 'Last Session', 'Last Tabs',
+        'Local Storage', 'Session Storage', 'IndexedDB'
+    )
+    $firefoxDirs = @("$env:APPDATA\Mozilla\Firefox\Profiles")
+    $firefoxLoginFiles = @(
+        'cookies.sqlite', 'logins.json', 'logins-backup.json', 'signedInUser.json',
+        'sessionstore.jsonlz4', 'sessionstore-backups', 'storage\default', 'webappsstore.sqlite'
+    )
+    $browserProcesses = @('chrome', 'msedge', 'firefox')
+
+    # Login data paths in every profile folder (a subfolder that has the marker file)
+    function Get-BrowserLoginFile {
+        $sets = @(
+            @{ Bases = $chromiumDirs; Marker = 'Preferences'; Names = $chromiumLoginFiles },
+            @{ Bases = $firefoxDirs; Marker = 'prefs.js'; Names = $firefoxLoginFiles }
+        )
+        foreach ($set in $sets) {
+            foreach ($base in $set.Bases) {
+                $profileDirs = Get-ChildItem -Path $base -Directory -Force -ErrorAction SilentlyContinue |
+                    Where-Object { Test-Path -LiteralPath (Join-Path $_.FullName $set.Marker) }
+                foreach ($profileDir in $profileDirs) {
+                    foreach ($name in $set.Names) {
+                        # SQLite side files (-journal, -wal, -shm) are removed too
+                        foreach ($suffix in @('', '-journal', '-wal', '-shm')) {
+                            $path = Join-Path $profileDir.FullName "$name$suffix"
+                            if (Test-Path -LiteralPath $path) { $path }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    $browserTargets = @(Get-BrowserLoginFile)
+    $runningBrowsers = @(Get-Process -Name $browserProcesses -ErrorAction SilentlyContinue |
+        Select-Object -ExpandProperty Name -Unique)
+
+    if ($targets.Count -eq 0 -and $browserTargets.Count -eq 0) {
+        Write-Host "No silent_sdk related files or browser login data found to clean up." -ForegroundColor Green
         exit 0
     }
 
     Write-Host "Targets to remove:" -ForegroundColor Cyan
-    $targets | ForEach-Object { Write-Host "  $_" }
+    $targets + $browserTargets | ForEach-Object { Write-Host "  $_" }
     Write-Host ""
+    if ($runningBrowsers.Count -gt 0) {
+        Write-Host "Browsers to close (running): $($runningBrowsers -join ' ')" -ForegroundColor Cyan
+        Write-Host ""
+    }
 
     if ($DryRun) {
         Write-Host "DryRun: no changes made." -ForegroundColor Green
@@ -66,6 +117,24 @@ if ($Cleanup) {
         if ($resp -ne 'y' -and $resp -ne 'Y') {
             Write-Host "Cancelled." -ForegroundColor Yellow
             exit 0
+        }
+    }
+
+    # A running browser locks its files and writes cookies/sessions back on exit, so close it first
+    $running = @(Get-Process -Name $browserProcesses -ErrorAction SilentlyContinue)
+    if ($running.Count -gt 0) {
+        Write-Host "Closing browsers: $(($running | Select-Object -ExpandProperty Name -Unique) -join ' ')" -ForegroundColor Yellow
+        $running | Stop-Process -Force -ErrorAction SilentlyContinue
+        Wait-Process -Name $browserProcesses -Timeout 10 -ErrorAction SilentlyContinue
+    }
+
+    # Browser files are outside the repo, so remove them now (search again for files written on exit)
+    foreach ($t in @(Get-BrowserLoginFile)) {
+        try {
+            Remove-Item -LiteralPath $t -Recurse -Force
+            Write-Host "Removed: $t" -ForegroundColor Green
+        } catch {
+            Write-Host "Failed to remove: $t - $($_.Exception.Message)" -ForegroundColor Red
         }
     }
 

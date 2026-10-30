@@ -35,6 +35,8 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/generic-win
 
 설치된 프로그램(git, VS Code, OpenCode CLI 등)은 유지하고, `silent_sdk` 저장소와 개인/비공개 정보만 정리합니다.
 
+브라우저(Chrome, Edge, Chromium, Firefox)의 모든 계정도 로그아웃합니다. 프로필마다 쿠키·세션·저장된 비밀번호·브라우저 계정 토큰·사이트 저장소만 지우고 북마크·기록·확장은 남깁니다. 실행 중인 브라우저는 확인(y/N) 후 종료합니다.
+
 ```powershell
 # 저장소 외부에서 실행 권장
 cd ..

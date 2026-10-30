@@ -7,7 +7,7 @@
 | desktop | Windows 10 이상 데스크탑 | [devices/desktop/README.md](devices/desktop/README.md) |
 | generic-windows | Windows 10 이상 (빌려쓰는 PC용, 최소 설치) | [devices/generic-windows/README.md](devices/generic-windows/README.md) |
 | generic-ubuntu | Ubuntu/Debian 계열 (빌려쓰는 PC용, 최소 설치) | [devices/generic-ubuntu/README.md](devices/generic-ubuntu/README.md) |
-| pi4-display | Raspberry Pi 4 (RAM 8GB), Raspberry Pi OS 64-bit (Trixie) | [devices/pi4-display/README.md](devices/pi4-display/README.md) |
+| pi4-display | Raspberry Pi 4 (RAM 8GB), Raspberry Pi OS Desktop 64-bit (Trixie) | [devices/pi4-display/README.md](devices/pi4-display/README.md) |
 | pi4-2gb | Raspberry Pi 4 (RAM 2GB), Raspberry Pi OS **Lite** 64-bit (Trixie) | [devices/pi4-2gb/README.md](devices/pi4-2gb/README.md) |
 | titan-s260 | SAM4S TITAN-S260 POS, Windows 10 IoT LTSC 2021 | [devices/titan-s260/README.md](devices/titan-s260/README.md) |
 | byt-t1 | PEGATRON BYT-T1 Mini-ITX 보드 (Intel Pentium J2900), Ubuntu Server 24.04 LTS | [devices/byt-t1/README.md](devices/byt-t1/README.md) |

@@ -129,33 +129,121 @@ if [[ $CLEANUP -eq 1 ]]; then
             targets+=("$f")
         done < <(find "$HOME" -name '.env' -not -path "*/$repo_check/*" -not -path "*/.git/*" -print0 2>/dev/null)
     fi
-    
+
+    # 홈에 직접 둔 GitHub 토큰 파일
+    [[ -f "$HOME/.gh_token" ]] && targets+=("$HOME/.gh_token")
+
     # Temp logs
     if [[ -d /tmp ]]; then
         while IFS= read -r -d '' f; do
             targets+=("$f")
         done < <(find /tmp -name 'silent_sdk*generic-ubuntu*' -print0 2>/dev/null)
     fi
-    
-    if [[ ${#targets[@]} -eq 0 ]]; then
-        echo "No silent_sdk related files found to clean up."
+
+    # 브라우저 로그아웃: 프로필마다 로그인 정보(쿠키·세션·저장된 비밀번호·계정 토큰·사이트 저장소)만 지움
+    # 북마크·기록·확장은 PC 주인의 데이터이므로 남김
+    # 브라우저는 sudo로 실행해도 sudo한 사용자의 것을 대상으로 함
+    browser_home="${user_home_cand:-$HOME}"
+    browser_user="${SUDO_USER:-$(id -un)}"
+    chromium_dirs=(
+        "$browser_home/.config/google-chrome"
+        "$browser_home/.config/microsoft-edge"
+        "$browser_home/.config/chromium"
+        "$browser_home/snap/chromium/common/chromium"
+    )
+    chromium_login_files=(
+        Cookies Network/Cookies "Extension Cookies"
+        "Login Data" "Login Data For Account" "Web Data" "Account Web Data"
+        Sessions "Current Session" "Current Tabs" "Last Session" "Last Tabs"
+        "Local Storage" "Session Storage" IndexedDB
+    )
+    firefox_dirs=(
+        "$browser_home/.mozilla/firefox"
+        "$browser_home/snap/firefox/common/.mozilla/firefox"
+    )
+    firefox_login_files=(
+        cookies.sqlite logins.json logins-backup.json signedInUser.json
+        sessionstore.jsonlz4 sessionstore-backups storage/default webappsstore.sqlite
+    )
+    browser_processes=(chrome chromium msedge firefox firefox-bin)
+
+    # 프로필 폴더(표시 파일이 있는 하위 폴더)마다 있는 로그인 정보 경로를 browser_targets에 추가
+    # 사용법: add_login_files <브라우저 데이터 폴더> <프로필 표시 파일> <파일 이름...>
+    add_login_files() {
+        local base="$1" marker="$2" profile name suffix
+        shift 2
+        for profile in "$base"/*/; do
+            [[ -f "$profile$marker" ]] || continue
+            for name in "$@"; do
+                # SQLite 보조 파일(-journal, -wal, -shm)도 함께 지움
+                for suffix in "" -journal -wal -shm; do
+                    [[ -e "$profile$name$suffix" ]] && browser_targets+=("$profile$name$suffix")
+                done
+            done
+        done
+    }
+
+    collect_browser_targets() {
+        local base
+        browser_targets=()
+        for base in "${chromium_dirs[@]}"; do
+            add_login_files "$base" Preferences "${chromium_login_files[@]}"
+        done
+        for base in "${firefox_dirs[@]}"; do
+            add_login_files "$base" prefs.js "${firefox_login_files[@]}"
+        done
+    }
+
+    # 실행 중인 브라우저 프로세스 이름을 한 줄에 하나씩 출력
+    running_browsers() {
+        local p
+        for p in "${browser_processes[@]}"; do
+            pgrep -u "$browser_user" -x "$p" >/dev/null && echo "$p"
+        done
+    }
+
+    collect_browser_targets
+    running="$(running_browsers)"
+
+    if [[ ${#targets[@]} -eq 0 && ${#browser_targets[@]} -eq 0 ]]; then
+        echo "No silent_sdk related files or browser login data found to clean up."
         exit 0
     fi
-    
+
     echo "Targets to remove:"
-    for t in "${targets[@]}"; do echo "  $t"; done
+    for t in "${targets[@]}" "${browser_targets[@]}"; do echo "  $t"; done
     echo ""
-    
+    [[ -n "$running" ]] && echo "Browsers to close (running): ${running//$'\n'/ }" && echo ""
+
     if [[ $DRYRUN -eq 1 ]]; then
         echo "DryRun: no changes made."
         exit 0
     fi
-    
+
     if [[ $FORCE -ne 1 ]]; then
         read -r -p "Are you sure you want to delete these? This cannot be undone. (y/N): " resp
         [[ "$resp" != "y" && "$resp" != "Y" ]] && echo "Cancelled." && exit 0
     fi
-    
+
+    # 브라우저가 켜져 있으면 종료할 때 메모리의 쿠키·세션을 다시 저장하므로 먼저 종료
+    running="$(running_browsers)"
+    if [[ -n "$running" ]]; then
+        echo "Closing browsers: ${running//$'\n'/ }"
+        for p in $running; do pkill -u "$browser_user" -x "$p"; done
+        # 정상 종료를 최대 5초 기다린 뒤, 남아 있으면 강제 종료
+        for _ in {1..10}; do
+            [[ -z "$(running_browsers)" ]] && break
+            sleep 0.5
+        done
+        for p in $(running_browsers); do pkill -KILL -u "$browser_user" -x "$p"; done
+    fi
+
+    # 브라우저 파일은 저장소 밖에 있으므로 바로 지움 (종료하며 새로 생긴 파일까지 다시 찾음)
+    collect_browser_targets
+    for t in "${browser_targets[@]}"; do
+        if rm -rf -- "$t"; then echo "Removed: $t"; else echo "Failed to remove: $t"; fi
+    done
+
     script_path="${BASH_SOURCE[0]}"
     if [[ "$script_path" == "$repo_check"/* ]]; then
         wrapper="/tmp/silent_sdk_cleanup_wrapper_$$.sh"
