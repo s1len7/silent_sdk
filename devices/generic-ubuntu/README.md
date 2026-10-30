@@ -34,7 +34,7 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/gene
 
 ## 반납 전 정리 (Cleanup)
 
-설치된 프로그램(git, VS Code, OpenCode CLI 등)은 유지하고, `silent_sdk` 저장소와 개인/비공개 정보만 정리합니다.
+설치된 프로그램(git, VS Code, OpenCode CLI 등)은 유지하고, `silent_sdk` 저장소와 개인/비공개 정보(`.env`, GitHub 토큰 파일 `~/.gh_token`)만 정리합니다.
 
 ```bash
 # 저장소 외부에서 실행 권장
