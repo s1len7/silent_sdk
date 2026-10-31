@@ -1,0 +1,9 @@
+{
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "search.exclude": {
+    "logs/**": true,
+    "tmp/**": true
+  }
+}
