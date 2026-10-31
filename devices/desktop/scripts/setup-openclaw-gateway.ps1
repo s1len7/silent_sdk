@@ -1,7 +1,8 @@
-# Setup a local OpenClaw Gateway (loopback only, token auth) with free models and automatic fallbacks. Run as admin.
+# Setup a local OpenClaw Gateway (loopback, token auth, Tailscale Serve for phones) with free models and automatic fallbacks. Run as admin.
 # Node.js (winget) -> OpenClaw CLI (npm, latest) -> onboard (Gateway as the "OpenClaw Gateway" scheduled task)
 # -> default model and fallbacks -> OpenRouter API key from devices/desktop/.env (OPENROUTER_API_KEY; skipped when empty)
-# -> Gemini API key from the same .env (GEMINI_API_KEY; skipped when empty).
+# -> Gemini API key from the same .env (GEMINI_API_KEY; skipped when empty)
+# -> Tailscale Serve for the phone apps (only when Tailscale is logged in with HTTPS certificates enabled).
 # Needs winget: setup-winget.ps1 runs before this step and installs it when missing.
 # Docs: https://docs.openclaw.ai/install
 
@@ -80,8 +81,22 @@ function Test-Key($provider, $key) {
     if (-not $key) { return $true }
     try { (Invoke-OpenClaw models auth list --provider $provider --json) -join '' -match "`"${provider}:" } catch { $false }
 }
+# MagicDNS name with an HTTPS certificate, or '' when Tailscale is missing, logged out or has HTTPS certificates off
+function Get-TailscaleDomain {
+    if (-not (Get-Command tailscale -ErrorAction SilentlyContinue)) { return '' }
+    $ErrorActionPreference = 'Continue'
+    try {
+        $status = (& tailscale status --json 2>$null) -join "`n" | ConvertFrom-Json
+        if ($status.BackendState -eq 'Running' -and $status.CertDomains) { return @($status.CertDomains)[0] }
+    } catch { }
+    ''
+}
+# True when Serve is on, or when Tailscale cannot serve yet (nothing to do until it can)
+function Test-Tailscale {
+    (-not (Get-TailscaleDomain)) -or (Get-OpenClawConfig gateway.tailscale.mode) -eq 'serve'
+}
 
-if ((Test-Cli) -and (Test-Gateway) -and (Test-Model) -and (Test-Key openrouter $apiKey) -and (Test-Key google $geminiKey)) {
+if ((Test-Cli) -and (Test-Gateway) -and (Test-Model) -and (Test-Key openrouter $apiKey) -and (Test-Key google $geminiKey) -and (Test-Tailscale)) {
     # OpenClaw is updated with: npm i -g openclaw@latest
     Write-Host 'Local OpenClaw Gateway is already set up, skipped'
     $global:SetupStepSkipped = $true
@@ -97,14 +112,14 @@ if (-not (Test-Cli)) {
     if (-not $winget) { throw 'winget not found. Run setup-winget.ps1 first' }
     & $winget list --id OpenJS.NodeJS --exact --accept-source-agreements | Out-Null
     $verb = if ($LASTEXITCODE -eq 0) { 'upgrade' } else { 'install' }
-    Write-Host "[1/6] Node.js: winget $verb"
+    Write-Host "[1/7] Node.js: winget $verb"
     & $winget $verb --id OpenJS.NodeJS --exact -s winget --silent --accept-package-agreements --accept-source-agreements
     # -1978335189 (0x8A15002B): no newer version, -1978335135 (0x8A150061): already installed
     if ($LASTEXITCODE -notin 0, -1978335189, -1978335135) { throw "Node.js $verb failed: exit code $LASTEXITCODE" }
     & node --version
 
     # 2. OpenClaw CLI (latest)
-    Write-Host '[2/6] Installing the OpenClaw CLI (npm, latest)'
+    Write-Host '[2/7] Installing the OpenClaw CLI (npm, latest)'
     & npm install -g --allow-scripts=$allowScripts openclaw@latest --loglevel error --logs-dir $logDir
     if ($LASTEXITCODE -ne 0) { throw "npm install openclaw failed: exit code $LASTEXITCODE" }
     Invoke-OpenClaw --version | Select-Object -Last 1
@@ -118,7 +133,7 @@ if (-not (Test-Cli)) {
 
 # 3. Onboard: Gateway on loopback with token auth, installed as a scheduled task; channels and skills are set up later
 if (-not (Test-Gateway)) {
-    Write-Host '[3/6] Running openclaw onboard (loopback + token, scheduled task)'
+    Write-Host '[3/7] Running openclaw onboard (loopback + token, scheduled task)'
     Invoke-OpenClaw onboard --non-interactive --accept-risk --mode local --flow quickstart `
         --auth-choice skip --gateway-bind loopback --gateway-auth token --install-daemon `
         --skip-channels --skip-skills --skip-search --skip-ui --suppress-gateway-token-output | Out-Null
@@ -127,7 +142,7 @@ if (-not (Test-Gateway)) {
 
 # 4. Default model and fallbacks (the list is rebuilt so the order always matches)
 if (-not (Test-Model)) {
-    Write-Host "[4/6] Setting the default model to $model, fallbacks: $(if ($fallbacks) { $fallbacks -join ', ' } else { 'none' })"
+    Write-Host "[4/7] Setting the default model to $model, fallbacks: $(if ($fallbacks) { $fallbacks -join ', ' } else { 'none' })"
     Invoke-OpenClaw models set $model | Out-Null
     Invoke-OpenClaw models fallbacks clear | Out-Null
     foreach ($fallback in $fallbacks) { Invoke-OpenClaw models fallbacks add $fallback | Out-Null }
@@ -135,21 +150,33 @@ if (-not (Test-Model)) {
 
 # 5. OpenRouter API key
 if (-not $apiKey) {
-    Write-Host "[5/6] OPENROUTER_API_KEY is empty in $envFile. Add the key and run this step again."
+    Write-Host "[5/7] OPENROUTER_API_KEY is empty in $envFile. Add the key and run this step again."
 } elseif (-not (Test-Key openrouter $apiKey)) {
-    Write-Host '[5/6] Saving the OpenRouter API key'
+    Write-Host '[5/7] Saving the OpenRouter API key'
     Save-ApiKey openrouter $apiKey
 }
 
 # 6. Gemini API key: needed by the google/* default model and fallbacks set in step 4
 if (-not $geminiKey) {
-    Write-Host "[6/6] GEMINI_API_KEY is empty in $envFile. Add the key and run this step again to use Gemini."
+    Write-Host "[6/7] GEMINI_API_KEY is empty in $envFile. Add the key and run this step again to use Gemini."
 } elseif (-not (Test-Key google $geminiKey)) {
-    Write-Host '[6/6] Saving the Gemini API key'
+    Write-Host '[6/7] Saving the Gemini API key'
     Save-ApiKey google $geminiKey
     # The running Gateway only picks up new provider settings after a restart
     Write-Host 'Restarting the Gateway to apply the Gemini provider settings'
     Invoke-OpenClaw gateway restart | Out-Null
 }
 
+# 7. Tailscale Serve: the Gateway stays on loopback and Tailscale serves it over HTTPS (wss) inside the tailnet,
+# which the iOS/Android apps need for full access; plain LAN ws:// would only get limited access
+$domain = Get-TailscaleDomain
+if (-not $domain) {
+    Write-Host '[7/7] Tailscale is not installed, not logged in or has HTTPS certificates off; phone apps cannot connect yet. Run this step again after setting it up.'
+} elseif (-not (Test-Tailscale)) {
+    # The Gateway restarts by itself after this config change
+    Write-Host "[7/7] Enabling Tailscale Serve: https://$domain"
+    Invoke-OpenClaw config set gateway.tailscale.mode serve | Out-Null
+}
+
 Write-Host 'Local OpenClaw Gateway setup done: ws://localhost:18789 (loopback, token auth)'
+if ($domain) { Write-Host "Phone apps: wss://$domain (pair with: openclaw qr)" }
