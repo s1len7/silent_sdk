@@ -1,7 +1,7 @@
-# Setup a local OpenClaw Gateway (loopback only, token auth) with the free OpenRouter router as the default model. Run as admin.
+# Setup a local OpenClaw Gateway (loopback only, token auth) with free models and automatic fallbacks. Run as admin.
 # Node.js (winget) -> OpenClaw CLI (npm, latest) -> onboard (Gateway as the "OpenClaw Gateway" scheduled task)
-# -> default model -> OpenRouter API key from devices/desktop/.env (OPENROUTER_API_KEY; skipped when empty)
-# -> Gemini API key from the same .env (GEMINI_API_KEY; skipped when empty; google/* models, not the default).
+# -> default model and fallbacks -> OpenRouter API key from devices/desktop/.env (OPENROUTER_API_KEY; skipped when empty)
+# -> Gemini API key from the same .env (GEMINI_API_KEY; skipped when empty).
 # Needs winget: setup-winget.ps1 runs before this step and installs it when missing.
 # Docs: https://docs.openclaw.ai/install
 
@@ -11,9 +11,6 @@ $ErrorActionPreference = 'Stop'
 $logDir = if ($env:SILENT_SDK_LOG_DIR) { $env:SILENT_SDK_LOG_DIR } else { $env:TEMP }
 $envFile = Join-Path (Split-Path $PSScriptRoot) '.env'
 $taskName = 'OpenClaw Gateway'
-# openclaw stores the model shortened (openrouter/openrouter/free -> openrouter/free)
-$model = 'openrouter/openrouter/free'
-$modelStored = 'openrouter/free'
 # Packages whose npm install scripts OpenClaw needs (npm skips them unless allowed; listed by the npm warning)
 $allowScripts = '@google/genai,esbuild,koffi,protobufjs,openclaw'
 
@@ -28,6 +25,18 @@ if (Test-Path $envFile) {
 }
 $apiKey = $values['OPENROUTER_API_KEY']
 $geminiKey = $values['GEMINI_API_KEY']
+
+# Models tried in order when one hits its free quota (429) or is overloaded: the first is the default, the rest are fallbacks.
+# OpenRouter free models share 50 requests/day; Gemini free quotas are per model, so each Gemini model adds its own.
+# All tested with free answers and tool calling (2026-10-31). OpenRouter stays first also without a key (install only).
+$models = @()
+if ($apiKey -or -not $geminiKey) { $models += 'openrouter/openrouter/free' }
+if ($geminiKey) { $models += 'google/gemini-3.6-flash', 'google/gemini-3.5-flash', 'google/gemini-3.5-flash-lite' }
+$model = $models[0]
+$fallbacks = @($models | Select-Object -Skip 1)
+
+# openclaw stores the OpenRouter router shortened (openrouter/openrouter/free -> openrouter/free)
+function Get-StoredModel($id) { $id -replace '^openrouter/openrouter/', 'openrouter/' }
 
 # Node.js and npm global bin in this session too (a fresh install only updates PATH for new processes)
 foreach ($dir in "$env:ProgramFiles\nodejs", "$env:APPDATA\npm") {
@@ -51,7 +60,12 @@ function Test-Gateway {
     schtasks /query /tn $taskName 2>&1 | Out-Null
     ($LASTEXITCODE -eq 0) -and (Get-OpenClawConfig gateway.bind) -eq 'loopback'
 }
-function Test-Model { (Get-OpenClawConfig agents.defaults.model.primary) -eq $modelStored }
+function Test-Model {
+    $stored = Get-OpenClawConfig agents.defaults.model.fallbacks
+    $storedFallbacks = if ($stored) { @($stored | ConvertFrom-Json) } else { @() }
+    ((Get-OpenClawConfig agents.defaults.model.primary) -eq (Get-StoredModel $model)) -and
+        (($storedFallbacks -join ',') -eq (($fallbacks | ForEach-Object { Get-StoredModel $_ }) -join ','))
+}
 # True when the provider's key is empty in .env (nothing to save) or a profile is already saved for it
 function Test-Key($provider, $key) {
     if (-not $key) { return $true }
@@ -98,10 +112,12 @@ if (-not (Test-Gateway)) {
     if (-not (Test-Gateway)) { throw "Gateway was not set up (scheduled task '$taskName', gateway.bind=loopback)" }
 }
 
-# 4. Default model
+# 4. Default model and fallbacks (the list is rebuilt so the order always matches)
 if (-not (Test-Model)) {
-    Write-Host "[4/6] Setting the default model to $model"
+    Write-Host "[4/6] Setting the default model to $model, fallbacks: $(if ($fallbacks) { $fallbacks -join ', ' } else { 'none' })"
     Invoke-OpenClaw models set $model | Out-Null
+    Invoke-OpenClaw models fallbacks clear | Out-Null
+    foreach ($fallback in $fallbacks) { Invoke-OpenClaw models fallbacks add $fallback | Out-Null }
 }
 
 # 5. OpenRouter API key (passed on stdin so it does not show up in process lists)
@@ -113,7 +129,7 @@ if (-not $apiKey) {
     if ($LASTEXITCODE -ne 0) { throw "Saving the OpenRouter API key failed: exit code $LASTEXITCODE" }
 }
 
-# 6. Gemini API key: google/* models become selectable; the default model stays on OpenRouter
+# 6. Gemini API key: needed by the google/* default model and fallbacks set in step 4
 if (-not $geminiKey) {
     Write-Host "[6/6] GEMINI_API_KEY is empty in $envFile. Add the key and run this step again to use Gemini."
 } elseif (-not (Test-Key google $geminiKey)) {

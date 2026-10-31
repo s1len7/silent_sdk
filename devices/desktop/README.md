@@ -151,10 +151,18 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
 
 ### OpenClaw (로컬 Gateway)
 
-- Setup: [scripts/setup-openclaw-gateway.ps1](scripts/setup-openclaw-gateway.ps1) (Node.js(winget) 최신, OpenClaw CLI(npm) 최신, 이 PC에서만 접속되는 Gateway `ws://localhost:18789`를 token 인증으로 설치, 기본 모델 `openrouter/openrouter/free`)
-  - 다시 실행 시: `openclaw` 명령이 있고, 작업 스케줄러에 `OpenClaw Gateway`가 있고, `gateway.bind=loopback`이고, 기본 모델이 OpenRouter 무료 라우터이고, `.env`에 키가 있으면 OpenRouter·Gemini 키도 등록돼 있을 때 건너뜀
+- Setup: [scripts/setup-openclaw-gateway.ps1](scripts/setup-openclaw-gateway.ps1) (Node.js(winget) 최신, OpenClaw CLI(npm) 최신, 이 PC에서만 접속되는 Gateway `ws://localhost:18789`를 token 인증으로 설치, 무료 기본 모델과 대체 모델 설정)
+  - 다시 실행 시: `openclaw` 명령이 있고, 작업 스케줄러에 `OpenClaw Gateway`가 있고, `gateway.bind=loopback`이고, 기본 모델·대체 모델 목록이 아래 표와 같고, `.env`에 키가 있으면 OpenRouter·Gemini 키도 등록돼 있을 때 건너뜀
+- 모델: 무료 사용량이 다 되거나(429) 과부하면 다음 모델로 자동 전환
+
+| 순서 | 모델 | 조건 |
+| --- | --- | --- |
+| 기본 | `openrouter/openrouter/free` | `OPENROUTER_API_KEY`가 있거나 두 키가 모두 없을 때 |
+| 대체 | `google/gemini-3.6-flash` → `google/gemini-3.5-flash` → `google/gemini-3.5-flash-lite` | `GEMINI_API_KEY`가 있을 때 (OpenRouter 키가 없으면 `gemini-3.6-flash`가 기본) |
+
+- 무료 한도: Gemini는 모델마다 따로(태평양 시간 자정 초기화, 한도는 [AI Studio](https://aistudio.google.com/rate-limit)에서 확인), OpenRouter 무료 모델은 합쳐서 하루 50회(UTC 자정 초기화)
 - 설정: `.env`의 `OPENROUTER_API_KEY` ([.env.example](.env.example) 참고, 비우면 키 없이 설치만 함)
-- 설정: `.env`의 `GEMINI_API_KEY` (비우면 Gemini 연결 안 함, 기본 모델은 그대로 OpenRouter), `openclaw infer model run --model google/gemini-3.6-flash --prompt "..."`로 사용
+- 설정: `.env`의 `GEMINI_API_KEY` (비우면 Gemini 연결 안 함, 대체 모델 없음)
 - Gateway는 작업 스케줄러 `OpenClaw Gateway`로 로그인 시 실행됨
 - 업데이트: `npm i -g openclaw@latest`
 
