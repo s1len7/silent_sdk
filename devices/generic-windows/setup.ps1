@@ -250,6 +250,7 @@ $results = @()
 $results += Invoke-Step 'git'      { & "$d\setup-git.ps1" }
 $results += Invoke-Step 'vscode'   { & "$d\setup-vscode.ps1" }
 $results += Invoke-Step 'vscode-extensions' { & "$d\setup-vscode-extensions.ps1" }
+$results += Invoke-Step 'vscode-settings' { & "$d\setup-vscode-settings.ps1" }
 # opencode step installs Node.js with winget, so install winget first (missing on LTSC / some Windows 10)
 $results += Invoke-Step 'winget'   { & "$d\setup-winget.ps1" }
 $results += Invoke-Step 'opencode' { & "$d\setup-opencode.ps1" }

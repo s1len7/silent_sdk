@@ -111,6 +111,7 @@ $results += Invoke-Step 'git'          { & "$g\setup-git.ps1" }
 $results += Invoke-Step 'python'       { & "$s\setup-python.ps1" }
 $results += Invoke-Step 'vscode'       { & "$g\setup-vscode.ps1" }
 $results += Invoke-Step 'vscode-extensions' { & "$g\setup-vscode-extensions.ps1" }
+$results += Invoke-Step 'vscode-settings' { & "$g\setup-vscode-settings.ps1" }
 $results += Invoke-Step 'docker'       { & "$s\setup-docker.ps1" }
 $results += Invoke-Step 'openclaw-gateway' { & "$s\setup-openclaw-gateway.ps1" }
 # After the local Gateway, which the tray app connects to

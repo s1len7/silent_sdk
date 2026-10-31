@@ -22,6 +22,10 @@
 - Setup: [scripts/setup-vscode-extensions.ps1](scripts/setup-vscode-extensions.ps1) (Windows 공통 스크립트, desktop·thinkpad-s2-2g도 사용, 현재 사용자에 Python·Remote - SSH·Remote Explorer 확장 설치, 모두 Microsoft 인증 게시자)
 - 다시 실행 시: 세 확장이 모두 설치돼 있으면 건너뜀. 빠진 확장만 설치
 
+### vscode-settings
+- Setup: [scripts/setup-vscode-settings.ps1](scripts/setup-vscode-settings.ps1) (Windows 공통 스크립트, desktop·thinkpad-s2-2g도 사용, 사용자 설정 `%APPDATA%\Code\User\settings.json`에 `telemetry.telemetryLevel: "off"`(사용 데이터 전송 끄기)를 넣음, 다른 설정·주석은 그대로 둠)
+- 다시 실행 시: 값이 이미 `"off"`이면 건너뜀. 다른 값이면 그 값만 바꿈
+
 ### winget
 - Setup: [scripts/setup-winget.ps1](scripts/setup-winget.ps1) (Windows 공통 스크립트, 관리자 필요, desktop·titan-s260·thinkpad-s2-2g도 사용)
 - 다시 실행 시: winget이 실행되는지 확인

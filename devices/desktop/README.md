@@ -128,6 +128,8 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
   - 다시 실행 시: VS Code가 설치돼 있으면(PC 전체 또는 사용자 단위) 건너뜀
 - Setup: [../generic-windows/scripts/setup-vscode-extensions.ps1](../generic-windows/scripts/setup-vscode-extensions.ps1) (Windows 공통 스크립트, 현재 사용자에 확장 설치: Python `ms-python.python`, Remote - SSH `ms-vscode-remote.remote-ssh`, Remote Explorer `ms-vscode.remote-explorer`, 모두 Microsoft 인증 게시자)
   - 다시 실행 시: 세 확장이 모두 설치돼 있으면 건너뜀. 빠진 확장만 설치
+- Setup: [../generic-windows/scripts/setup-vscode-settings.ps1](../generic-windows/scripts/setup-vscode-settings.ps1) (Windows 공통 스크립트, 사용자 설정 `%APPDATA%\Code\User\settings.json`에 `telemetry.telemetryLevel: "off"`(사용 데이터 전송 끄기)를 넣음, 다른 설정·주석은 그대로 둠)
+  - 다시 실행 시: 값이 이미 `"off"`이면 건너뜀. 다른 값이면 그 값만 바꿈
 - 기본 단축키
 
 | 기능 | 단축키 |
