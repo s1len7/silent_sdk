@@ -35,6 +35,7 @@ silent_sdk/
 │  ├─ thinkpad-s2-2g/
 │  ├─ gmk87/         ZUOYA GMK87 키보드 (VIA 키 매핑, 설정 백업, 전체 설치 없음)
 │  └─ ds218plus/     Synology NAS, Container Manager 프로젝트 (전체 설치 없음)
+├─ .vscode/          VS Code 워크스페이스 설정 (이 저장소를 열 때만 적용)
 ├─ .agents/skills/   AI 에이전트 공통 스킬 (git에 올리지 않음, OpenCode·Codex·Gemini CLI가 읽음, Claude Code는 `.claude/skills` 링크로 읽음, OpenClaw에는 desktop setup이 복사)
 ├─ logs/             설치 로그 (git에는 올라가지 않음)
 ├─ AGENTS.md         작성 원칙 (장비 공통)
@@ -99,3 +100,15 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150
 ## 개발
 
 - 작성 원칙: [AGENTS.md](AGENTS.md) 참고 (장비 전용 규칙은 각 `devices/<장비>/AGENTS.md`, CLAUDE.md·GEMINI.md는 AGENTS.md를 불러오기만 함)
+- VS Code 워크스페이스 설정: [.vscode/settings.json](.vscode/settings.json) (이 저장소를 열 때만 적용되고 사용자 설정보다 우선)
+  - 저장할 때 줄 끝 공백 제거, 파일 끝 빈 줄을 하나로 맞춤
+  - 검색에서 `logs/`, `tmp/` 제외 (탐색기에는 보임)
+  - 줄바꿈은 `.gitattributes`, 들여쓰기는 VS Code 기본값(공백 4칸)을 따름
+  - 프로그램 전체에 걸리는 설정(예: `telemetry.telemetryLevel`)은 워크스페이스 설정에서 무시되므로 사용자 설정에 둘 것
+
+| 기능 | 단축키 |
+| --- | --- |
+| 설정 화면 (사용자·워크스페이스 탭) | `Ctrl+,` |
+| 워크스페이스 설정 JSON | 명령 팔레트(`Ctrl+Shift+P`) → `Preferences: Open Workspace Settings (JSON)` |
+| 사용자 설정 JSON | 명령 팔레트 → `Preferences: Open User Settings (JSON)` |
+| VS Code 기본값 보기 (읽기 전용) | 명령 팔레트 → `Preferences: Open Default Settings (JSON)` |
