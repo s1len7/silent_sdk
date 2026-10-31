@@ -116,6 +116,8 @@ $results += Invoke-Step 'docker'       { & "$s\setup-docker.ps1" }
 $results += Invoke-Step 'openclaw-gateway' { & "$s\setup-openclaw-gateway.ps1" }
 # After the local Gateway, which the tray app connects to
 $results += Invoke-Step 'openclaw-companion' { & "$s\setup-openclaw-companion.ps1" }
+# Websites and apps as commands for OpenClaw (the app installs the skills OpenClaw loads)
+$results += Invoke-Step 'opencli'      { & "$s\setup-opencli.ps1" }
 $results += Invoke-Step 'opencode'     { & "$g\setup-opencode.ps1" }
 # After the agents are installed, so their config folders exist
 $results += Invoke-Step 'agent-rules'  { & "$s\setup-agent-rules.ps1" }

@@ -176,6 +176,18 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
 - 트레이 앱에 이미 있는 다른 Gateway 연결은 그대로 두고, 로컬 연결을 활성 연결로 바꿈 (트레이 앱은 한 번에 Gateway 하나에만 연결됨)
 
 
+### OpenCLI
+
+- Setup: [scripts/setup-opencli.ps1](scripts/setup-opencli.ps1) ([OpenCLI](https://github.com/jackwener/OpenCLI) 공식 권장 Windows 설치인 OpenCLIApp 최신 버전을 사용자 단위로 무인 설치)
+  - 다시 실행 시: `opencli` 명령이 있으면 건너뜀
+- 웹사이트·앱을 `opencli <사이트> <명령>`으로 다루는 CLI. OpenClaw가 명령으로 실행함 (브라우저를 직접 클릭하는 것보다 모델 호출이 적음)
+- 처음 설치 후 한 번: OpenCLIApp을 열고 System 화면에서 `opencli` 명령을 설치한 뒤 Setup을 다시 실행 (앱이 명령줄 설치 옵션을 제공하지 않음)
+- 크롬 확장: 로그인된 크롬을 쓰는 명령에는 [OpenCLI Browser Bridge](https://chromewebstore.google.com/detail/opencli/ildkmabpimmkaediidaifkhjpohdnifk)가 필요함 (없으면 Setup이 경고만 표시)
+- 에이전트 스킬: 앱이 `~\.agents\skills\opencli-*`에 설치·관리하고, OpenClaw가 이 폴더를 읽음
+- 업데이트: OpenCLIApp 트레이 메뉴 (`opencli doctor`의 `npm install -g` 안내는 npm 설치용이라 따르지 않음)
+- 상태 확인: `opencli doctor` (데몬, 확장 연결)
+
+
 ### OpenClaw Companion (원격 Gateway 연결)
 
 - Setup: [scripts/setup-openclaw-remote.ps1](scripts/setup-openclaw-remote.ps1) (이 PC에는 Gateway·OpenClaw CLI를 설치하지 않음, winget `OpenClaw.OpenClawCompanion` 설치, 원격 Gateway에 연결, 트레이 앱의 페어링 요청(operator, node)을 Gateway 장비에서 ssh로 승인)
