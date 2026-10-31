@@ -35,7 +35,7 @@ silent_sdk/
 │  ├─ thinkpad-s2-2g/
 │  ├─ gmk87/         ZUOYA GMK87 키보드 (VIA 키 매핑, 설정 백업, 전체 설치 없음)
 │  └─ ds218plus/     Synology NAS, Container Manager 프로젝트 (전체 설치 없음)
-├─ .claude/skills/   AI 에이전트 공통 스킬 (git에 올리지 않음, Claude Code·OpenCode가 읽음, OpenClaw에는 desktop setup이 복사)
+├─ .agents/skills/   AI 에이전트 공통 스킬 (git에 올리지 않음, OpenCode·Codex·Gemini CLI가 읽음, Claude Code는 `.claude/skills` 링크로 읽음, OpenClaw에는 desktop setup이 복사)
 ├─ logs/             설치 로그 (git에는 올라가지 않음)
 ├─ AGENTS.md         작성 원칙 (장비 공통)
 ├─ CLAUDE.md         AGENTS.md를 불러옴 (`@./AGENTS.md`)

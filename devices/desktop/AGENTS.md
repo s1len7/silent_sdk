@@ -19,4 +19,4 @@
 - Windows 공통 모듈(git, vscode, winget, opencode)은 `devices/generic-windows/scripts/`에 있고 desktop도 그것을 호출함 (수정 시 titan-s260·thinkpad-s2-2g에 미치는 영향도 확인할 것)
 - desktop에서 쓰는 모든 AI 에이전트의 전역 지침서에 `~/silent_sdk/AGENTS.md`를 따르라는 내용을 넣을 것 (지침서가 없으면 만들 것)
   - 현재 대상은 Claude Code·OpenClaw·OpenCode이며, 에이전트를 새로 추가할 때도 빠뜨리지 말 것
-  - 저장소 스킬(`.claude/skills/`)을 못 읽는 에이전트에는 `scripts/setup-agent-rules.ps1`이 공용 스킬을 그 에이전트의 스킬 폴더로 복사함 (새 에이전트는 `$agents`에 지침서와 스킬 폴더를 함께 적을 것)
+  - 저장소 스킬(`.agents/skills/`)을 못 읽는 에이전트에는 `scripts/setup-agent-rules.ps1`이 공용 스킬을 그 에이전트의 스킬 폴더로 복사함 (새 에이전트는 `$agents`에 지침서와 스킬 폴더를 함께 적을 것)

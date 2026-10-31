@@ -227,3 +227,6 @@ tmp/*
 
 # Claude Code 로컬 설정 (특정 파일을 올려야 하면 사용자에게 먼저 확인)
 .claude/
+
+# AI 에이전트 공통 스킬 (이 PC에만 둠, AGENTS.md 참고)
+.agents/

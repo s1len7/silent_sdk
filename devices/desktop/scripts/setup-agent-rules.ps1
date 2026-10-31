@@ -1,10 +1,11 @@
 # Point the global instruction file of every AI agent on this PC at the shared silent_sdk rules (AGENTS.md in the repo root).
 # Only agents that are installed (their config folder exists) are handled; the instruction file is created when missing.
 # OpenCode does not follow references inside AGENTS.md by itself, so its opencode.json "instructions" also lists the rules.
-# Agents that cannot read the repo skills (<repo>\.claude\skills, read by Claude Code and OpenCode in the repo)
-# get copies of the shared skills in their own skills folder; a changed skill is copied again.
+# Repo skills live in <repo>\.agents\skills, the folder OpenCode, Codex and Gemini CLI read in the repo.
+# Claude Code reads only <repo>\.claude\skills, so that path is made a junction to .agents\skills.
+# Agents that cannot read the repo skills get copies of the shared skills in their own skills folder; a changed skill is copied again.
 # Copies carry a marker file, so a skill dropped from $sharedSkills is removed and skills from elsewhere are never touched.
-# The repo skills are local only (.claude/ is not in git), so without that folder skill copying is skipped.
+# The repo skills are local only (.agents/ is not in git), so without that folder the junction and skill copying are skipped.
 # To cover a new agent, add one entry to $agents below.
 # The block is English because .ps1 files here are ASCII-only (Windows PowerShell 5.1 misreads non-ASCII files without a BOM).
 
@@ -13,7 +14,8 @@ $ErrorActionPreference = 'Stop'
 
 # Repo root AGENTS.md (this script is in <repo>\devices\desktop\scripts), forward slashes so every agent reads it as a path
 $rulesPath = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..\AGENTS.md')).Path.Replace('\', '/')
-$skillsSource = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\..\..\.claude\skills'))
+$skillsSource = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\..\..\.agents\skills'))
+$claudeSkills = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\..\..\.claude\skills'))
 $hasSkills = Test-Path $skillsSource
 # Repo skills also useful outside the repo (operations, model and open source checks)
 $sharedSkills = @('oss-review', 'openclaw-ops', 'free-model-check')
@@ -95,25 +97,44 @@ function Get-RetiredSkill($agent) {
         Where-Object { (Test-Managed $_.FullName) -and $sharedSkills -notcontains $_.Name } | ForEach-Object Name)
 }
 
+# True when there is nothing to link, or .claude\skills already points at .agents\skills.
+# A real folder there is left alone (warned about below) so local Claude-only skills are never lost.
+function Test-ClaudeSkillsLink {
+    if (-not $hasSkills -or -not (Test-Path $claudeSkills)) { return -not $hasSkills }
+    $item = Get-Item $claudeSkills -Force
+    ($item.LinkType -ne 'Junction') -or (@($item.Target) -contains $skillsSource)
+}
+
 function Test-Agent($agent) {
     (Test-RuleReference $agent.File) -and (Test-ConfigInstruction $agent) -and
         -not (Get-StaleSkill $agent) -and -not (Get-RetiredSkill $agent)
 }
 
 if (-not $hasSkills) {
-    Write-Host "Repo skills not found ($skillsSource), skill copying skipped"
+    Write-Host "Repo skills not found ($skillsSource), skill link and copying skipped"
 }
 $installed = @($agents | Where-Object { Test-Path $_.Home })
+$linkReady = Test-ClaudeSkillsLink
+if ($hasSkills -and (Test-Path $claudeSkills) -and (Get-Item $claudeSkills -Force).LinkType -ne 'Junction') {
+    Write-Warning "Claude Code: $claudeSkills is a real folder, left as is. Move its skills to $skillsSource and remove it to link the repo skills"
+}
 foreach ($agent in $agents | Where-Object { -not (Test-Path $_.Home) }) {
     Write-Host "$($agent.Name) is not installed ($($agent.Home) not found), skipped. Run this step again after installing it."
 }
-if (-not ($installed | Where-Object { -not (Test-Agent $_) })) {
+if ($linkReady -and -not ($installed | Where-Object { -not (Test-Agent $_) })) {
     Write-Host "Agent instruction files already refer to $rulesPath and shared skills are current, skipped"
     $global:SetupStepSkipped = $true
     return
 }
 
 $utf8NoBom = New-Object Text.UTF8Encoding($false)
+if (-not $linkReady) {
+    # A junction pointing elsewhere is replaced; removing a junction does not touch its target
+    if (Test-Path $claudeSkills) { (Get-Item $claudeSkills -Force).Delete() }
+    New-Item -ItemType Directory -Force (Split-Path $claudeSkills) | Out-Null
+    New-Item -ItemType Junction -Path $claudeSkills -Target $skillsSource | Out-Null
+    Write-Host "Claude Code: linked $claudeSkills to $skillsSource"
+}
 foreach ($agent in $installed) {
     if (Test-RuleReference $agent.File) {
         Write-Host "$($agent.Name): $($agent.File) already refers to the rules"
@@ -152,7 +173,7 @@ foreach ($agent in $installed) {
             Copy-Item $source $target -Recurse
         }
         [IO.File]::WriteAllText((Join-Path $target $marker),
-            "Copied by silent_sdk devices/desktop/scripts/setup-agent-rules.ps1 from .claude/skills/$skill. Local edits are overwritten.`n", $utf8NoBom)
+            "Copied by silent_sdk devices/desktop/scripts/setup-agent-rules.ps1 from .agents/skills/$skill. Local edits are overwritten.`n", $utf8NoBom)
         Write-Host "$($agent.Name): skill $skill is current in $target"
     }
 

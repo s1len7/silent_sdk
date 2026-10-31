@@ -123,8 +123,9 @@
   - `@경로` 불러오기는 Claude Code·Gemini CLI 전용 문법이므로 AGENTS.md에는 쓰지 않을 것
 - CLAUDE.md(Claude Code용)와 GEMINI.md(Gemini CLI용)에는 불러오기만 두고, 두 파일의 내용을 같게 유지할 것: 자기 폴더의 `@./AGENTS.md`와, 그 AGENTS.md가 따르라고 한 상위·형제 AGENTS.md (루트 AGENTS.md는 루트 CLAUDE.md·GEMINI.md로 항상 읽히므로 제외)
 - 줄바꿈은 .gitattributes를 따름 (`.sh`는 LF, `.ps1`은 CRLF)
-- AI 에이전트 스킬은 저장소 `.claude/skills/<이름>/SKILL.md`에 원본을 둘 것 (Claude Code·OpenCode가 저장소에서 바로 읽는 공통 위치)
-  - `.claude/`는 git에 올리지 않으므로 스킬은 이 PC에만 있음. 스킬을 쓰는 스크립트는 폴더가 없어도 실패하지 않게 할 것
+- AI 에이전트 스킬은 특정 에이전트에 묶지 말고 저장소 `.agents/skills/<이름>/SKILL.md`에 원본을 둘 것 (OpenCode·Codex·Gemini CLI가 저장소에서 바로 읽는 공통 위치)
+  - `.agents/`·`.claude/`는 git에 올리지 않으므로 스킬은 이 PC에만 있음. 스킬을 쓰는 스크립트는 폴더가 없어도 실패하지 않게 할 것
+  - Claude Code는 `.claude/skills`만 읽으므로 이 경로는 `.agents/skills`를 가리키는 링크(junction)로 둘 것 (실제 폴더를 만들지 않음)
   - frontmatter에 `name`(폴더 이름과 같게, 영문 소문자·숫자·하이픈)과 `description`을 넣고, 본문은 한글로 쓸 것
   - 스킬에는 규칙을 다시 적지 말고 절차만 담을 것. 스킬과 AGENTS.md가 충돌하면 AGENTS.md를 따르고, 충돌을 보고한 뒤 스킬을 고칠 것
   - 스킬 내용은 실제 작업에서 얻은 것만 담을 것 (모델이 이미 아는 일반 지식이나 해보지 않은 추측은 넣지 않음)

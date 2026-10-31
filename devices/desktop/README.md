@@ -196,7 +196,7 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
 ### AI 에이전트 공통 규칙 연결
 
 - Setup: [scripts/setup-agent-rules.ps1](scripts/setup-agent-rules.ps1) (설치된 AI 에이전트의 전역 지침서 끝에 저장소 루트 [AGENTS.md](../../AGENTS.md)를 따르라는 블록 추가, 지침서가 없으면 만듦)
-  - 다시 실행 시: 설치된 에이전트의 지침서가 모두 AGENTS.md 경로를 담고 있고, OpenCode `opencode.json`의 `instructions`에도 경로가 있고, 공용 스킬 복사본이 저장소와 같으면 건너뜀. 빠진 곳에만 추가하고, 바뀐 스킬만 다시 복사
+  - 다시 실행 시: 설치된 에이전트의 지침서가 모두 AGENTS.md 경로를 담고 있고, OpenCode `opencode.json`의 `instructions`에도 경로가 있고, 공용 스킬 복사본이 저장소와 같고, `.claude/skills` 링크가 있으면 건너뜀. 빠진 곳에만 추가하고, 바뀐 스킬만 다시 복사
 - 대상 (설정 폴더가 있는 에이전트만, 새 에이전트는 스크립트의 `$agents`에 한 줄 추가)
 
 | 에이전트 | 지침서 | 연결 방식 |
@@ -206,7 +206,7 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
 | OpenClaw | `<작업 폴더>\AGENTS.md` (기본 `~\.openclaw\workspace`) | 경로를 읽고 따르라는 문장 |
 
 - 지침서와 `opencode.json`의 기존 내용은 그대로 둠
-- 스킬: 원본은 이 PC의 저장소 `.claude/skills` (git에 올리지 않음, Claude Code·OpenCode가 저장소에서 바로 읽음). 이 폴더가 없으면 스킬 복사는 건너뜀. 저장소 밖에서 일하는 OpenClaw에는 공용 스킬(`oss-review`, `openclaw-ops`, `free-model-check`)을 `~\.openclaw\skills`로 복사 (공용 스킬 목록은 스크립트의 `$sharedSkills`)
+- 스킬: 원본은 이 PC의 저장소 `.agents/skills` (git에 올리지 않음, OpenCode·Codex·Gemini CLI가 저장소에서 바로 읽음). Claude Code용 `.claude/skills`는 이 폴더를 가리키는 링크(junction)로 만듦 (실제 폴더가 있으면 경고만 하고 그대로 둠). 이 폴더가 없으면 링크와 스킬 복사는 건너뜀. 저장소 밖에서 일하는 OpenClaw에는 공용 스킬(`oss-review`, `openclaw-ops`, `free-model-check`)을 `~\.openclaw\skills`로 복사 (공용 스킬 목록은 스크립트의 `$sharedSkills`)
   - 복사본에는 `.silent-sdk-managed` 표시 파일을 남기고, 목록에서 빠진 스킬은 이 표시가 있는 복사본만 지움 (다른 곳에서 설치한 스킬은 건드리지 않음)
   - 같은 이름인데 표시가 없는 스킬은 덮어쓰지 않고 경고만 표시 (지우면 다음 실행 때 저장소 스킬로 복사)
 
