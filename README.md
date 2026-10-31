@@ -97,6 +97,23 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150
 ```
 
 
+## git에 올리지 않는 관리 파일
+
+개인정보·비밀값이 있거나 이 PC에만 두는 파일. 저장소에 없으므로 직접 백업할 것 (비밀값이 든 파일은 암호화된 위치에만)
+
+| 파일 | 위치 | 내용 | 관리 |
+| --- | --- | --- | --- |
+| `.env` | `.env.example`이 있는 장비·프로젝트 폴더 | API 키, token, 비밀번호 | `.env.example`을 복사해 값을 채움 |
+| `~/.ssh/` | 각 PC 사용자 폴더 | 접속 키, 장비별 접속 설정(`config`), `known_hosts` | 직접 백업 (개인 키 포함) |
+| `~/.bashrc` | Linux 장비 사용자 폴더 | 셸 환경 | Jetson Nano의 CUDA 경로 줄은 setup이 다시 넣음, 그 밖의 수정은 직접 백업 |
+| `.agents/skills/` | 저장소 (desktop) | AI 에이전트 공통 스킬 원본 | 직접 백업 (`.claude/skills`는 이 폴더를 가리키는 링크) |
+| `.claude/` | 저장소 | Claude Code 로컬 설정 (`settings.local.json`) | 직접 백업 |
+| `~/.openclaw/` | desktop 사용자 폴더 | OpenClaw 설정·대화 기록, 텔레그램 봇 token 파일 | 모델 설정은 setup이 다시 넣음, 텔레그램 연결·token·기록은 직접 백업 |
+| VS Code 사용자 설정 | `%APPDATA%\Code\User\settings.json` | 개인 편집기 설정 | setup은 `telemetry.telemetryLevel`만 넣음, 그 밖의 설정은 직접 백업 또는 VS Code 설정 동기화 |
+
+- 장비별 상세 목록: [desktop 백업 대상](devices/desktop/README.md#백업-대상)
+
+
 ## 개발
 
 - 작성 원칙: [AGENTS.md](AGENTS.md) 참고 (장비 전용 규칙은 각 `devices/<장비>/AGENTS.md`, CLAUDE.md·GEMINI.md는 AGENTS.md를 불러오기만 함)
