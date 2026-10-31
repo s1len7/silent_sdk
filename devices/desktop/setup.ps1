@@ -116,6 +116,8 @@ $results += Invoke-Step 'openclaw-gateway' { & "$s\setup-openclaw-gateway.ps1" }
 # After the local Gateway, which the tray app connects to
 $results += Invoke-Step 'openclaw-companion' { & "$s\setup-openclaw-companion.ps1" }
 $results += Invoke-Step 'opencode'     { & "$g\setup-opencode.ps1" }
+# After the agents are installed, so their config folders exist
+$results += Invoke-Step 'agent-rules'  { & "$s\setup-agent-rules.ps1" }
 
 Write-SetupSummary $results $logDir
 Stop-Transcript | Out-Null

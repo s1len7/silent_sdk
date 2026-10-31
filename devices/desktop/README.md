@@ -185,6 +185,21 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
 - 업데이트: `npm i -g --allow-scripts=opencode-ai opencode-ai@latest`
 
 
+### AI 에이전트 공통 규칙 연결
+
+- Setup: [scripts/setup-agent-rules.ps1](scripts/setup-agent-rules.ps1) (설치된 AI 에이전트의 전역 지침서 끝에 저장소 루트 [AGENTS.md](../../AGENTS.md)를 따르라는 블록 추가, 지침서가 없으면 만듦)
+  - 다시 실행 시: 설치된 에이전트의 지침서가 모두 AGENTS.md 경로를 담고 있고, OpenCode `opencode.json`의 `instructions`에도 경로가 있으면 건너뜀. 빠진 곳에만 추가
+- 대상 (설정 폴더가 있는 에이전트만, 새 에이전트는 스크립트의 `$agents`에 한 줄 추가)
+
+| 에이전트 | 지침서 | 연결 방식 |
+| --- | --- | --- |
+| Claude Code | `~\.claude\CLAUDE.md` | `@<경로>` 불러오기 (항상 읽힘) |
+| OpenCode | `~\.config\opencode\AGENTS.md`, `~\.config\opencode\opencode.json` | 경로를 읽고 따르라는 문장 + `instructions`에 경로 추가 (항상 읽힘, AGENTS.md 안의 경로는 자동으로 읽지 않으므로) |
+| OpenClaw | `<작업 폴더>\AGENTS.md` (기본 `~\.openclaw\workspace`) | 경로를 읽고 따르라는 문장 |
+
+- 지침서와 `opencode.json`의 기존 내용은 그대로 둠
+
+
 ## 백업 대상
 
 - `~\.ssh\` (`C:\Users\<사용자>\.ssh\`): 장비 접속용 ssh 키(`id_rsa`, `id_rsa.pub`, `id_rsa.putty.pub`, `id_rsa.ppk`), 장비별 접속 설정(`config`), 장비 서버 키 목록(`known_hosts`)

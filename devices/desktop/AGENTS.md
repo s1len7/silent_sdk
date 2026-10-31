@@ -17,3 +17,5 @@
   - 설치 프로그램 로그는 `$env:SILENT_SDK_LOG_DIR`(없으면 `$env:TEMP`)에 `<기능>-install.log`로 남길 것
 - 진입점(`setup.ps1`)은 각 단계를 `devices/generic-windows/scripts/lib-log.ps1`의 `Invoke-Step`으로 실행함 (실패해도 다음 단계 진행, 로그는 저장소 `logs/<플랫폼>-<시각>/`)
 - Windows 공통 모듈(git, vscode, winget, opencode)은 `devices/generic-windows/scripts/`에 있고 desktop도 그것을 호출함 (수정 시 titan-s260·thinkpad-s2-2g에 미치는 영향도 확인할 것)
+- desktop에서 쓰는 모든 AI 에이전트의 전역 지침서에 `~/silent_sdk/AGENTS.md`를 따르라는 내용을 넣을 것 (지침서가 없으면 만들 것)
+  - 현재 대상은 Claude Code·OpenClaw·OpenCode이며, 에이전트를 새로 추가할 때도 빠뜨리지 말 것
