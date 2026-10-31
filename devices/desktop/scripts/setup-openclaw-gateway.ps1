@@ -43,11 +43,20 @@ foreach ($dir in "$env:ProgramFiles\nodejs", "$env:APPDATA\npm") {
     if (($env:Path -split ';') -notcontains $dir) { $env:Path = "$dir;$env:Path" }
 }
 
-# Run openclaw and return its output; throws on a non-zero exit code
+# Run openclaw and return its output; throws on a non-zero exit code.
+# 'Continue' here: under 'Stop', Windows PowerShell 5.1 turns any stderr line (e.g. a Node.js warning) into a terminating error
 function Invoke-OpenClaw {
+    $ErrorActionPreference = 'Continue'
     $out = & openclaw @args 2>&1 | ForEach-Object { "$_" }
     if ($LASTEXITCODE -ne 0) { throw "openclaw $($args -join ' ') failed: exit code $LASTEXITCODE`n$($out -join "`n")" }
     $out
+}
+
+# Save a provider API key, passed on stdin so it does not show up in process lists (output is not shown: it may echo the key)
+function Save-ApiKey($provider, $key) {
+    $ErrorActionPreference = 'Continue'
+    $key | & openclaw models auth paste-api-key --provider $provider 2>&1 | Out-Null
+    if ($LASTEXITCODE -ne 0) { throw "Saving the $provider API key failed: exit code $LASTEXITCODE" }
 }
 
 # Value of a config path, or '' when unset or when the CLI or config is not usable yet
@@ -79,28 +88,32 @@ if ((Test-Cli) -and (Test-Gateway) -and (Test-Model) -and (Test-Key openrouter $
     return
 }
 
-# 1. Node.js: install, or upgrade to the newest release (OpenClaw requires a recent Node.js)
-$winget = "$env:LOCALAPPDATA\Microsoft\WindowsApps\winget.exe"
-if (-not (Test-Path $winget)) { $winget = (Get-Command winget -ErrorAction SilentlyContinue).Source }
-if (-not $winget) { throw 'winget not found. Run setup-winget.ps1 first' }
-& $winget list --id OpenJS.NodeJS --exact --accept-source-agreements | Out-Null
-$verb = if ($LASTEXITCODE -eq 0) { 'upgrade' } else { 'install' }
-Write-Host "[1/6] Node.js: winget $verb"
-& $winget $verb --id OpenJS.NodeJS --exact -s winget --silent --accept-package-agreements --accept-source-agreements
-# -1978335189 (0x8A15002B): no newer version, -1978335135 (0x8A150061): already installed
-if ($LASTEXITCODE -notin 0, -1978335189, -1978335135) { throw "Node.js $verb failed: exit code $LASTEXITCODE" }
-& node --version
+# 1-2. Node.js and the OpenClaw CLI only when the CLI is missing: a later step being incomplete is no reason
+# to upgrade a working install (an upgrade can restart or disable the running Gateway)
+if (-not (Test-Cli)) {
+    # 1. Node.js: install, or upgrade to the newest release (OpenClaw requires a recent Node.js)
+    $winget = "$env:LOCALAPPDATA\Microsoft\WindowsApps\winget.exe"
+    if (-not (Test-Path $winget)) { $winget = (Get-Command winget -ErrorAction SilentlyContinue).Source }
+    if (-not $winget) { throw 'winget not found. Run setup-winget.ps1 first' }
+    & $winget list --id OpenJS.NodeJS --exact --accept-source-agreements | Out-Null
+    $verb = if ($LASTEXITCODE -eq 0) { 'upgrade' } else { 'install' }
+    Write-Host "[1/6] Node.js: winget $verb"
+    & $winget $verb --id OpenJS.NodeJS --exact -s winget --silent --accept-package-agreements --accept-source-agreements
+    # -1978335189 (0x8A15002B): no newer version, -1978335135 (0x8A150061): already installed
+    if ($LASTEXITCODE -notin 0, -1978335189, -1978335135) { throw "Node.js $verb failed: exit code $LASTEXITCODE" }
+    & node --version
 
-# 2. OpenClaw CLI (latest)
-Write-Host '[2/6] Installing the OpenClaw CLI (npm, latest)'
-& npm install -g --allow-scripts=$allowScripts openclaw@latest --loglevel error --logs-dir $logDir
-if ($LASTEXITCODE -ne 0) { throw "npm install openclaw failed: exit code $LASTEXITCODE" }
-Invoke-OpenClaw --version | Select-Object -Last 1
+    # 2. OpenClaw CLI (latest)
+    Write-Host '[2/6] Installing the OpenClaw CLI (npm, latest)'
+    & npm install -g --allow-scripts=$allowScripts openclaw@latest --loglevel error --logs-dir $logDir
+    if ($LASTEXITCODE -ne 0) { throw "npm install openclaw failed: exit code $LASTEXITCODE" }
+    Invoke-OpenClaw --version | Select-Object -Last 1
 
-# A config left by an older OpenClaw can fail validation after an upgrade; doctor migrates it
-try { Invoke-OpenClaw config validate | Out-Null } catch {
-    Write-Host 'Repairing the existing OpenClaw config (openclaw doctor --fix)'
-    Invoke-OpenClaw doctor --fix --non-interactive | Out-Null
+    # A config left by an older OpenClaw can fail validation after an install; doctor migrates it
+    try { Invoke-OpenClaw config validate | Out-Null } catch {
+        Write-Host 'Repairing the existing OpenClaw config (openclaw doctor --fix)'
+        Invoke-OpenClaw doctor --fix --non-interactive | Out-Null
+    }
 }
 
 # 3. Onboard: Gateway on loopback with token auth, installed as a scheduled task; channels and skills are set up later
@@ -120,13 +133,12 @@ if (-not (Test-Model)) {
     foreach ($fallback in $fallbacks) { Invoke-OpenClaw models fallbacks add $fallback | Out-Null }
 }
 
-# 5. OpenRouter API key (passed on stdin so it does not show up in process lists)
+# 5. OpenRouter API key
 if (-not $apiKey) {
     Write-Host "[5/6] OPENROUTER_API_KEY is empty in $envFile. Add the key and run this step again."
 } elseif (-not (Test-Key openrouter $apiKey)) {
     Write-Host '[5/6] Saving the OpenRouter API key'
-    $apiKey | & openclaw models auth paste-api-key --provider openrouter | Out-Null
-    if ($LASTEXITCODE -ne 0) { throw "Saving the OpenRouter API key failed: exit code $LASTEXITCODE" }
+    Save-ApiKey openrouter $apiKey
 }
 
 # 6. Gemini API key: needed by the google/* default model and fallbacks set in step 4
@@ -134,8 +146,7 @@ if (-not $geminiKey) {
     Write-Host "[6/6] GEMINI_API_KEY is empty in $envFile. Add the key and run this step again to use Gemini."
 } elseif (-not (Test-Key google $geminiKey)) {
     Write-Host '[6/6] Saving the Gemini API key'
-    $geminiKey | & openclaw models auth paste-api-key --provider google | Out-Null
-    if ($LASTEXITCODE -ne 0) { throw "Saving the Gemini API key failed: exit code $LASTEXITCODE" }
+    Save-ApiKey google $geminiKey
     # The running Gateway only picks up new provider settings after a restart
     Write-Host 'Restarting the Gateway to apply the Gemini provider settings'
     Invoke-OpenClaw gateway restart | Out-Null

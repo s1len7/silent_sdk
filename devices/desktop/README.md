@@ -152,7 +152,7 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
 ### OpenClaw (로컬 Gateway)
 
 - Setup: [scripts/setup-openclaw-gateway.ps1](scripts/setup-openclaw-gateway.ps1) (Node.js(winget) 최신, OpenClaw CLI(npm) 최신, 이 PC에서만 접속되는 Gateway `ws://localhost:18789`를 token 인증으로 설치, 무료 기본 모델과 대체 모델 설정)
-  - 다시 실행 시: `openclaw` 명령이 있고, 작업 스케줄러에 `OpenClaw Gateway`가 있고, `gateway.bind=loopback`이고, 기본 모델·대체 모델 목록이 아래 표와 같고, `.env`에 키가 있으면 OpenRouter·Gemini 키도 등록돼 있을 때 건너뜀
+  - 다시 실행 시: `openclaw` 명령이 있고, 작업 스케줄러에 `OpenClaw Gateway`가 있고, `gateway.bind=loopback`이고, 기본 모델·대체 모델 목록이 아래 표와 같고, `.env`에 키가 있으면 OpenRouter·Gemini 키도 등록돼 있을 때 건너뜀. `openclaw` 명령이 있으면 Node.js·CLI 설치(업데이트) 없이 빠진 설정만 적용
 - 모델: 무료 사용량이 다 되거나(429) 과부하면 다음 모델로 자동 전환
 
 | 순서 | 모델 | 조건 |
