@@ -98,7 +98,8 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/thinkpad-s2
 ### Git
 
 - Setup: [generic-windows/scripts/setup-git.ps1](../generic-windows/scripts/setup-git.ps1) (Git for Windows 최신 64-bit, 기본 옵션 무인 설치)
-  - 다시 실행 시: Git이 설치돼 있고 user.name/user.email이 같으면 건너뜀. 설치만 돼 있으면 사용자 정보만 설정
+  - 다시 실행 시: Git이 설치돼 있고 아래 전역 설정이 모두 같으면 건너뜀. 설치만 돼 있으면 빠진 설정만 적용
+  - 전역 설정: `user.name`, `user.email`(GitHub noreply 주소로 비식별화), `init.defaultBranch=main`(새 저장소 첫 브랜치), `fetch.prune=true`(원격에서 지운 브랜치 정리), `pull.rebase=false`(pull은 merge로 합침)
 
 
 ### Python

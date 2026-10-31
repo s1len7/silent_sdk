@@ -12,7 +12,8 @@
 
 ### git
 - Setup: [scripts/setup-git.ps1](scripts/setup-git.ps1) (Windows 공통 스크립트, desktop·titan-s260·thinkpad-s2-2g도 사용)
-- 다시 실행 시: git 설치 및 사용자 정보 설정 여부 확인
+- 다시 실행 시: Git이 설치돼 있고 아래 전역 설정이 모두 같으면 건너뜀. 설치만 돼 있으면 빠진 설정만 적용
+- 전역 설정: `user.name`, `user.email`(GitHub noreply 주소로 비식별화), `init.defaultBranch=main`(새 저장소 첫 브랜치), `fetch.prune=true`(원격에서 지운 브랜치 정리), `pull.rebase=false`(pull은 merge로 합침)
 
 ### vscode
 - Setup: [scripts/setup-vscode.ps1](scripts/setup-vscode.ps1) (Windows 공통 스크립트, desktop·thinkpad-s2-2g도 사용)
