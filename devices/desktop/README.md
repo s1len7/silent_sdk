@@ -126,6 +126,20 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
 
 - Setup: [../generic-windows/scripts/setup-vscode.ps1](../generic-windows/scripts/setup-vscode.ps1) (Windows 공통 스크립트, System Installer x64 최신 버전, PATH 추가, 탐색기 "Code로 열기" 메뉴)
   - 다시 실행 시: VS Code가 설치돼 있으면(PC 전체 또는 사용자 단위) 건너뜀
+- Setup: [../generic-windows/scripts/setup-vscode-extensions.ps1](../generic-windows/scripts/setup-vscode-extensions.ps1) (Windows 공통 스크립트, 현재 사용자에 확장 설치: Python `ms-python.python`, Remote - SSH `ms-vscode-remote.remote-ssh`, Remote Explorer `ms-vscode.remote-explorer`, 모두 Microsoft 인증 게시자)
+  - 다시 실행 시: 세 확장이 모두 설치돼 있으면 건너뜀. 빠진 확장만 설치
+- 기본 단축키
+
+| 기능 | 단축키 |
+| --- | --- |
+| 명령 팔레트 | `Ctrl+Shift+P` 또는 `F1` |
+| 설정 | `Ctrl+,` (JSON으로 열기: 명령 팔레트 → `Preferences: Open User Settings (JSON)`) |
+| 키보드 단축키 설정 | `Ctrl+K` → `Ctrl+S` |
+| 확장 | `Ctrl+Shift+X` |
+| 파일 빠르게 열기 | `Ctrl+P` |
+| 터미널 열기·닫기 | ``Ctrl+` `` |
+| SSH 원격 접속 | 명령 팔레트 → `Remote-SSH: Connect to Host...` (`~\.ssh\config`의 Host 사용), 왼쪽 원격 탐색기 아이콘에서도 가능 |
+| Python 인터프리터 선택 | 명령 팔레트 → `Python: Select Interpreter` |
 
 
 ### Docker + Docker Desktop

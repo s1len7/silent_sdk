@@ -111,6 +111,8 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/thinkpad-s2
 
 - Setup: [generic-windows/scripts/setup-vscode.ps1](../generic-windows/scripts/setup-vscode.ps1) (System Installer x64 최신 버전, PATH 추가, 탐색기 "Code로 열기" 메뉴)
   - 다시 실행 시: VS Code가 설치돼 있으면(PC 전체 또는 사용자 단위) 건너뜀
+- Setup: [generic-windows/scripts/setup-vscode-extensions.ps1](../generic-windows/scripts/setup-vscode-extensions.ps1) (현재 사용자에 확장 설치: Python, Remote - SSH, Remote Explorer, 모두 Microsoft 인증 게시자)
+  - 다시 실행 시: 세 확장이 모두 설치돼 있으면 건너뜀. 빠진 확장만 설치
 
 
 ### OpenCode
