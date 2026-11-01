@@ -9,6 +9,7 @@
 | generic-ubuntu | Ubuntu/Debian 계열 (빌려쓰는 PC용, 최소 설치) | [devices/generic-ubuntu/README.md](devices/generic-ubuntu/README.md) |
 | pi4-display | Raspberry Pi 4 (RAM 8GB), Raspberry Pi OS Desktop 64-bit (Trixie) | [devices/pi4-display/README.md](devices/pi4-display/README.md) |
 | pi4-2gb | Raspberry Pi 4 (RAM 2GB), Raspberry Pi OS **Lite** 64-bit (Trixie) | [devices/pi4-2gb/README.md](devices/pi4-2gb/README.md) |
+| pi5 | Raspberry Pi 5 (RAM 8GB) + Hailo-8 AI 가속기, Raspberry Pi OS Desktop 64-bit (Trixie) | [devices/pi5/README.md](devices/pi5/README.md) |
 | titan-s260 | SAM4S TITAN-S260 POS, Windows 10 IoT LTSC 2021 | [devices/titan-s260/README.md](devices/titan-s260/README.md) |
 | byt-t1 | PEGATRON BYT-T1 Mini-ITX 보드 (Intel Pentium J2900), Ubuntu Server 24.04 LTS | [devices/byt-t1/README.md](devices/byt-t1/README.md) |
 | jetson-nano-b01 | NVIDIA Jetson Nano Developer Kit B01, JetPack 4.6.6 (Ubuntu 18.04) | [devices/jetson-nano-b01/README.md](devices/jetson-nano-b01/README.md) |
@@ -29,6 +30,7 @@ silent_sdk/
 │  ├─ titan-s260/
 │  ├─ pi4-display/
 │  ├─ pi4-2gb/
+│  ├─ pi5/
 │  ├─ byt-t1/
 │  ├─ jetson-nano-b01/
 │  ├─ b150m-am2/
@@ -79,6 +81,11 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/pi4-
 pi4-2gb (Raspberry Pi 4, 2GB):
 ```bash
 curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/pi4-2gb/setup.sh | sudo bash
+```
+
+pi5 (Raspberry Pi 5, 8GB):
+```bash
+curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/pi5/setup.sh | sudo bash
 ```
 
 Jetson Nano B01:
