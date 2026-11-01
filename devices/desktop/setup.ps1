@@ -121,6 +121,7 @@ $results += Invoke-Step 'opencli'      { & "$s\setup-opencli.ps1" }
 $results += Invoke-Step 'opencode'     { & "$g\setup-opencode.ps1" }
 # After the agents are installed, so their config folders exist
 $results += Invoke-Step 'agent-rules'  { & "$s\setup-agent-rules.ps1" }
+$results += Invoke-Step 'claude-settings' { & "$s\setup-claude-settings.ps1" }
 
 Write-SetupSummary $results $logDir
 Stop-Transcript | Out-Null

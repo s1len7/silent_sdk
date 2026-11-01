@@ -213,7 +213,7 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
 ### AI 에이전트 공통 규칙 연결
 
 - Setup: [scripts/setup-agent-rules.ps1](scripts/setup-agent-rules.ps1) (설치된 AI 에이전트의 전역 지침서 끝에 저장소 루트 [AGENTS.md](../../AGENTS.md)를 따르라는 블록 추가, 지침서가 없으면 만듦)
-  - 다시 실행 시: 설치된 에이전트의 지침서가 모두 AGENTS.md 경로를 담고 있고, OpenCode `opencode.json`의 `instructions`에도 경로가 있고, 공용 스킬 복사본이 저장소와 같고, `.claude/skills` 링크가 있으면 건너뜀. 빠진 곳에만 추가하고, 바뀐 스킬만 다시 복사
+  - 다시 실행 시: 설치된 에이전트의 지침서가 모두 AGENTS.md 경로를 담고 있고, OpenCode `opencode.json`의 `instructions`에도 경로가 있고, 공용 스킬 복사본이 저장소와 같고, `.claude/skills` 링크와 `~\.claude\skills\<스킬>` 링크가 모두 있으면 건너뜀. 빠진 곳에만 추가하고, 바뀐 스킬만 다시 복사
 - 대상 (설정 폴더가 있는 에이전트만, 새 에이전트는 스크립트의 `$agents`에 한 줄 추가)
 
 | 에이전트 | 지침서 | 연결 방식 |
@@ -226,6 +226,24 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
 - 스킬: 원본은 이 PC의 저장소 `.agents/skills` (git에 올리지 않음, OpenCode·Codex·Gemini CLI가 저장소에서 바로 읽음). Claude Code용 `.claude/skills`는 이 폴더를 가리키는 링크(junction)로 만듦 (실제 폴더가 있으면 경고만 하고 그대로 둠). 이 폴더가 없으면 링크와 스킬 복사는 건너뜀. 저장소 밖에서 일하는 OpenClaw에는 공용 스킬(`oss-review`, `openclaw-ops`, `free-model-check`)을 `~\.openclaw\skills`로 복사 (공용 스킬 목록은 스크립트의 `$sharedSkills`)
   - 복사본에는 `.silent-sdk-managed` 표시 파일을 남기고, 목록에서 빠진 스킬은 이 표시가 있는 복사본만 지움 (다른 곳에서 설치한 스킬은 건드리지 않음)
   - 같은 이름인데 표시가 없는 스킬은 덮어쓰지 않고 경고만 표시 (지우면 다음 실행 때 저장소 스킬로 복사)
+- 모든 프로젝트에서 저장소 스킬 쓰기: Claude Code 개인 스킬 폴더 `~\.claude\skills`에 저장소 스킬마다 `<스킬>` 링크(junction)를 만듦 (복사하지 않으므로 저장소에서 고치면 바로 반영)
+  - 저장소에서 지운 스킬의 링크는 지움 (저장소 스킬 원본은 건드리지 않음). 다른 곳에서 설치한 스킬(예: opencli)은 그대로 둠
+  - 같은 이름의 실제 폴더가 있으면 덮어쓰지 않고 경고만 표시
+
+
+### Claude Code 전역 설정
+
+- Setup: [scripts/setup-claude-settings.ps1](scripts/setup-claude-settings.ps1) (원본 [config/claude-settings.json](config/claude-settings.json)의 키를 `~\.claude\settings.json`에 넣음, 다른 키는 그대로 둠)
+  - 다시 실행 시: 원본의 키가 모두 같은 값이고 `permissions.additionalDirectories`에 저장소 경로가 있으면 건너뜀
+- `settings.json`은 다른 파일을 불러올 수 없으므로 저장소의 원본을 고친 뒤 이 단계를 다시 실행해 반영함
+
+| 설정 | 값 | 이유 (공통 규칙) |
+| --- | --- | --- |
+| `attribution` | `commit`, `pr` 모두 빈 값 | 커밋·PR에 AI 공동 작성자 줄을 넣지 않음 |
+| `language` | `korean` | 답변과 질문은 한글 |
+| `permissions.additionalDirectories` | 저장소 경로 (스크립트가 위치로 계산) | 다른 프로젝트에서도 이 저장소의 규칙·스킬을 묻지 않고 읽음 (편집은 권한 모드대로 물어봄) |
+
+- `settings.json`이 올바른 JSON이 아니면 덮어쓰지 않고 실패함
 
 
 ## 백업 대상
