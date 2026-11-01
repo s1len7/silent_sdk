@@ -19,6 +19,9 @@ services:
       - WUD_TRIGGER_NTFY_NAS_TOPIC=nas-updates
       - WUD_TRIGGER_NTFY_NAS_AUTH_TOKEN=${WUD_NTFY_TOKEN}
       - WUD_TRIGGER_NTFY_NAS_MODE=batch
+    extra_hosts:
+      # ntfy 주소(silent-nas.local)를 컨테이너 안에서도 풀 수 있게 Docker가 호스트(NAS) 주소로 바꿔 주는 host-gateway로 연결
+      - "silent-nas.local:host-gateway"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./store:/store

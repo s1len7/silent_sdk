@@ -1,0 +1,22 @@
+# Tailscale: NAS를 tailnet에 silent-nas-ts로 연결 (VPN)
+# host 네트워크라서 tailnet 주소가 NAS 본체가 되어 NAS의 다른 서비스(Mosquitto 1883, Home Assistant 8123 등)에 바로 닿음
+services:
+  tailscale:
+    image: tailscale/tailscale:stable
+    container_name: tailscale
+    network_mode: host
+    environment:
+      # host 네트워크에서는 compose의 hostname을 쓸 수 없으므로 tailnet 이름은 TS_HOSTNAME으로 정함
+      - TS_HOSTNAME=silent-nas-ts
+      # 처음 로그인할 때만 쓰임, 이후에는 상태 폴더의 로그인 정보로 접속
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false
+    volumes:
+      - ./var/lib/tailscale:/var/lib/tailscale
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    restart: unless-stopped

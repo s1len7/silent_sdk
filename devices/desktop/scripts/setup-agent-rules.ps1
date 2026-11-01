@@ -3,6 +3,8 @@
 # OpenCode does not follow references inside AGENTS.md by itself, so its opencode.json "instructions" also lists the rules.
 # Repo skills live in <repo>\.agents\skills, the folder OpenCode, Codex and Gemini CLI read in the repo.
 # Claude Code reads only <repo>\.claude\skills, so that path is made a junction to .agents\skills.
+# To use the repo skills in every project, each repo skill also gets a junction in the Claude Code personal skills folder
+# (~\.claude\skills\<skill>); a junction whose skill was removed from the repo is deleted, other skills there are never touched.
 # Agents that cannot read the repo skills get copies of the shared skills in their own skills folder; a changed skill is copied again.
 # Copies carry a marker file, so a skill dropped from $sharedSkills is removed and skills from elsewhere are never touched.
 # The repo skills are local only (.agents/ is not in git), so without that folder the junction and skill copying are skipped.
@@ -35,9 +37,10 @@ if (Get-Command openclaw -ErrorAction SilentlyContinue) {
 # Home: the agent's config folder (missing = not installed), File: its global instruction file,
 # Import: how the file refers to the rules (Claude Code loads @path imports; the others read the path when told to),
 # Config: optional opencode.json-style config whose "instructions" array must list the rules,
-# Skills: optional skills folder that gets the shared skills (only for agents that cannot read the repo skills)
+# Skills: optional skills folder that gets the shared skills (only for agents that cannot read the repo skills),
+# Links: optional skills folder that gets a junction to every repo skill
 $agents = @(
-    @{ Name = 'Claude Code'; Home = "$HOME\.claude"; File = "$HOME\.claude\CLAUDE.md"; Import = $true }
+    @{ Name = 'Claude Code'; Home = "$HOME\.claude"; File = "$HOME\.claude\CLAUDE.md"; Import = $true; Links = "$HOME\.claude\skills" }
     @{ Name = 'OpenCode'; Home = "$HOME\.config\opencode"; File = "$HOME\.config\opencode\AGENTS.md"; Import = $false; Config = "$HOME\.config\opencode\opencode.json" }
     @{ Name = 'OpenClaw'; Home = "$HOME\.openclaw"; File = "$openClawWorkspace\AGENTS.md"; Import = $false; Skills = "$HOME\.openclaw\skills" }
 )
@@ -105,9 +108,39 @@ function Test-ClaudeSkillsLink {
     ($item.LinkType -ne 'Junction') -or (@($item.Target) -contains $skillsSource)
 }
 
+# Names of the repo skills (folders with a SKILL.md)
+function Get-RepoSkill {
+    if (-not $hasSkills) { return @() }
+    @(Get-ChildItem $skillsSource -Directory | Where-Object { Test-Path (Join-Path $_.FullName 'SKILL.md') } | ForEach-Object Name)
+}
+
+# Target of a junction, or $null when the path is missing or not a junction (also works for a junction whose target is gone)
+function Get-JunctionTarget($path) {
+    $item = Get-Item -LiteralPath $path -Force -ErrorAction SilentlyContinue
+    if (-not $item -or $item.LinkType -ne 'Junction') { return $null }
+    @($item.Target)[0]
+}
+
+# Repo skills without a junction to them in the agent's Links folder
+function Get-MissingLink($agent) {
+    if (-not $agent.Links -or -not $hasSkills) { return @() }
+    @(Get-RepoSkill | Where-Object { (Get-JunctionTarget (Join-Path $agent.Links $_)) -ne (Join-Path $skillsSource $_) })
+}
+
+# Junctions in the agent's Links folder that point into the repo skills but whose skill is gone
+function Get-StaleLink($agent) {
+    if (-not $agent.Links -or -not $hasSkills -or -not (Test-Path $agent.Links)) { return @() }
+    @(Get-ChildItem $agent.Links -Force | Where-Object {
+        $target = Get-JunctionTarget $_.FullName
+        $target -and $target.StartsWith("$skillsSource\", [StringComparison]::OrdinalIgnoreCase) -and
+            -not (Test-Path (Join-Path $target 'SKILL.md'))
+    } | ForEach-Object Name)
+}
+
 function Test-Agent($agent) {
     (Test-RuleReference $agent.File) -and (Test-ConfigInstruction $agent) -and
-        -not (Get-StaleSkill $agent) -and -not (Get-RetiredSkill $agent)
+        -not (Get-StaleSkill $agent) -and -not (Get-RetiredSkill $agent) -and
+        -not (Get-MissingLink $agent) -and -not (Get-StaleLink $agent)
 }
 
 if (-not $hasSkills) {
@@ -180,6 +213,25 @@ foreach ($agent in $installed) {
     foreach ($skill in Get-RetiredSkill $agent) {
         Remove-Item (Join-Path $agent.Skills $skill) -Recurse -Force
         Write-Host "$($agent.Name): removed skill $skill (no longer shared)"
+    }
+
+    # Deleting a junction removes only the link, never the repo skill it points to
+    foreach ($skill in Get-StaleLink $agent) {
+        (Get-Item -LiteralPath (Join-Path $agent.Links $skill) -Force).Delete()
+        Write-Host "$($agent.Name): removed the link to skill $skill (no longer in the repo)"
+    }
+    foreach ($skill in Get-MissingLink $agent) {
+        $link = Join-Path $agent.Links $skill
+        $existing = Get-Item -LiteralPath $link -Force -ErrorAction SilentlyContinue
+        if ($existing -and $existing.LinkType -ne 'Junction') {
+            Write-Warning "$($agent.Name): $link is a real folder, left as is. Remove it to link the repo skill $skill"
+            continue
+        }
+        # A junction pointing elsewhere is replaced
+        if ($existing) { $existing.Delete() }
+        New-Item -ItemType Directory -Force $agent.Links | Out-Null
+        New-Item -ItemType Junction -Path $link -Target (Join-Path $skillsSource $skill) | Out-Null
+        Write-Host "$($agent.Name): linked skill $skill in $($agent.Links)"
     }
 }
 

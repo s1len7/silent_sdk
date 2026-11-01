@@ -238,7 +238,7 @@ compose 파일: `docker/dozzle/docker-compose.yml`
 | 모듈 | fork 브랜치 | 이유 | 업스트림 PR |
 | --- | --- | --- | --- |
 | MMM-mmpm | [s1len7/MMM-mmpm](https://github.com/s1len7/MMM-mmpm) `fix/toggle-loop-const` | 모듈 표시/숨김 후 응답이 오지 않는 버그 수정 | [Bee-Mar/MMM-mmpm#2](https://github.com/Bee-Mar/MMM-mmpm/pull/2) |
-| MMM-Remote-Control | [s1len7/MMM-Remote-Control](https://github.com/s1len7/MMM-Remote-Control) `feat/qr-hostname` | 웹 리모컨 URL·QR에 IP 대신 호스트 이름 표시 (`useHostname`, `multicast-dns` 필요: 모듈 폴더에서 `npm install --omit=dev`) | [Jopyth/MMM-Remote-Control#430](https://github.com/Jopyth/MMM-Remote-Control/pull/430) |
+| MMM-Remote-Control | [s1len7/MMM-Remote-Control](https://github.com/s1len7/MMM-Remote-Control) `feat/qr-hostname` | 웹 리모컨 URL·QR에 IP 대신 호스트 이름 표시 (`hostname` 옵션) | [Jopyth/MMM-Remote-Control#430](https://github.com/Jopyth/MMM-Remote-Control/pull/430) |
 
 한글 폰트: [한글 폰트](#한글-폰트) 모듈(`setup_korean_font`)이 설치함 (전체 Setup에서 Magic Mirror보다 먼저 실행)
 <!-- portainer > docker-compose.yml -->

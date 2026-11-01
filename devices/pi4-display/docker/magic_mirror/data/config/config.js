@@ -122,8 +122,8 @@ let config = {
             config: {
                 secureEndpoints: true,
                 qrCodeSize: 200,
-                // URL·QR 코드에 IP 대신 mDNS 호스트 이름(silent-pi4-display.local)을 씀 (fork 브랜치 기능, README 참고)
-                useHostname: true,
+                // URL·QR 코드에 IP 대신 이 호스트 이름을 씀 (fork 브랜치 기능, README 참고)
+                hostname: "silent-pi4-display.local",
                 // 기본 명령(sudo shutdown)은 컨테이너에서 동작하지 않으므로, 마운트한 systemctl로 호스트 systemd에 요청함
                 // (인증 없이 허용하는 polkit 규칙은 scripts/setup_magic_mirror.sh가 설치)
                 // 모니터 명령(wlopm)은 Electron 프로세스에 WAYLAND_DISPLAY·XDG_RUNTIME_DIR이 없어 직접 지정함 (docker-compose.yml의 마운트 경로와 같음)

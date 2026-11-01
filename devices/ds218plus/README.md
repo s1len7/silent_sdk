@@ -35,7 +35,7 @@ ssh silent-nas.local 'python3 - list' < devices/ds218plus/scripts/synoproj.py
 | --- | --- | --- | --- | --- |
 | adguardhome | adguardhome | DNS 광고 차단 | 53, 3000 | [projects/adguardhome](projects/adguardhome/compose.yaml) |
 | authentik | postgresql, server, worker | SSO(통합 로그인), 내부망 전용 | 39000 | [projects/authentik](projects/authentik/compose.yaml) |
-| code-server | code-server | 웹 VS Code | 38081 | [projects/code-server](projects/code-server/compose.yaml) |
+| code-server | code-server | 웹 VS Code (멈춤) | 38081 | [projects/code-server](projects/code-server/compose.yaml) |
 | dozzle | dozzle | 컨테이너 로그 보기 | 38082 | [projects/dozzle](projects/dozzle/compose.yaml) |
 | grafana | vector, loki, grafana | 로그 수집·대시보드 | 1514/udp, 8899, 3100, 33000 | [projects/grafana](projects/grafana/compose.yaml) |
 | home-assistant | homeassistant | 스마트홈 | 8123 (host) | [projects/home-assistant](projects/home-assistant/compose.yaml) |
@@ -45,22 +45,22 @@ ssh silent-nas.local 'python3 - list' < devices/ds218plus/scripts/synoproj.py
 | | eclipse-mosquitto | MQTT 브로커 | 1883 | |
 | | esphome | ESP 기기 펌웨어 관리 | 6052 (host) | |
 | homepage | homepage | 서비스 상태판 (내부망 전용) | 33003 | [projects/homepage](projects/homepage/compose.yaml) |
-| metabase | metabase | 데이터 시각화 | 33001 | [projects/metabase](projects/metabase/compose.yaml) |
+| metabase | metabase | 데이터 시각화 (b150m-am2 ubuntu-docker VM으로 이전 예정, [이전 방법](../b150m-am2/vm/ubuntu-docker/README.md#nas에서-옮기기)) | 33001 | [projects/metabase](projects/metabase/compose.yaml) |
 | nginx-proxy-manager | nginx-proxy-manager | 리버스 프록시 (NAS 폴더: `ngnix-proxy-manager`) | 8080, 8181, 4443 | [projects/nginx-proxy-manager](projects/nginx-proxy-manager/compose.yaml) |
 | ntfy | ntfy | 알림 (WUD 새 버전 알림 → 주제 `nas-updates`) | 30081 | [projects/ntfy](projects/ntfy/compose.yaml) |
-| open-webui | open-webui | LLM 웹 UI | 38080 | (비밀값 정리 전) |
-| openclaw | openclaw | OpenClaw Gateway (예비, 주 Gateway는 b150m-am2 VM) | 18789 | [projects/openclaw](projects/openclaw/compose.yaml) |
+| ollama | ollama | 로컬 LLM 서버 (미사용, Container Manager 프로젝트 미등록) | 11434 | [projects/ollama](projects/ollama/compose.yaml) |
+| open-webui | open-webui | LLM 웹 UI (미사용, 멈춤) | 38080 | [projects/open-webui](projects/open-webui/compose.yaml) |
+| openclaw | openclaw | OpenClaw Gateway (예비, 멈춤, 주 Gateway는 b150m-am2 VM) | 18789 | [projects/openclaw](projects/openclaw/compose.yaml) |
 | portainer | portainer | 컨테이너 관리 UI | 8000, 9000 | [projects/portainer](projects/portainer/compose.yaml) |
-| tailscale | tailscale | VPN | - | (비밀값 정리 전) |
-| uptime-kuma | uptime-kuma | 서비스 감시 | 3001 | (비밀값 정리 전) |
+| tailscale | tailscale | VPN (tailnet 이름 `silent-nas-ts`) | - (host) | [projects/tailscale](projects/tailscale/compose.yaml) |
+| uptime-kuma | uptime-kuma | 서비스 감시 | 3001 | [projects/uptime-kuma](projects/uptime-kuma/compose.yaml) |
 | vaultwarden | vaultwarden | 비밀번호 관리 (authentik SSO 연결) | 30080 | [projects/vaultwarden](projects/vaultwarden/compose.yaml) |
-| wg-easy | wg-easy | WireGuard VPN (이 NAS 커널에서 동작 안 함) | 51820/udp, 51821 | [projects/wg-easy](projects/wg-easy/compose.yaml) |
-| wireguard | wireguard | WireGuard VPN (이 NAS 커널에서 동작 안 함) | 51820/udp | (비밀값 정리 전) |
+| wg-easy | wg-easy | WireGuard VPN (미사용, 멈춤, 이 NAS 커널에서 동작 안 함) | 51820/udp, 51821 | [projects/wg-easy](projects/wg-easy/compose.yaml) |
+| wireguard | wireguard | WireGuard VPN (미사용, 멈춤, 이 NAS 커널에서 동작 안 함) | 51820/udp | [projects/wireguard](projects/wireguard/compose.yaml) |
 | wud | wud | 이미지 새 버전 확인 | 33002 | [projects/wud](projects/wud/compose.yaml) |
 | forgejo | forgejo | 자체 Git 호스팅 (로컬망) | 30082, 2223 | [projects/forgejo](projects/forgejo/compose.yaml) |
 
 - Home Assistant와 함께 쓰는 서비스(음성 인식·합성, 음악, MQTT, ESPHome)는 home-assistant 프로젝트 하나에 서비스로 둠 (데이터는 `home-assistant/<서비스>/` 아래)
-- "비밀값 정리 전"인 프로젝트는 NAS의 compose에 비밀값·주소가 직접 들어 있어 저장소에 넣지 않았음 (`.env`로 옮긴 뒤 추가)
 
 
 ### WUD (이미지 새 버전 확인)
@@ -99,15 +99,3 @@ ssh silent-nas.local 'python3 - list' < devices/ds218plus/scripts/synoproj.py
 | portainer | `portainer` | Portainer 관리자 화면 > Settings > Authentication > OAuth (Custom)에서 입력 |
 
 - 클라이언트 ID·비밀값은 authentik 관리자 화면 > 애플리케이션 > 공급자에서 확인
-
-
-
-## 진행 예정
-
-### tailscale
-
-- `projects/tailscale/compose.yaml` 추가: NAS compose의 비밀값(인증 키 등)을 `.env`로 옮기고 값이 빈 `.env.example`을 함께 둠
-- 컨테이너를 host network로 다시 만들 것: `network_mode: host`, `devices: [/dev/net/tun]`, `cap_add: [NET_ADMIN]`
-  - 지금은 tailnet 주소(`silent-nas-ts`)가 NAS 본체가 아니라 컨테이너 자신이어서 NAS의 다른 서비스(Mosquitto 1883, Home Assistant 8123)에 닿지 않는 것으로 추정 (미확인, Tailscale ACL이 막고 있을 수도 있음)
-  - 완료 기준: tailnet에서 `silent-nas-ts:1883`, `silent-nas-ts:8123`에 접속됨
-- 끝나면 위 프로젝트 목록 표의 "(비밀값 정리 전)"을 링크로 바꿈

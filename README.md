@@ -13,7 +13,7 @@
 | titan-s260 | SAM4S TITAN-S260 POS, Windows 10 IoT LTSC 2021 | [devices/titan-s260/README.md](devices/titan-s260/README.md) |
 | byt-t1 | PEGATRON BYT-T1 Mini-ITX 보드 (Intel Pentium J2900), Ubuntu Server 24.04 LTS | [devices/byt-t1/README.md](devices/byt-t1/README.md) |
 | jetson-nano-b01 | NVIDIA Jetson Nano Developer Kit B01, JetPack 4.6.6 (Ubuntu 18.04) | [devices/jetson-nano-b01/README.md](devices/jetson-nano-b01/README.md) |
-| b150m-am2 | ASUS B150M-A/M.2 Micro-ATX 보드 (Intel B150), Proxmox VE 9 + Ubuntu Server 24.04 LTS VM, OpenClaw 서버 | [devices/b150m-am2/README.md](devices/b150m-am2/README.md) |
+| b150m-am2 | ASUS B150M-A/M.2 Micro-ATX 보드 (Intel B150), Proxmox VE 9 + Ubuntu Server 24.04 LTS VM 2개, OpenClaw 서버·Docker 서비스(Metabase) 서버 | [devices/b150m-am2/README.md](devices/b150m-am2/README.md) |
 | thinkpad-s2-2g | Lenovo ThinkPad S2 2G(2nd Gen) 노트북, Windows 10 Pro | [devices/thinkpad-s2-2g/README.md](devices/thinkpad-s2-2g/README.md) |
 | gmk87 | ZUOYA GMK87 기계식 키보드 (USB-C / 2.4 GHz / Bluetooth, VIA 키 매핑) | [devices/gmk87/README.md](devices/gmk87/README.md) |
 | ds218plus | Synology DS218+ NAS, DSM 7, Container Manager(Docker) 프로젝트 관리 | [devices/ds218plus/README.md](devices/ds218plus/README.md) |
@@ -98,9 +98,14 @@ ASUS B150M-A/M.2 (Proxmox 호스트 셸, root):
 curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150m-am2/setup_host.sh | bash
 ```
 
-ASUS B150M-A/M.2의 Ubuntu VM (VM 안에서, sudo):
+ASUS B150M-A/M.2의 OpenClaw VM (VM 안에서, sudo):
 ```bash
 curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150m-am2/vm/ubuntu-server/setup_vm.sh | sudo bash
+```
+
+ASUS B150M-A/M.2의 Docker VM (VM 안에서, sudo):
+```bash
+curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150m-am2/vm/ubuntu-docker/setup_vm.sh | sudo bash
 ```
 
 
