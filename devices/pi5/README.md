@@ -67,3 +67,13 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/pi5/
   - 다시 실행 시: 패키지, docker 그룹, 같은 버전의 Portainer Agent 실행이 모두 확인되면 건너뜀
   - 개별 실행: 이 폴더에서 `sudo bash ../pi4-display/scripts/setup_docker.sh`
 - 설치 후 다시 로그인해야 sudo 없이 `docker` 명령을 쓸 수 있음
+
+
+### Tailscale
+
+- Setup: [scripts/setup_tailscale.sh](scripts/setup_tailscale.sh) (공식 apt 저장소 `pkgs.tailscale.com` 등록 후 `tailscale` 설치, `tailscaled` 서비스 실행, tailnet 로그인)
+  - 다시 실행 시: `tailscale` 패키지가 설치돼 있고, `tailscaled`가 실행 중이고, 로그인돼 있으면 건너뜀
+- 로그인: `.env`의 `TS_AUTHKEY`가 있으면 그 키로 자동 로그인, 없으면 터미널에 뜬 URL을 브라우저에서 열어 로그인
+  - 키 설정: `.env.example`을 `.env`로 복사해 `TS_AUTHKEY`를 채움 (키는 Tailscale 관리 페이지 Settings → Keys에서 만듦)
+  - 키도 터미널도 없으면 로그인만 건너뜀 (SKIP). 나중에 `sudo tailscale up`으로 로그인
+- 업데이트는 apt로 받음 (`sudo apt update && sudo apt upgrade`)

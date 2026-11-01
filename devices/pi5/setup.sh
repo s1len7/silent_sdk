@@ -99,6 +99,7 @@ modules=(
     setup_vscode
     ../pi4-display/scripts/setup_opencode
     ../pi4-display/scripts/setup_docker
+    setup_tailscale
 )
 for entry in "${modules[@]}"; do
     name="$(basename "$entry")"
