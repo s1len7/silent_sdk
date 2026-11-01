@@ -69,6 +69,13 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/pi5/
 - 업데이트는 apt로 받음 (`sudo apt update && sudo apt upgrade`)
 
 
+### VS Code 자동실행
+
+- Setup: [scripts/setup_vscode_autostart.sh](scripts/setup_vscode_autostart.sh) (VS Code 설치 후 실행)
+  - 다시 실행 시: `code` 패키지가 설치돼 있고 자동실행 파일이 저장소와 같으면 건너뜀
+- `~/.config/autostart/code.desktop` 설정 파일로 로그인 시 자동실행
+
+
 ### OpenCode CLI
 
 - Setup: [../pi4-display/scripts/setup_opencode.sh](../pi4-display/scripts/setup_opencode.sh) (라즈베리파이 공통 모듈, 설명은 [pi4-display README](../pi4-display/README.md#opencode-cli) 참고)
