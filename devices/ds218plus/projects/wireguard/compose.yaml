@@ -1,0 +1,29 @@
+# WireGuard VPN
+# 미사용 (멈춤, 이 NAS 커널에서 동작 안 함, VPN은 tailscale 사용)
+services:
+  wireguard:
+    image: linuxserver/wireguard:latest
+    container_name: wireguard
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      PUID: 1026
+      PGID: 100
+      TZ: Asia/Seoul
+      # 외부에서 접속할 주소, .env에서 읽음
+      SERVERURL: ${SERVERURL}
+      SERVERPORT: 51820
+      PEERS: iphone
+      PEERDNS: auto
+      INTERNAL_SUBNET: 10.13.13.0
+      ALLOWEDIPS: 0.0.0.0/0
+      LOG_CONFS: true
+    volumes:
+      - ./config:/config
+      - /lib/modules:/lib/modules
+    ports:
+      - "51820:51820/udp"
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    restart: unless-stopped

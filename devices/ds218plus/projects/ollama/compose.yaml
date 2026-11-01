@@ -1,0 +1,18 @@
+# Ollama: 로컬 LLM 서버
+# 미사용 (Container Manager 프로젝트로 등록 안 됨, 컨테이너 없음, NAS에는 폴더와 모델 데이터만 있음)
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    network_mode: bridge
+    ports:
+      - "11434:11434/tcp"
+    environment:
+      - TZ=Asia/Seoul
+      # 다중 요청을 막고 한 요청에 CPU를 집중해 속도 향상
+      - OLLAMA_NUM_PARALLEL=1
+      # 메모리에 모델을 하나만 올려 RAM 부족 방지
+      - OLLAMA_MAX_LOADED_MODELS=1
+    volumes:
+      - ./root/.ollama:/root/.ollama
+    restart: unless-stopped
