@@ -2,8 +2,8 @@
 
 - 제조사: [ASUS](https://www.asus.com/)
 - 모델명: [B150M-A/M.2](https://www.asus.com/supportonly/b150m-am.2/helpdesk/) (Micro-ATX 메인보드, Intel B150)
-- 지원OS: [Proxmox VE](https://www.proxmox.com/en/products/proxmox-virtual-environment/overview) 9 (호스트, Debian 13 기반) + Ubuntu Server 24.04 LTS VM (OpenClaw 실행)
-- 용도: [OpenClaw](https://docs.openclaw.ai/install) 서버
+- 지원OS: [Proxmox VE](https://www.proxmox.com/en/products/proxmox-virtual-environment/overview) 9 (호스트, Debian 13 기반) + Ubuntu Server 24.04 LTS VM 2개 (OpenClaw 실행, Docker 서비스 실행)
+- 용도: [OpenClaw](https://docs.openclaw.ai/install) 서버, Docker 서비스(Metabase) 서버
 - 작성 원칙: [AGENTS.md](AGENTS.md) 참고 (공통 규칙은 [상위 AGENTS.md](../../AGENTS.md))
 
 | 항목 | 사양 |
@@ -23,9 +23,9 @@
 
 ## 기능
 
-- 순서: Proxmox VE 9 설치 → 호스트 Setup (저장소 설정, Wi-Fi 연결(선택), Ubuntu Server 24.04 LTS VM 생성, 첫 부팅 때 VM Setup 자동 실행: OpenClaw 설치·온보딩) → VM에 OpenRouter API 키 등록
-- 전체 셋업 스크립트: 호스트는 [setup_host.sh](setup_host.sh) (`scripts/host/` 모듈), VM은 [vm/ubuntu-server/setup_vm.sh](vm/ubuntu-server/setup_vm.sh) (`vm/ubuntu-server/scripts/` 모듈)
-- VM 사양·접속 방법: [vm/ubuntu-server/README.md](vm/ubuntu-server/README.md)
+- 순서: Proxmox VE 9 설치 → 호스트 Setup (저장소 설정, Wi-Fi 연결(선택), Ubuntu Server 24.04 LTS VM 2개 생성, 첫 부팅 때 VM Setup 자동 실행: OpenClaw 설치·온보딩 / Docker·Metabase 설치) → OpenClaw VM에 OpenRouter API 키 등록
+- 전체 셋업 스크립트: 호스트는 [setup_host.sh](setup_host.sh) (`scripts/host/` 모듈), VM은 [vm/ubuntu-server/setup_vm.sh](vm/ubuntu-server/setup_vm.sh)·[vm/ubuntu-docker/setup_vm.sh](vm/ubuntu-docker/setup_vm.sh) (`vm/<VM 이름>/scripts/` 모듈)
+- VM 사양·접속 방법: [vm/ubuntu-server/README.md](vm/ubuntu-server/README.md) (OpenClaw), [vm/ubuntu-docker/README.md](vm/ubuntu-docker/README.md) (Docker 서비스)
 - 호스트 Setup: Proxmox 셸(root)에서 이 한 줄만 실행 (git 설치 → 저장소를 `~/silent_sdk`에 clone → 전체 설치):
 
 ```bash
@@ -40,11 +40,17 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150
 curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150m-am2/vm/ubuntu-server/setup_vm.sh | sudo bash
 ```
 
-- 저장소를 새로 받지 않고 실행: 호스트는 `bash ~/silent_sdk/devices/b150m-am2/setup_host.sh`, VM은 `sudo bash ~/silent_sdk/devices/b150m-am2/vm/ubuntu-server/setup_vm.sh`
-- 개별 기능만 설치: 이 폴더(`~/silent_sdk/devices/b150m-am2`)에서 `bash scripts/host/setup_<기능>.sh` (호스트) 또는 `sudo bash vm/ubuntu-server/scripts/setup_<기능>.sh` (VM)
+- Docker VM을 직접 만들었으면 **그 VM 안에서**:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150m-am2/vm/ubuntu-docker/setup_vm.sh | sudo bash
+```
+
+- 저장소를 새로 받지 않고 실행: 호스트는 `bash ~/silent_sdk/devices/b150m-am2/setup_host.sh`, VM은 `sudo bash ~/silent_sdk/devices/b150m-am2/vm/<VM 이름>/setup_vm.sh`
+- 개별 기능만 설치: 이 폴더(`~/silent_sdk/devices/b150m-am2`)에서 `bash scripts/host/setup_<기능>.sh` (호스트) 또는 `sudo bash vm/<VM 이름>/scripts/setup_<기능>.sh` (VM)
 - 실패한 모듈이 있어도 나머지 모듈은 계속 진행하고, 끝에 모듈별 결과(OK/SKIP/FAIL) 요약을 보여줌
 - 다시 실행: 같은 명령을 다시 실행하면 이미 설정된 모듈은 SKIP하고, 실패했거나 안 된 모듈만 다시 진행함 (모듈별 확인 기준은 아래 각 기능의 "다시 실행 시" 참고)
-- 로그: `~/silent_sdk/logs/b150m-am2-host-<시각>/setup.log` (호스트), `~/silent_sdk/logs/b150m-am2-ubuntu-server-<시각>/setup.log` (VM)
+- 로그: `~/silent_sdk/logs/b150m-am2-host-<시각>/setup.log` (호스트), `~/silent_sdk/logs/b150m-am2-<VM 이름>-<시각>/setup.log` (VM)
 
 
 ### Proxmox 저장소 (호스트)
@@ -96,6 +102,15 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150
   - 진행 확인: 호스트에서 `qm terminal 100` (나가기: Ctrl+O), VM에서 `cloud-init status --wait`
   - 이를 위해 `local` 저장소에 snippets 용도를 추가하고 `/var/lib/vz/snippets/`에 첫 부팅 작업 파일을 만듦
 
+### Docker VM 생성 (호스트)
+
+- Setup: [scripts/host/setup_vm_ubuntu_docker.sh](scripts/host/setup_vm_ubuntu_docker.sh) (위 Ubuntu VM 생성과 같은 방식, OpenClaw VM과 분리된 Docker 서비스용 VM)
+  - 다시 실행 시: 같은 번호(`DOCKER_VM_ID`)의 VM이 있으면 건너뜀 (기존 VM은 건드리지 않음)
+- 기본값: VM 101, 이름 `ubuntu-docker`(호스트 이름으로도 쓰여 `ubuntu-docker.local`로 접속), 2코어, 3072MB, 32GB. 바꾸려면 `.env`의 `DOCKER_VM_*` ([.env.example](.env.example) 참고)
+  - 저장소·브리지·계정·콘솔 비밀번호·SSH 키는 위 표의 `VM_*` 값을 함께 씀
+- 첫 부팅 때 VM의 [vm/ubuntu-docker/setup_vm.sh](vm/ubuntu-docker/setup_vm.sh)(Avahi·Docker·Metabase 설치)를 실행함 (끄려면 `DOCKER_VM_AUTO_SETUP=no`)
+- 아직 실제 장비에서 시험하지 않음 ([vm/ubuntu-docker/README.md](vm/ubuntu-docker/README.md#todo) TODO 참고)
+
 ### OpenClaw (VM)
 
 - Setup: [vm/ubuntu-server/scripts/setup_openclaw.sh](vm/ubuntu-server/scripts/setup_openclaw.sh) (VM 안에서 실행, Proxmox 호스트에서는 실행되지 않음)
@@ -139,3 +154,19 @@ python3 -c "import json,os;print(json.load(open(os.path.expanduser('~/.openclaw/
 - 허용 ID 한 명만 봇에게 말을 걸 수 있고 그룹 대화는 꺼짐 ([공식 문서](https://docs.openclaw.ai/channels/telegram/access-control))
 - 토큰은 `~/.openclaw/telegram-bot-token`(권한 600)에 두고 설정에는 파일 경로만 넣음
 - 봇 하나는 한 곳에서만 메시지를 받을 수 있으므로, 같은 봇을 다른 OpenClaw에서 동시에 쓰지 않음
+
+### mDNS (Docker VM)
+
+- Setup: [vm/ubuntu-docker/scripts/setup_avahi.sh](vm/ubuntu-docker/scripts/setup_avahi.sh) (avahi-daemon을 설치해 `ubuntu-docker.local`로 접속되게 함)
+  - 다시 실행 시: `avahi-daemon`이 설치돼 있고 실행 중이면 건너뜀
+
+### Docker (Docker VM)
+
+- Setup: [vm/ubuntu-docker/scripts/setup_docker.sh](vm/ubuntu-docker/scripts/setup_docker.sh) ([Docker 공식 apt 저장소](https://docs.docker.com/engine/install/ubuntu/)로 Docker Engine과 compose 플러그인 설치)
+  - 다시 실행 시: Docker 패키지가 모두 설치돼 있고 `docker` 서비스가 실행 중이면 건너뜀
+
+### Metabase (Docker VM)
+
+- Setup: [vm/ubuntu-docker/scripts/setup_metabase.sh](vm/ubuntu-docker/scripts/setup_metabase.sh) ([compose](vm/ubuntu-docker/projects/metabase/compose.yaml)를 `/srv/docker/metabase/`에 복사해 실행, 웹 화면 `http://ubuntu-docker.local:3000`)
+  - 다시 실행 시: `/srv/docker/metabase/compose.yaml`이 저장소와 같고 `metabase` 컨테이너가 실행 중이면 건너뜀
+- NAS(ds218plus)에서 데이터 옮기는 방법: [vm/ubuntu-docker/README.md](vm/ubuntu-docker/README.md#nas에서-옮기기)

@@ -3,17 +3,18 @@
 ## b150m-am2 전용
 
 - 대상: ASUS B150M-A/M.2 (Intel Core i5-7600, RAM 16GB, SSD 256GB, x86_64)
-  - 호스트: Proxmox VE 9 (Debian 13 기반), 게스트: Ubuntu Server 24.04 LTS VM에서 OpenClaw 실행
+  - 호스트: Proxmox VE 9 (Debian 13 기반), 게스트: Ubuntu Server 24.04 LTS VM에서 OpenClaw 실행, 별도 Ubuntu Server VM에서 Docker 서비스 실행
   - 에이전트 격리를 위해 OpenClaw는 LXC가 아니라 VM 안에서만 실행할 것
+  - 에이전트 격리를 위해 Docker 서비스는 OpenClaw VM이 아니라 `ubuntu-docker` VM에서 실행할 것
   - 호스트용과 VM용 스크립트를 섞지 말고, 각 스크립트 주석에 어디서 실행하는지 적을 것
   - 데스크탑 환경이 없는 서버이므로 GUI나 자동실행(autostart) 대신 systemd 서비스로 구성할 것
   - 온보드 LAN(Realtek RTL8111H, r8169)은 Proxmox 커널 업데이트 후 끊김 보고가 있으므로 네트워크 관련 변경 시 주의할 것
-- 용도: OpenClaw 서버
+- 용도: OpenClaw 서버, Docker 서비스(Metabase 등) 서버
   - 설치와 실행 방식은 [OpenClaw 공식 문서](https://docs.openclaw.ai/install)를 따르고, 서드파티 가이드보다 공식 문서를 우선할 것
   - Gateway는 랜에 열고(`gateway.bind=lan`), 인증(token 또는 password)을 반드시 유지할 것
     - 리버스 프록시를 거칠 때는 `gateway.trustedProxies`에 프록시 IP만 넣고, `gateway.publicOrigin`을 외부 https 주소로 둘 것 ([Trusted proxy 문서](https://docs.openclaw.ai/gateway/trusted-proxy-auth))
   - API 키, 토큰은 `.env`(git 무시)에 둘 것
-- 전체 셋업 스크립트는 호스트용 `setup_host.sh`(장비 폴더 바로 아래), VM용 `vm/<VM 이름>/setup_vm.sh`로 둘 것 (현재 VM: `ubuntu-server`)
+- 전체 셋업 스크립트는 호스트용 `setup_host.sh`(장비 폴더 바로 아래), VM용 `vm/<VM 이름>/setup_vm.sh`로 둘 것 (현재 VM: `ubuntu-server`(OpenClaw), `ubuntu-docker`(Docker 서비스))
 - 기능 하나당 모듈 하나로 만들고, 호스트용은 `scripts/host/setup_<기능>.sh`, VM용은 `vm/<VM 이름>/scripts/setup_<기능>.sh`에 둘 것
   - README.md `## 기능` 아래에 `### <기능> (호스트|VM)` 섹션과 `- Setup: [<모듈 경로>](...)` 줄을 추가할 것
   - 새 모듈은 `setup_host.sh` 또는 해당 VM의 `setup_vm.sh`의 `modules` 목록에 실행 순서에 맞게 한 줄 추가할 것 (와일드카드로 모아 실행하지 않음)

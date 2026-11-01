@@ -63,3 +63,12 @@ ssh silent@192.168.0.22 "python3 -c \"import json,os;print(json.load(open(os.pat
   - 다시 실행 시: `.env`에 봇 토큰·허용 ID가 없거나, 토큰 파일과 채널 설정이 같으면 건너뜀
 - 설정: `.env`의 `TELEGRAM_BOT_TOKEN`, `TELEGRAM_ALLOW_FROM` ([.env.example](.env.example) 참고)
 - 상태 확인: `openclaw channels status`
+
+
+## TODO
+
+- [ ] VM 이름을 `ubuntu-server`에서 `ubuntu-openclaw`로 바꾸기 (Docker VM `ubuntu-docker`와 이름 규칙을 맞춤). b150m-am2를 켜고 [ubuntu-docker](../ubuntu-docker/README.md#todo)를 시험할 때 한 번에 할 것
+  - [ ] 저장소: 이 폴더 `vm/ubuntu-server/` → `vm/ubuntu-openclaw/`, 호스트 스크립트 `setup_vm_ubuntu_server.sh` → `setup_vm_ubuntu_openclaw.sh`, 문서·curl 한 줄 명령의 경로 (`devices/desktop/.env.example`의 안내 한 줄은 다른 장비 폴더라 사용자 확인 후)
+  - [ ] VM 안: git에 없는 `vm/ubuntu-server/.env`(OpenRouter 키, 텔레그램 토큰)를 새 폴더로 옮긴 뒤 `git pull` (안 옮기면 다시 실행할 때 키 설정이 빠짐)
+  - [ ] Proxmox: `qm set 100 --name ubuntu-openclaw` 또는 `.env`에 `VM_NAME=ubuntu-server` (이름이 다르면 호스트 Setup이 "다른 이름으로 이미 있음"으로 실패함)
+    - 이름을 바꾸면 VM 호스트 이름도 바뀌므로, cloud-init이 첫 부팅 작업을 다시 하거나 SSH 호스트 키를 새로 만드는지 확인할 것 (미확인)

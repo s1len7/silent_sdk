@@ -1,0 +1,16 @@
+# Metabase: 데이터 시각화 (ds218plus NAS에서 옮겨 옴)
+# 웹 화면: http://ubuntu-docker.local:3000
+# scripts/setup_metabase.sh가 /srv/docker/metabase/로 복사해 실행함 (데이터는 그 아래 metabase-data/)
+services:
+  metabase:
+    image: metabase/metabase:latest
+    container_name: metabase
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./metabase-data:/metabase-data
+    environment:
+      # 내장 H2 DB 파일 (NAS의 metabase-data/metabase.db를 그대로 옮겨 씀)
+      MB_DB_FILE: /metabase-data/metabase.db
+      JAVA_TIMEZONE: Asia/Seoul
+    restart: unless-stopped

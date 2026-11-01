@@ -15,7 +15,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 if ! command -v pveversion >/dev/null; then
-    echo "Not a Proxmox host. In the Ubuntu VM, run vm/ubuntu-server/setup_vm.sh instead." >&2
+    echo "Not a Proxmox host. In a VM, run vm/<VM name>/setup_vm.sh instead." >&2
     exit 1
 fi
 
@@ -97,10 +97,11 @@ summary=()
 failed=0
 # 실행할 모듈 (위에서부터 순서대로 실행, 새 모듈은 여기에 한 줄 추가)
 modules=(
-    # 저장소 설정과 패치를 먼저 한 뒤 (Wi-Fi 패키지 설치에 필요) Wi-Fi 연결, VM 생성
+    # 저장소 설정과 패치를 먼저 한 뒤 (Wi-Fi 패키지 설치에 필요) Wi-Fi 연결, VM 생성 (OpenClaw VM, Docker VM)
     setup_pve_repo
     setup_wifi
     setup_vm_ubuntu_server
+    setup_vm_ubuntu_docker
 )
 for name in "${modules[@]}"; do
     module="$device_dir/scripts/host/$name.sh"

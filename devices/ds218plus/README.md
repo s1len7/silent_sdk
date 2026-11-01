@@ -45,7 +45,7 @@ ssh silent-nas.local 'python3 - list' < devices/ds218plus/scripts/synoproj.py
 | | eclipse-mosquitto | MQTT 브로커 | 1883 | |
 | | esphome | ESP 기기 펌웨어 관리 | 6052 (host) | |
 | homepage | homepage | 서비스 상태판 (내부망 전용) | 33003 | [projects/homepage](projects/homepage/compose.yaml) |
-| metabase | metabase | 데이터 시각화 | 33001 | [projects/metabase](projects/metabase/compose.yaml) |
+| metabase | metabase | 데이터 시각화 (b150m-am2 ubuntu-docker VM으로 이전 예정, [이전 방법](../b150m-am2/vm/ubuntu-docker/README.md#nas에서-옮기기)) | 33001 | [projects/metabase](projects/metabase/compose.yaml) |
 | nginx-proxy-manager | nginx-proxy-manager | 리버스 프록시 (NAS 폴더: `ngnix-proxy-manager`) | 8080, 8181, 4443 | [projects/nginx-proxy-manager](projects/nginx-proxy-manager/compose.yaml) |
 | ntfy | ntfy | 알림 (WUD 새 버전 알림 → 주제 `nas-updates`) | 30081 | [projects/ntfy](projects/ntfy/compose.yaml) |
 | ollama | ollama | 로컬 LLM 서버 (미사용, Container Manager 프로젝트 미등록) | 11434 | [projects/ollama](projects/ollama/compose.yaml) |
