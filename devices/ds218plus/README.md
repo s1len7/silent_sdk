@@ -52,7 +52,7 @@ ssh silent-nas.local 'python3 - list' < devices/ds218plus/scripts/synoproj.py
 | openclaw | openclaw | OpenClaw Gateway (예비, 주 Gateway는 b150m-am2 VM) | 18789 | [projects/openclaw](projects/openclaw/compose.yaml) |
 | portainer | portainer | 컨테이너 관리 UI | 8000, 9000 | [projects/portainer](projects/portainer/compose.yaml) |
 | tailscale | tailscale | VPN | - | (비밀값 정리 전) |
-| uptime-kuma | uptime-kuma | 서비스 감시 | 3001 | (비밀값 정리 전) |
+| uptime-kuma | uptime-kuma | 서비스 감시 | 3001 | [projects/uptime-kuma](projects/uptime-kuma/compose.yaml) |
 | vaultwarden | vaultwarden | 비밀번호 관리 (authentik SSO 연결) | 30080 | [projects/vaultwarden](projects/vaultwarden/compose.yaml) |
 | wg-easy | wg-easy | WireGuard VPN (이 NAS 커널에서 동작 안 함) | 51820/udp, 51821 | [projects/wg-easy](projects/wg-easy/compose.yaml) |
 | wireguard | wireguard | WireGuard VPN (이 NAS 커널에서 동작 안 함) | 51820/udp | (비밀값 정리 전) |

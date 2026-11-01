@@ -1,0 +1,14 @@
+# Uptime Kuma: 서비스 감시
+# 웹 화면: http://<NAS>:3001
+services:
+  uptime-kuma:
+    image: louislam/uptime-kuma:latest
+    container_name: uptime-kuma
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./app/data:/app/data
+    extra_hosts:
+      # 감시 대상에서 쓰는 NAS 이름, NAS 주소는 .env에서 읽음
+      - "silent_nas.local:${NAS_IP}"
