@@ -83,6 +83,16 @@ sudo systemctl start ssh
 - 폰트 라이선스: [SIL Open Font License 1.1](https://openfontlicense.org/) (설치 후 `/usr/share/doc/fonts-nanum/copyright`에서 확인 가능)
 
 
+### 한글 입력
+
+- Setup: [scripts/setup_korean_input.sh](scripts/setup_korean_input.sh) (`fcitx5-hangul` 설치, im-config로 fcitx5 선택, 입력기 목록에 한글 추가, 한/영 전환 키 설정)
+  - 다시 실행 시: 패키지가 설치돼 있고, `~/.xinputrc`가 fcitx5를 고르고, `~/.config/fcitx5/profile`에 `hangul`이, `~/.config/fcitx5/config`에 전환 키가 모두 있으면 건너뜀
+- 한/영 전환: 한/영 키, `Shift+Space`, `Ctrl+Space`
+- 기존 `profile`(입력기 목록)은 키보드 배열 + 한글 한 그룹으로 바꾸고, 바꾸기 전 파일은 `.bak`으로 남김
+- fcitx5가 실행 중이면 끄고 다시 실행함. 열려 있던 프로그램은 다시 실행해야 한글이 입력됨
+- 라이선스: fcitx5·fcitx5-hangul LGPL-2.1+, im-config GPL-2+ (설치 후 `/usr/share/doc/<패키지>/copyright`에서 확인 가능)
+
+
 ### OpenCode CLI
 
 - Setup: [scripts/setup_opencode.sh](scripts/setup_opencode.sh) (Node.js·npm 설치 후 npm `opencode-ai`를 사용자 `~/.local`에 설치)

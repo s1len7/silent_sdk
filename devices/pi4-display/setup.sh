@@ -96,6 +96,7 @@ modules=(
     setup_boot_beep
     setup_sftp
     setup_korean_font
+    setup_korean_input
     setup_opencode
     setup_screen_blanking
     setup_htop_autostart
