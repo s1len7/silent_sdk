@@ -76,6 +76,13 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/pi5/
 - `~/.config/autostart/code.desktop` 설정 파일로 로그인 시 자동실행
 
 
+### 런처 전원 끄기 아이콘
+
+- Setup: [../pi4-display/scripts/setup_shutdown_shortcut.sh](../pi4-display/scripts/setup_shutdown_shortcut.sh) (라즈베리파이 공통 모듈, 작업표시줄에 `pishutdown` 아이콘 추가. 설명은 [pi4-display README](../pi4-display/README.md#런처-전원-끄기-아이콘) 참고)
+  - 다시 실행 시: `launchers` 목록에 항목이 있고 찾을 수 있는 `pishutdown.desktop` 파일이 있으면 건너뜀
+  - 개별 실행: 이 폴더에서 `sudo bash ../pi4-display/scripts/setup_shutdown_shortcut.sh`
+
+
 ### OpenCode CLI
 
 - Setup: [../pi4-display/scripts/setup_opencode.sh](../pi4-display/scripts/setup_opencode.sh) (라즈베리파이 공통 모듈, 설명은 [pi4-display README](../pi4-display/README.md#opencode-cli) 참고)

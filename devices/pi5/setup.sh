@@ -100,6 +100,7 @@ modules=(
     ../pi4-display/scripts/setup_korean_input
     setup_vscode
     setup_vscode_autostart
+    ../pi4-display/scripts/setup_shutdown_shortcut
     ../pi4-display/scripts/setup_opencode
     ../pi4-display/scripts/setup_docker
     setup_tailscale
