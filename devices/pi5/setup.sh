@@ -95,6 +95,7 @@ failed=0
 # 라즈베리파이 공통 모듈은 pi4-display/scripts에 두고 함께 씀
 modules=(
     ../pi4-display/scripts/setup_boot_beep
+    ../pi4-display/scripts/setup_sftp
     ../pi4-display/scripts/setup_korean_font
     ../pi4-display/scripts/setup_korean_input
     setup_vscode
