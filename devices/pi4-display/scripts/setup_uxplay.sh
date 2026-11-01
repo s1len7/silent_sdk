@@ -26,7 +26,8 @@ fi
 apt-get update
 apt-get install -y uxplay
 
-mkdir -p "$(dirname "$dst")"
+# ~/.config 등 중간 폴더가 root 소유로 만들어지지 않게 사용자 권한으로 폴더를 만듦
+sudo -u "$user_name" mkdir -p "$(dirname "$dst")"
 # 원본이 Windows에서 편집된 경우를 대비해 CR 제거
 tr -d '\r' < "$src" > "$dst"
 chown -R "$user_name:" "$user_home/.config/autostart"

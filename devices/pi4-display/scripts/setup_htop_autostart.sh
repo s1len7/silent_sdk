@@ -28,10 +28,11 @@ if ! command -v htop >/dev/null 2>&1; then
     apt-get install -y htop
 fi
 
-mkdir -p "$(dirname "$dst")"
+# ~/.config가 없을 때 root 소유로 만들어지지 않게 사용자 권한으로 폴더를 만듦
+sudo -u "$user_name" mkdir -p "$(dirname "$dst")"
 # 원본이 Windows에서 편집된 경우를 대비해 CR 제거
 tr -d '\r' < "$src" > "$dst"
-chown -R "$user_name:" "$user_home/.config/autostart"
+chown "$user_name:" "$dst"
 
 echo "Copied htop.desktop to $dst"
 echo "htop will start automatically on next login."

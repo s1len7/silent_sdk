@@ -34,7 +34,8 @@ fi
 apt-get update
 apt-get install -y "${packages[@]}"
 
-mkdir -p "$(dirname "$py_dst")" "$(dirname "$desktop_dst")"
+# ~/.config 등 중간 폴더가 root 소유로 만들어지지 않게 사용자 권한으로 폴더를 만듦
+sudo -u "$user_name" mkdir -p "$(dirname "$py_dst")" "$(dirname "$desktop_dst")"
 py_src > "$py_dst"
 desktop_src > "$desktop_dst"
 chown -R "$user_name:" "$user_home/toggle_rotate" "$user_home/.config/autostart"

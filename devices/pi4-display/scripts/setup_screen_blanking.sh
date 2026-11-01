@@ -26,7 +26,8 @@ if [[ -f "$autostart" && "$(grep -c swayidle "$autostart")" == 1 ]] && grep -qxF
     skip_done "Screen blanking is already set to ${timeout}s"
 fi
 
-mkdir -p "$(dirname "$autostart")"
+# ~/.config 등 중간 폴더가 root 소유로 만들어지지 않게 사용자 권한으로 폴더를 만듦
+sudo -u "$user_name" mkdir -p "$(dirname "$autostart")"
 touch "$autostart"
 
 # 기존 swayidle 줄을 지우고 새로 추가 (여러 번 실행해도 중복 없음)

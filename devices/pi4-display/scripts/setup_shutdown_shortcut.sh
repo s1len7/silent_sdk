@@ -69,7 +69,8 @@ fi
 # (pishutdown 패키지의 pishutdown.desktop을 기반으로 이름만 Shutdown으로 바꿈)
 if ! find_desktop >/dev/null; then
     echo "Creating $user_apps/$desktop_id"
-    mkdir -p "$user_apps"
+    # ~/.local 등 중간 폴더가 root 소유로 만들어지지 않게 사용자 권한으로 폴더를 만듦
+    sudo -u "$user_name" mkdir -p "$user_apps"
     cat > "$user_apps/$desktop_id" <<EOF
 [Desktop Entry]
 Type=Application
@@ -82,7 +83,8 @@ EOF
 fi
 
 # launchers 목록에 항목 추가 (여러 번 실행해도 중복 없음)
-mkdir -p "$(dirname "$panel_ini")"
+# ~/.config 등 중간 폴더가 root 소유로 만들어지지 않게 사용자 권한으로 폴더를 만듦
+sudo -u "$user_name" mkdir -p "$(dirname "$panel_ini")"
 if [[ ! -f "$panel_ini" ]]; then
     # 사용자 파일이 없으면 시스템 기본 파일에서 시작 (toggle_rotate의 labwc rc.xml와 같은 방식)
     if [[ -f "$system_ini" ]]; then
