@@ -83,6 +83,18 @@ sudo systemctl start ssh
 - 폰트 라이선스: [SIL Open Font License 1.1](https://openfontlicense.org/) (설치 후 `/usr/share/doc/fonts-nanum/copyright`에서 확인 가능)
 
 
+### OpenCode CLI
+
+- Setup: [scripts/setup_opencode.sh](scripts/setup_opencode.sh) (Node.js·npm 설치 후 npm `opencode-ai`를 사용자 `~/.local`에 설치)
+  - 다시 실행 시: `~/.local/bin/opencode`가 있고 실행되면 건너뜀
+- `~/.local/bin`이 처음 생긴 경우 다시 로그인해야 `opencode` 명령이 PATH에 들어감
+- 업데이트 (sudo 불필요):
+
+```bash
+npm install -g --prefix ~/.local opencode-ai@latest
+```
+
+
 ### 화면보호기 / 화면 끄기
 
 - Setup: [scripts/setup_screen_blanking.sh](scripts/setup_screen_blanking.sh)
