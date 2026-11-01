@@ -94,6 +94,7 @@ failed=0
 # 이름만 쓰면 이 장비의 scripts/<이름>.sh, '/'가 들어가면 이 장비 폴더 기준 상대 경로(.sh 생략)
 # 라즈베리파이 공통 모듈은 pi4-display/scripts에 두고 함께 씀
 modules=(
+    ../pi4-display/scripts/setup_boot_beep
     ../pi4-display/scripts/setup_korean_font
     ../pi4-display/scripts/setup_korean_input
     setup_vscode

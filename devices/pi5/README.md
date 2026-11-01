@@ -33,6 +33,14 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/pi5/
 - 로그: `~/silent_sdk/logs/pi5-<시각>/setup.log`
 
 
+### 부팅 완료 비프음
+
+- Setup: [../pi4-display/scripts/setup_boot_beep.sh](../pi4-display/scripts/setup_boot_beep.sh) (라즈베리파이 공통 모듈, 설명은 [pi4-display README](../pi4-display/README.md#부팅-완료-비프음) 참고)
+  - 다시 실행 시: 서비스 파일이 같고 등록돼 있으면 건너뜀 (테스트 비프음도 울리지 않음)
+  - 개별 실행: 이 폴더에서 `sudo bash ../pi4-display/scripts/setup_boot_beep.sh`
+- 능동 부저(High level trigger 모듈) 배선: I/O - 18번(GPIO24), VCC - 2번(5V), GND - 20번
+
+
 ### 한글 폰트
 
 - Setup: [../pi4-display/scripts/setup_korean_font.sh](../pi4-display/scripts/setup_korean_font.sh) (라즈베리파이 공통 모듈, 설명은 [pi4-display README](../pi4-display/README.md#한글-폰트) 참고)
