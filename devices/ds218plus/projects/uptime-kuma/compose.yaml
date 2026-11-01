@@ -10,5 +10,5 @@ services:
     volumes:
       - ./app/data:/app/data
     extra_hosts:
-      # 감시 대상에서 쓰는 NAS 이름, NAS 주소는 .env에서 읽음
-      - "silent_nas.local:${NAS_IP}"
+      # 감시 대상에서 쓰는 NAS 이름, 컨테이너 안에서는 .local 이름이 풀리지 않으므로 Docker가 호스트(NAS) 주소로 바꿔 주는 host-gateway로 연결
+      - "silent_nas.local:host-gateway"
