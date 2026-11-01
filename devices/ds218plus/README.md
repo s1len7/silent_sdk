@@ -100,3 +100,14 @@ ssh silent-nas.local 'python3 - list' < devices/ds218plus/scripts/synoproj.py
 
 - 클라이언트 ID·비밀값은 authentik 관리자 화면 > 애플리케이션 > 공급자에서 확인
 
+
+
+## 진행 예정
+
+### tailscale
+
+- `projects/tailscale/compose.yaml` 추가: NAS compose의 비밀값(인증 키 등)을 `.env`로 옮기고 값이 빈 `.env.example`을 함께 둠
+- 컨테이너를 host network로 다시 만들 것: `network_mode: host`, `devices: [/dev/net/tun]`, `cap_add: [NET_ADMIN]`
+  - 지금은 tailnet 주소(`silent-nas-ts`)가 NAS 본체가 아니라 컨테이너 자신이어서 NAS의 다른 서비스(Mosquitto 1883, Home Assistant 8123)에 닿지 않는 것으로 추정 (미확인, Tailscale ACL이 막고 있을 수도 있음)
+  - 완료 기준: tailnet에서 `silent-nas-ts:1883`, `silent-nas-ts:8123`에 접속됨
+- 끝나면 위 프로젝트 목록 표의 "(비밀값 정리 전)"을 링크로 바꿈
