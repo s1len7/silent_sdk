@@ -10,6 +10,9 @@ services:
       - HOMEPAGE_ALLOWED_HOSTS=${HOMEPAGE_ALLOWED_HOSTS}
       # app/config/services.yaml의 바로가기·웹 응답 검사에 쓰는 NAS 주소
       - HOMEPAGE_VAR_NAS=${HOMEPAGE_VAR_NAS}
+    extra_hosts:
+      # HOMEPAGE_VAR_NAS(silent-nas.local)로 하는 웹 응답 검사가 컨테이너 안에서도 되게 Docker가 호스트(NAS) 주소로 바꿔 주는 host-gateway로 연결
+      - "silent-nas.local:host-gateway"
     volumes:
       - ./app/config:/app/config
       - /var/run/docker.sock:/var/run/docker.sock:ro
