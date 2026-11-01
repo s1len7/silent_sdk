@@ -95,6 +95,7 @@ modules=(
     setup_power_button
     setup_boot_beep
     setup_sftp
+    setup_korean_font
     setup_screen_blanking
     setup_htop_autostart
     setup_shutdown_shortcut

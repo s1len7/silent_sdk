@@ -74,6 +74,15 @@ sudo systemctl start ssh
 - 클라이언트 연결: FileZilla 같은 프로그램에서 호스트(`sftp://라즈베리파이_IP`), 사용자명, 비밀번호, 포트(22)를 입력해 접속
 
 
+### 한글 폰트
+
+- Setup: [scripts/setup_korean_font.sh](scripts/setup_korean_font.sh) (나눔 폰트 `fonts-nanum`, `fonts-nanum-extra` 설치로 한글 깨짐 해결)
+  - 다시 실행 시: `fonts-nanum`, `fonts-nanum-extra` 패키지가 설치돼 있고 `fc-list`에 나눔고딕(NanumGothic)이 보이면 건너뜀
+- Raspberry Pi OS에는 한글 폰트가 없어 화면·브라우저의 한글이 네모(□)로 보임
+- 설치 후 열려 있던 프로그램(브라우저 등)은 다시 실행해야 적용됨
+- 폰트 라이선스: [SIL Open Font License 1.1](https://openfontlicense.org/) (설치 후 `/usr/share/doc/fonts-nanum/copyright`에서 확인 가능)
+
+
 ### 화면보호기 / 화면 끄기
 
 - Setup: [scripts/setup_screen_blanking.sh](scripts/setup_screen_blanking.sh)
@@ -196,7 +205,7 @@ compose 파일: `docker/dozzle/docker-compose.yml`
 #### Magic Mirror & MMPM
 
 - Setup: [scripts/setup_magic_mirror.sh](scripts/setup_magic_mirror.sh)
-  - 다시 실행 시: `.env`, 한글 폰트, 전원 polkit 규칙(`/etc/polkit-1/rules.d/50-magicmirror-power.rules`), 실행 중인 컨테이너가 모두 있으면 건너뜀 (위치를 다시 묻지 않음)
+  - 다시 실행 시: `.env`, 전원 polkit 규칙(`/etc/polkit-1/rules.d/50-magicmirror-power.rules`), 실행 중인 컨테이너가 모두 있으면 건너뜀 (위치를 다시 묻지 않음)
   - 웹 리모컨(`http://<장비 이름>.local:8080/remote.html`)의 전원 끄기·재부팅을 위해, 장비 사용자가 인증 없이 전원을 끄고 재부팅할 수 있는 polkit 규칙을 설치함 (집 안 네트워크에서 리모컨에 접속할 수 있으면 누구나 장비를 끌 수 있음)
   - 날씨 위치(`MM_LAT`, `MM_LON`)는 `docker/magic_mirror/.env`에서 읽음. 없으면 실행 중에 1) 공인 IP로 위치 추정(기본값, [ipinfo.io](https://ipinfo.io) 사용) 2) 좌표 직접 입력 3) 건너뛰기 중에서 선택 (직접 만들려면 `.env.example`을 `.env`로 복사해 채움)
 
@@ -209,7 +218,7 @@ compose 파일: `docker/dozzle/docker-compose.yml`
 | MMM-mmpm | [s1len7/MMM-mmpm](https://github.com/s1len7/MMM-mmpm) `fix/toggle-loop-const` | 모듈 표시/숨김 후 응답이 오지 않는 버그 수정 | [Bee-Mar/MMM-mmpm#2](https://github.com/Bee-Mar/MMM-mmpm/pull/2) |
 | MMM-Remote-Control | [s1len7/MMM-Remote-Control](https://github.com/s1len7/MMM-Remote-Control) `feat/qr-hostname` | 웹 리모컨 URL·QR에 IP 대신 호스트 이름 표시 (`useHostname`, `multicast-dns` 필요: 모듈 폴더에서 `npm install --omit=dev`) | [Jopyth/MMM-Remote-Control#430](https://github.com/Jopyth/MMM-Remote-Control/pull/430) |
 
-한글 폰트: `sudo apt install fonts-nanum fonts-nanum-extra`
+한글 폰트: [한글 폰트](#한글-폰트) 모듈(`setup_korean_font`)이 설치함 (전체 Setup에서 Magic Mirror보다 먼저 실행)
 <!-- portainer > docker-compose.yml -->
 compose 파일: `docker/magic_mirror/docker-compose.yml`
 

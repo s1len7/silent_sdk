@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Magic Mirror & MMPM 실행 스크립트
-# 한글 폰트 설치 후 docker/magic_mirror/docker-compose.yml 실행
+# docker/magic_mirror/docker-compose.yml 실행 (한글 폰트는 setup_korean_font.sh가 설치)
 # 사용법: sudo bash scripts/setup_magic_mirror.sh
 set -euo pipefail
 
@@ -14,11 +14,10 @@ source "$(dirname "$0")/lib.sh"
 repo="$(cd "$(dirname "$0")/.." && pwd)"
 env_file="$repo/docker/magic_mirror/.env"
 compose="$repo/docker/magic_mirror/docker-compose.yml"
-fonts=(fonts-nanum fonts-nanum-extra)
 power_rule=/etc/polkit-1/rules.d/50-magicmirror-power.rules
 
-# .env, 한글 폰트, 전원 polkit 규칙, 실행 중인 컨테이너가 모두 있으면 건너뜀 (위치를 다시 묻지 않음)
-if [[ -f "$env_file" ]] && pkgs_installed "${fonts[@]}" && [[ -f "$power_rule" ]] && compose_running "$compose"; then
+# .env, 전원 polkit 규칙, 실행 중인 컨테이너가 모두 있으면 건너뜀 (위치를 다시 묻지 않음)
+if [[ -f "$env_file" ]] && [[ -f "$power_rule" ]] && compose_running "$compose"; then
     skip_done "Magic Mirror is already running"
 fi
 
@@ -92,9 +91,6 @@ if [[ ! -f "$env_file" ]]; then
     chown "${SUDO_USER:-root}:" "$env_file"
     echo "Created $env_file"
 fi
-
-apt-get update
-apt-get install -y fonts-nanum fonts-nanum-extra
 
 # 웹 리모컨(MMM-Remote-Control)의 전원 끄기·재부팅은 컨테이너 안에서 systemctl poweroff/reboot으로 호스트 logind에 요청함
 # 컨테이너는 로그인 세션이 없어 polkit이 관리자 인증을 요구하므로, 장비 사용자에게 인증 없이 허용함
