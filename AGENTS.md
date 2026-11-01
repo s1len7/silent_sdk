@@ -43,6 +43,10 @@
   - [자치법규](https://legalize.kr/ordinances.html)
   - [행정규칙](https://legalize.kr/admrules.html)
 - `AGENTS.md`가 너무 길어져 가독성이 떨어진다고 판단되면 압축을 요청할 것
+- 모든 작업(문서, 코드, 답변, 파일 읽기·명령 실행 등)에서 토큰 소비를 최소화할 것
+  - 늘어나는 목록은 하나씩 나열하지 말고 일반화한 형식으로 쓸 것 (예: `devices/<장비>/`)
+  - 다른 곳에 이미 있는 내용은 다시 적지 말고 그 위치만 가리킬 것
+  - 파일·명령 출력은 필요한 부분만 읽을 것
 
 ### 설계
 
@@ -110,7 +114,7 @@
 ## silent_sdk 구조
 
 - 장비별 설정 자동화를 한 저장소에서 관리함
-- 장비마다 `devices/` 아래에 폴더 하나 (`devices/desktop/`, `devices/pi4-display/`, `devices/pi4-2gb/`, `devices/titan-s260/`, `devices/byt-t1/`, `devices/jetson-nano-b01/`, `devices/b150m-am2/`, `devices/thinkpad-s2-2g/`, `devices/ds218plus/`), 장비 전용 규칙은 각 폴더의 AGENTS.md를 따를 것
+- 장비마다 `devices/<장비>/` 폴더 하나 (장비 목록은 루트 README.md 참고), 장비 전용 규칙은 각 폴더의 AGENTS.md를 따를 것
 - 한 장비 작업에서 다른 장비 폴더는 수정하지 않을 것
   - 단, `devices/desktop/scripts/`는 `devices/titan-s260/setup.ps1`·`devices/thinkpad-s2-2g/setup.ps1`도 호출하고, `devices/generic-windows/scripts/`는 desktop·titan-s260·thinkpad-s2-2g도 호출하고, `devices/pi4-display/scripts/`의 라즈베리파이 공통 모듈(예: `setup_korean_font.sh`)은 pi5도 호출하므로 수정 시 그 장비들에 미치는 영향도 확인할 것
 - 장비의 전체 설치 진입점은 모든 장비에서 이름을 `setup`으로 통일해 장비 폴더 바로 아래에 둘 것 (`devices/<장비>/setup.ps1` 또는 `devices/<장비>/setup.sh`), 저장소 루트나 `scripts/` 안에는 두지 않을 것
