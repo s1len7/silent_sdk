@@ -54,6 +54,7 @@ modules=(
     setup_scroll_direction
     setup_hangul_input
     setup_nodejs
+    setup_opencode
 )
 
 for name in "${modules[@]}"; do
