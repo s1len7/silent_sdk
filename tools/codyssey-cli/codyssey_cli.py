@@ -4,6 +4,7 @@ import base64
 import json
 import os
 import time
+from enum import Enum
 from pathlib import Path
 from typing import Iterator
 
@@ -14,11 +15,24 @@ from rich.markdown import Markdown
 
 # 이 도구 폴더의 .env (저장소 .gitignore가 .env를 무시하므로 키가 git에 올라가지 않음)
 CONFIG_PATH = Path(__file__).resolve().parent / ".env"
-ENV_KEYS = {"api_key": "CODYSSEY_API_KEY", "base_url": "CODYSSEY_BASE_URL"}
+# Codyssey는 Claude용·OpenAI용 키를 따로 발급한다
+ENV_KEYS = {
+    "claude_api_key": "CODYSSEY_CLAUDE_API_KEY",
+    "openai_api_key": "CODYSSEY_OPENAI_API_KEY",
+    "base_url": "CODYSSEY_BASE_URL",
+}
 DEFAULT_BASE_URL = "https://copa.codyssey.kr"
 DEFAULT_CHAT_MODEL = "gpt-5-mini"
 VIDEO_POLL_SECONDS = 5
 VIDEO_TIMEOUT_SECONDS = 15 * 60
+
+
+class KeyFamily(str, Enum):
+    """Codyssey가 따로 발급하는 키의 종류."""
+
+    claude = "claude"
+    openai = "openai"
+
 
 app = typer.Typer(help="Command-line client for the Codyssey Public API.")
 config_app = typer.Typer(help="Manage the API key and base URL.")
@@ -45,7 +59,8 @@ def read_env_file() -> dict:
 
 def load_config() -> dict:
     """.env를 읽고, 환경 변수가 있으면 그 값을 우선한다. 빈 값은 없는 것으로 본다."""
-    config = {"base_url": DEFAULT_BASE_URL, "api_key": None}
+    config = {name: None for name in ENV_KEYS}
+    config["base_url"] = DEFAULT_BASE_URL
     file_values = read_env_file()
 
     for name, env_key in ENV_KEYS.items():
@@ -194,15 +209,24 @@ def raise_for_error(response: httpx.Response) -> None:
         raise ApiError(f"HTTP {response.status_code}: {response.text}")
 
 
-def get_client() -> CodysseyClient:
+def get_client(model: str = "") -> CodysseyClient:
+    """모델에 맞는 키로 클라이언트를 만든다. claude-* 모델은 Claude 키, 나머지는 OpenAI 키를 쓰고,
+    모델이 없으면(모델 목록, 영상 상태 확인) 있는 키를 쓴다."""
     config = load_config()
-    if not config["api_key"]:
+    if not model:
+        name = "openai_api_key" if config["openai_api_key"] else "claude_api_key"
+    elif model.startswith("claude"):
+        name = "claude_api_key"
+    else:
+        name = "openai_api_key"
+    if not config[name]:
+        family = name.removesuffix("_api_key")
         console.print(
-            "[red]No API key.[/red] Run "
-            "[bold]codyssey-cli config set-key[/bold] or set CODYSSEY_API_KEY."
+            f"[red]No API key.[/red] Run [bold]codyssey-cli config set-key {family}[/bold] "
+            f"or set {ENV_KEYS[name]}."
         )
         raise typer.Exit(1)
-    return CodysseyClient(config["api_key"], config["base_url"])
+    return CodysseyClient(config[name], config["base_url"])
 
 
 def stream_answer(client: CodysseyClient, model: str, messages: list) -> str:
@@ -218,23 +242,25 @@ def stream_answer(client: CodysseyClient, model: str, messages: list) -> str:
 # ===== 명령: config =====
 
 @config_app.command("set-key")
-def config_set_key() -> None:
-    """Save your virtual API key."""
-    api_key = typer.prompt("API key", hide_input=True)
+def config_set_key(family: KeyFamily) -> None:
+    """Save your virtual API key (Codyssey issues one for claude and one for openai)."""
+    name = f"{family.value}_api_key"
+    api_key = typer.prompt(ENV_KEYS[name], hide_input=True)
     config = load_config()
-    config["api_key"] = api_key
+    config[name] = api_key
     save_config(config)
-    console.print(f"Saved to {CONFIG_PATH}")
+    console.print(f"Saved {ENV_KEYS[name]} to {CONFIG_PATH}")
 
 
 @config_app.command("show")
 def config_show() -> None:
     """Show the current settings (key is masked)."""
     config = load_config()
-    api_key = config["api_key"]
-    masked = f"{api_key[:4]}…{api_key[-4:]}" if api_key else "(not set)"
-    console.print(f"base_url: {config['base_url']}")
-    console.print(f"api_key:  {masked}")
+    console.print(f"base_url:       {config['base_url']}")
+    for name in ("claude_api_key", "openai_api_key"):
+        api_key = config[name]
+        masked = f"{api_key[:4]}…{api_key[-4:]}" if api_key else "(not set)"
+        console.print(f"{name + ':':<16}{masked}")
 
 
 # ===== 명령: 모델·채팅 =====
@@ -253,7 +279,7 @@ def ask(
     stream: bool = typer.Option(True, help="Print the answer as it arrives."),
 ) -> None:
     """Ask one question and print the answer."""
-    client = get_client()
+    client = get_client(model)
     messages = [{"role": "user", "content": question}]
 
     if stream:
@@ -268,7 +294,7 @@ def chat(
     system: str = typer.Option(None, "--system", "-s", help="System prompt."),
 ) -> None:
     """Start an interactive chat. Type /exit to quit, /reset to clear."""
-    client = get_client()
+    client = get_client(model)
     messages = [{"role": "system", "content": system}] if system else []
     console.print(f"[dim]Model: {model}  |  /exit quit, /reset clear[/dim]")
 
@@ -310,7 +336,7 @@ def image(
 ) -> None:
     """Generate an image."""
     with console.status("Generating image..."):
-        get_client().create_image(model, prompt, size, output)
+        get_client(model).create_image(model, prompt, size, output)
     console.print(f"Saved {output}")
 
 
@@ -324,7 +350,7 @@ def tts(
 ) -> None:
     """Convert text to speech."""
     with console.status("Generating speech..."):
-        get_client().create_speech(model, text, voice, audio_format, output)
+        get_client(model).create_speech(model, text, voice, audio_format, output)
     console.print(f"Saved {output}")
 
 
@@ -338,7 +364,7 @@ def video(
     aspect_ratio: str = typer.Option("16:9", "--aspect-ratio"),
 ) -> None:
     """Generate a video, wait until it is done, then download it."""
-    client = get_client()
+    client = get_client(model)
     job_id = client.create_video(
         model, prompt, duration, resolution, aspect_ratio
     )

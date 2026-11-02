@@ -14,11 +14,13 @@ Codyssey Public API(`https://copa.codyssey.kr`)를 쓰는 명령줄 도구
 
 ```bash
 pip install -e tools/codyssey-cli
-codyssey-cli config set-key
+codyssey-cli config set-key claude
+codyssey-cli config set-key openai
 ```
 
-- API 키는 이 폴더의 `.env`에 `CODYSSEY_API_KEY`로 저장됨 (git에 올라가지 않음, 현재 사용자만 읽기 가능). 직접 쓰려면 [.env.example](.env.example)을 `.env`로 복사해 값을 채움
-- 파일 대신 환경 변수 `CODYSSEY_API_KEY`, `CODYSSEY_BASE_URL`을 써도 됨 (환경 변수가 우선)
+- Codyssey는 Claude용·OpenAI용 키를 따로 발급함. `claude-*` 모델은 `CODYSSEY_CLAUDE_API_KEY`, 나머지 모델은 `CODYSSEY_OPENAI_API_KEY`를 씀
+- API 키는 이 폴더의 `.env`에 저장됨 (git에 올라가지 않음, 현재 사용자만 읽기 가능). 직접 쓰려면 [.env.example](.env.example)을 `.env`로 복사해 값을 채움
+- 파일 대신 같은 이름의 환경 변수를 써도 됨 (환경 변수가 우선)
 
 
 ## 사용법
@@ -35,7 +37,7 @@ codyssey-cli video-get <jobId>
 
 | 명령 | 내용 |
 | --- | --- |
-| `config set-key` / `config show` | API 키 저장 / 현재 설정 보기 (키는 가려서 표시) |
+| `config set-key claude\|openai` / `config show` | API 키 저장 / 현재 설정 보기 (키는 가려서 표시) |
 | `models` | 사용 가능한 모델 목록 |
 | `ask` | 질문 하나에 답변 (기본 모델 `gpt-5-mini`) |
 | `chat` | 대화 이어가기 (`/reset` 대화 지우기, `/exit` 종료) |
