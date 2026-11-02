@@ -51,6 +51,7 @@ failed=0
 modules=(
     setup_git
     setup_claude_code
+    setup_codyssey_proxy
     setup_scroll_direction
     setup_hangul_input
     setup_nodejs

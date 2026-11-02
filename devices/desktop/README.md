@@ -264,6 +264,15 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
 - `settings.json`이 올바른 JSON이 아니면 덮어쓰지 않고 실패함
 
 
+### Codyssey 프록시
+
+- Setup: [scripts/setup-codyssey-proxy.ps1](scripts/setup-codyssey-proxy.ps1) (Codyssey 게이트웨이 앞단의 통합 프록시, `~/.codyssey-proxy/`에 설치)
+  - `devices/desktop/.env`의 `COPA_API_KEY`가 비어 있으면 건너뜀
+  - Python이 없으면 건너뜀 (setup-python 먼저 실행)
+  - `tools/codyssey-proxy`를 pip으로 editable 설치, `~/.codyssey-proxy/.env` 작성, 자동 시작(Startup 폴더) 등록, 프록시 즉시 실행
+  - `~/.claude/settings.json`의 `env`를 프록시 주소(`http://localhost:8082`)와 모델명으로 갱신
+  - 재실행 시: 프록시가 이미 실행 중이고 설정이 모두 같으면 건너뜀
+
 ## 백업 대상
 
 - `~\.ssh\` (`C:\Users\<사용자>\.ssh\`): 장비 접속용 ssh 키(`id_rsa`, `id_rsa.pub`, `id_rsa.putty.pub`, `id_rsa.ppk`), 장비별 접속 설정(`config`), 장비 서버 키 목록(`known_hosts`)

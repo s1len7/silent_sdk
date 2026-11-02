@@ -76,3 +76,12 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 - Setup: [scripts/setup_opencode.sh](scripts/setup_opencode.sh) (OpenCode CLI를 npm `opencode-ai` 최신으로 설치하고 `~/.local/bin/opencode`로 링크, 무료 기본 모델 `opencode/deepseek-v4.1-flash-free`와 대체 모델 플러그인·목록을 `~/.config/opencode/`에 설정, 다른 키는 그대로 둠)
 - 다시 실행 시: `opencode` 명령이 있고 기본 모델·대체 모델 설정이 모두 같으면 건너뜀. 설치만 돼 있으면 설정만 적용
 - 무료 `opencode/*` 모델은 로그인이 필요 없음. 공용 장비이므로 API 키는 설정하지 않음
+### codyssey proxy
+
+- Setup: [scripts/setup_codyssey_proxy.sh](scripts/setup_codyssey_proxy.sh) (Codyssey 게이트웨이 앞단의 통합 프록시, `~/.codyssey-proxy/`에 설치)
+  - `~/.codyssey-proxy/.env`가 없으면 예시 파일을 복사하고 건너뜀 (OPENAI_API_KEY 채운 뒤 재실행)
+  - `OPENAI_API_KEY`가 비어 있으면 건너뜀
+  - Python 3가 없으면 실패
+  - `tools/codyssey-proxy`를 pip으로 editable 설치, `~/.claude/settings.json`을 프록시 주소(`http://localhost:8082`)로 갱신
+  - LaunchAgent(`com.silent.codyssey-proxy`) 등록으로 자동 시작, 즉시 실행
+  - 재실행 시: 키가 있고 설정이 같으면 LaunchAgent 재로드 후 상태 확인

@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "codyssey-proxy"
+version = "0.1.0"
+description = "Unified Anthropic + OpenAI proxy to the Codyssey gateway"
+requires-python = ">=3.9"
+dependencies = ["claude-code-proxy", "httpx>=0.25", "python-dotenv>=1.0", "uvicorn>=0.25", "fastapi>=0.100"]
+
+[project.scripts]
+codyssey-proxy = "codyssey_proxy:run"
+
+[tool.setuptools]
+py-modules = ["codyssey_proxy"]
