@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "codyssey-cli"
+version = "0.1.0"
+description = "Command-line client for the Codyssey Public API"
+requires-python = ">=3.9"
+dependencies = ["typer>=0.9", "httpx>=0.25", "rich>=13"]
+
+[project.scripts]
+codyssey-cli = "codyssey_cli:run"
+
+[tool.setuptools]
+py-modules = ["codyssey_cli"]

@@ -39,6 +39,8 @@ silent_sdk/
 │  ├─ gmk87/         ZUOYA GMK87 키보드 (VIA 키 매핑, 설정 백업, 전체 설치 없음)
 │  ├─ ds218plus/     Synology NAS, Container Manager 프로젝트 (전체 설치 없음)
 │  └─ imac-27-2019/  Apple iMac 27형 2019, macOS (bash 3.2)
+├─ tools/            장비에 묶이지 않는 도구
+│  └─ codyssey-cli/  Codyssey Public API 명령줄 도구 ([README](tools/codyssey-cli/README.md))
 ├─ .vscode/          VS Code 워크스페이스 설정 (이 저장소를 열 때만 적용)
 ├─ .agents/skills/   AI 에이전트 공통 스킬 (git에 올리지 않음, OpenCode·Codex·Gemini CLI가 읽음, Claude Code는 `.claude/skills` 링크로 읽음, OpenClaw에는 desktop setup이 복사)
 ├─ logs/             설치 로그 (git에는 올라가지 않음)

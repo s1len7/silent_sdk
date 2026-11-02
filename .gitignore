@@ -230,3 +230,6 @@ tmp/*
 
 # AI 에이전트 공통 스킬 (이 PC에만 둠, AGENTS.md 참고)
 .agents/
+
+# macOS Finder
+.DS_Store
