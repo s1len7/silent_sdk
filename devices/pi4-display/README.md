@@ -52,8 +52,12 @@ dtoverlay=gpio-shutdown,gpio_pin=26
 ### 부팅 완료 비프음
 
 - Setup: [scripts/setup_boot_beep.sh](scripts/setup_boot_beep.sh)
-  - 다시 실행 시: 서비스 파일이 같고 등록돼 있으면 건너뜀 (테스트 비프음도 울리지 않음)
+  - 다시 실행 시: 서비스 파일·실행 파일(`/usr/local/bin/boot-beep`)이 같고, 소리 파일과 설정 파일이 있고, 서비스가 등록돼 있으면 건너뜀 (테스트 비프음도 울리지 않음)
 - 능동 부저(High level trigger 모듈) 배선: I/O - 18번(GPIO24), VCC - 2번(5V), GND - 20번
+- 부팅 때마다 소리를 낼 수 있는 출력을 찾아 사운드로 울리고, 없으면 부저로 울림 (순서: USB 사운드 → 오디오를 받는 HDMI 모니터 → 3.5mm 단자 → 부저)
+  - 3.5mm 단자는 스피커가 꽂혔는지 알 수 없어서 `/etc/default/boot-beep`의 `BOOT_BEEP_ANALOG=yes`일 때만 씀 (Pi 5에는 단자 없음)
+  - 사운드 재생에 실패해도 부저로 울림. 어느 쪽으로 울렸는지: `journalctl -u boot-beep`
+  - 바로 시험: `sudo /usr/local/bin/boot-beep`
 
 
 ### SFTP 활성화
