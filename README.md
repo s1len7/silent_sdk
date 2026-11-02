@@ -17,6 +17,7 @@
 | thinkpad-s2-2g | Lenovo ThinkPad S2 2G(2nd Gen) 노트북, Windows 10 Pro | [devices/thinkpad-s2-2g/README.md](devices/thinkpad-s2-2g/README.md) |
 | gmk87 | ZUOYA GMK87 기계식 키보드 (USB-C / 2.4 GHz / Bluetooth, VIA 키 매핑) | [devices/gmk87/README.md](devices/gmk87/README.md) |
 | ds218plus | Synology DS218+ NAS, DSM 7, Container Manager(Docker) 프로젝트 관리 | [devices/ds218plus/README.md](devices/ds218plus/README.md) |
+| imac-27-2019 | Apple iMac (Retina 5K, 27-inch, 2019), macOS Sequoia 15 | [devices/imac-27-2019/README.md](devices/imac-27-2019/README.md) |
 
 
 ## 구조
@@ -36,7 +37,8 @@ silent_sdk/
 │  ├─ b150m-am2/
 │  ├─ thinkpad-s2-2g/
 │  ├─ gmk87/         ZUOYA GMK87 키보드 (VIA 키 매핑, 설정 백업, 전체 설치 없음)
-│  └─ ds218plus/     Synology NAS, Container Manager 프로젝트 (전체 설치 없음)
+│  ├─ ds218plus/     Synology NAS, Container Manager 프로젝트 (전체 설치 없음)
+│  └─ imac-27-2019/  Apple iMac 27형 2019, macOS (bash 3.2)
 ├─ .vscode/          VS Code 워크스페이스 설정 (이 저장소를 열 때만 적용)
 ├─ .agents/skills/   AI 에이전트 공통 스킬 (git에 올리지 않음, OpenCode·Codex·Gemini CLI가 읽음, Claude Code는 `.claude/skills` 링크로 읽음, OpenClaw에는 desktop setup이 복사)
 ├─ logs/             설치 로그 (git에는 올라가지 않음)
@@ -106,6 +108,11 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150
 ASUS B150M-A/M.2의 Docker VM (VM 안에서, sudo):
 ```bash
 curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150m-am2/vm/ubuntu-docker/setup_vm.sh | sudo bash
+```
+
+imac-27-2019 (macOS, bash):
+```bash
+curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac-27-2019/setup.sh | bash
 ```
 
 
