@@ -38,3 +38,8 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 
 - Setup: [scripts/setup_claude_code.sh](scripts/setup_claude_code.sh) (공식 네이티브 설치 스크립트로 `~/.local/bin/claude`에 설치, 원본 [config/claude-settings.json](config/claude-settings.json)의 키와 저장소 경로(`permissions.additionalDirectories`)를 `~/.claude/settings.json`에 넣음, 다른 키는 그대로 둠)
 - 다시 실행 시: `claude` 명령이 있고 설정이 모두 같으면 건너뜀. 설치만 돼 있으면 설정만 적용
+
+### scroll direction
+
+- Setup: [scripts/setup_scroll_direction.sh](scripts/setup_scroll_direction.sh) (마우스·트랙패드의 "자연스러운 스크롤"을 꺼서 Windows와 같은 방향으로 스크롤, 로그아웃 후 다시 로그인해야 적용됨)
+- 다시 실행 시: 자연스러운 스크롤이 이미 꺼져 있으면 건너뜀
