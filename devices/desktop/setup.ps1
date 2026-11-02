@@ -112,6 +112,10 @@ $results += Invoke-Step 'python'       { & "$s\setup-python.ps1" }
 $results += Invoke-Step 'vscode'       { & "$g\setup-vscode.ps1" }
 $results += Invoke-Step 'vscode-extensions' { & "$g\setup-vscode-extensions.ps1" }
 $results += Invoke-Step 'vscode-settings' { & "$g\setup-vscode-settings.ps1" }
+# Cursor after VS Code, so its first-run import can pick up the VS Code settings
+$results += Invoke-Step 'cursor'       { & "$s\setup-cursor.ps1" }
+$results += Invoke-Step 'cursor-extensions' { & "$s\setup-cursor-extensions.ps1" }
+$results += Invoke-Step 'cursor-settings' { & "$s\setup-cursor-settings.ps1" }
 $results += Invoke-Step 'docker'       { & "$s\setup-docker.ps1" }
 $results += Invoke-Step 'openclaw-gateway' { & "$s\setup-openclaw-gateway.ps1" }
 # After the local Gateway, which the tray app connects to

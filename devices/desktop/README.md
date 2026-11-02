@@ -144,6 +144,20 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
 | Python 인터프리터 선택 | 명령 팔레트 → `Python: Select Interpreter` |
 
 
+### Cursor
+
+- Setup: [scripts/setup-cursor.ps1](scripts/setup-cursor.ps1) (공식 Windows x64 사용자 범위 설치 파일을 `%LOCALAPPDATA%\Programs\cursor`에 무인 설치)
+  - 다시 실행 시: `%LOCALAPPDATA%\Programs\cursor\Cursor.exe`가 있으면 건너뜀 (Cursor가 스스로 업데이트)
+  - 최신 버전은 https://cursor.com/download 페이지의 다운로드 링크에서 읽음 (예: `3.27` → 3.27.22). 페이지 구조가 바뀌어 링크를 못 찾으면 FAIL
+  - 설치 프로그램은 Inno Setup이라 `/VERYSILENT /LOG`로 무인 설치하고 로그를 `cursor-install.log`에 남김
+- Setup: [scripts/setup-cursor-extensions.ps1](scripts/setup-cursor-extensions.ps1) (현재 사용자에 확장 설치: Python `ms-python.python`, Microsoft 인증 게시자)
+  - 다시 실행 시: 확장이 모두 설치돼 있으면 건너뜀. 빠진 확장만 설치
+  - Remote - SSH·Remote Explorer는 넣지 않음: Cursor는 자체 원격 기능을 쓰므로 VS Code 원격 확장이 동작하는지 확인하지 못함
+- Setup: [scripts/setup-cursor-settings.ps1](scripts/setup-cursor-settings.ps1) (사용자 설정 `%APPDATA%\Cursor\User\settings.json`에 `telemetry.telemetryLevel: "off"`를 넣음, 다른 설정·주석은 그대로 둠)
+  - 다시 실행 시: 값이 이미 `"off"`이면 건너뜀. 다른 값이면 그 값만 바꿈
+  - 첫 실행 때 VS Code 설정을 가져오는 화면이 뜨면 넣어 둔 값이 덮어써질 수 있음. 그 경우 이 단계를 다시 실행
+
+
 ### Docker + Docker Desktop
 
 - Setup: [scripts/setup-docker.ps1](scripts/setup-docker.ps1) (WSL 2 활성화 후 Docker Desktop 최신 버전 설치, docker-users 그룹 추가, 적용 후 재부팅)
