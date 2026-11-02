@@ -2,6 +2,10 @@
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
+  // "python.defaultInterpreterPath": "/usr/bin/python3", // 이 저장소에 Python 가상환경이 없어 확장 기본값(python)을 씀. 값은 pi5 기본 경로
+  // "python.terminal.activateEnvironment": true, // 기본값이 이미 true이고, 현재 Python 확장에서는 python-envs.terminal.autoActivationType으로 대체된 예전 설정
+  // "python.terminal.useEnvFile": true, // 켜면 루트 .env 값을 모든 터미널 환경변수에 넣음. 비밀값이 든 .env가 생기면 퍼질 수 있어 막아 둠
+  "terminal.integrated.defaultProfile.windows": "Command Prompt", // Windows에서만 적용되고 다른 OS에서는 무시됨
   "search.exclude": {
     "logs/**": true,
     "tmp/**": true
