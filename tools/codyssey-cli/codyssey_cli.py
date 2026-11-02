@@ -17,7 +17,7 @@ from rich.markdown import Markdown
 CONFIG_PATH = Path(__file__).resolve().parent / ".env"
 # Codyssey는 Claude용·OpenAI용 키를 따로 발급한다
 ENV_KEYS = {
-    "claude_api_key": "CODYSSEY_CLAUDE_API_KEY",
+    "claude_api_key": "CODYSSEY_ANTHROPIC_API_KEY",
     "openai_api_key": "CODYSSEY_OPENAI_API_KEY",
     "base_url": "CODYSSEY_BASE_URL",
 }
@@ -63,8 +63,12 @@ def load_config() -> dict:
     config["base_url"] = DEFAULT_BASE_URL
     file_values = read_env_file()
 
+    # Backward compat: accept the old env var name too
+    legacy = {"claude_api_key": "CODYSSEY_CLAUDE_API_KEY"}
     for name, env_key in ENV_KEYS.items():
         value = os.environ.get(env_key) or file_values.get(env_key)
+        if not value and name in legacy:
+            value = os.environ.get(legacy[name]) or file_values.get(legacy[name])
         if value:
             config[name] = value
     return config

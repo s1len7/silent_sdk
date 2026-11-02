@@ -18,7 +18,7 @@ codyssey-cli config set-key claude
 codyssey-cli config set-key openai
 ```
 
-- Codyssey는 Claude용·OpenAI용 키를 따로 발급함. `claude-*` 모델은 `CODYSSEY_CLAUDE_API_KEY`, 나머지 모델은 `CODYSSEY_OPENAI_API_KEY`를 씀
+- Codyssey는 Claude용·OpenAI용 키를 따로 발급함. `claude-*` 모델은 `CODYSSEY_ANTHROPIC_API_KEY`, 나머지 모델은 `CODYSSEY_OPENAI_API_KEY`를 씀
 - API 키는 이 폴더의 `.env`에 저장됨 (git에 올라가지 않음, 현재 사용자만 읽기 가능). 직접 쓰려면 [.env.example](.env.example)을 `.env`로 복사해 값을 채움
 - 파일 대신 같은 이름의 환경 변수를 써도 됨 (환경 변수가 우선)
 
