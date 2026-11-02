@@ -2,7 +2,7 @@
 
 Codyssey Public API(`https://copa.codyssey.kr`)를 쓰는 명령줄 도구
 
-> 상태: 있는 그대로(as-is) 올린 초기 버전. `models`·`ask`만 실제 API로 확인했고, 나머지 명령은 테스트 중
+> 상태: 있는 그대로(as-is) 올린 초기 버전. 2026-11-02 실제 API로 `models`·`ask`·`chat`·`image`·`tts`는 동작 확인, `video`는 서버의 미디어 provider 오류(HTTP 503)로 확인하지 못함
 
 - 채팅은 OpenAI 호환 엔드포인트(`/v1/chat/completions`) 하나로 모든 채팅 모델(Claude·GPT·Gemini)을 씀
 - 모델 ID와 차감 배수는 Codyssey API 콘솔의 모델 표 참고
@@ -46,3 +46,26 @@ codyssey-cli video-get <jobId>
 
 - 스트리밍 답변이 안 되는 모델은 `ask --no-stream` 사용
 - 각 명령의 옵션은 `codyssey-cli <명령> --help` 참고
+
+
+## OpenCode에서 쓰기
+
+OpenCode 전역 설정(`~/.config/opencode/opencode.json`)에 OpenAI 호환 공급자로 추가하고, `opencode auth login` → Other → id `codyssey`로 키를 등록함
+
+```json
+{
+  "provider": {
+    "codyssey": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Codyssey",
+      "options": { "baseURL": "https://copa.codyssey.kr/v1" },
+      "models": { "gemini-3-flash": { "name": "gemini-3-flash" } }
+    }
+  }
+}
+```
+
+- 2026-11-02 OpenCode 1.19.5 기준 Gemini 모델만 동작함
+  - GPT-5 계열: OpenCode가 `reasoning_effort`를 넣는데 Codyssey가 지원하지 않음 (`unsupported_feature`)
+  - Claude 계열: OpenCode가 메시지에 `cache_control`을 붙이는데 Codyssey가 지원하지 않음 (`unsupported_feature`)
+  - 둘 다 OpenCode가 모델 ID로 정하는 동작이라 설정으로 끌 수 없음
