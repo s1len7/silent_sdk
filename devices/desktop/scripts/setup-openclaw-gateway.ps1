@@ -95,8 +95,9 @@ function Get-TailscaleDomain {
 function Test-Tailscale {
     (-not (Get-TailscaleDomain)) -or (Get-OpenClawConfig gateway.tailscale.mode) -eq 'serve'
 }
+function Test-ChatApi { (Get-OpenClawConfig gateway.http.endpoints.chatCompletions.enabled) -eq 'true' }
 
-if ((Test-Cli) -and (Test-Gateway) -and (Test-Model) -and (Test-Key openrouter $apiKey) -and (Test-Key google $geminiKey) -and (Test-Tailscale)) {
+if ((Test-Cli) -and (Test-Gateway) -and (Test-Model) -and (Test-Key openrouter $apiKey) -and (Test-Key google $geminiKey) -and (Test-Tailscale) -and (Test-ChatApi)) {
     # OpenClaw is updated with: npm i -g openclaw@latest
     Write-Host 'Local OpenClaw Gateway is already set up, skipped'
     $global:SetupStepSkipped = $true
@@ -112,14 +113,14 @@ if (-not (Test-Cli)) {
     if (-not $winget) { throw 'winget not found. Run setup-winget.ps1 first' }
     & $winget list --id OpenJS.NodeJS --exact --accept-source-agreements | Out-Null
     $verb = if ($LASTEXITCODE -eq 0) { 'upgrade' } else { 'install' }
-    Write-Host "[1/7] Node.js: winget $verb"
+    Write-Host "[1/8] Node.js: winget $verb"
     & $winget $verb --id OpenJS.NodeJS --exact -s winget --silent --accept-package-agreements --accept-source-agreements
     # -1978335189 (0x8A15002B): no newer version, -1978335135 (0x8A150061): already installed
     if ($LASTEXITCODE -notin 0, -1978335189, -1978335135) { throw "Node.js $verb failed: exit code $LASTEXITCODE" }
     & node --version
 
     # 2. OpenClaw CLI (latest)
-    Write-Host '[2/7] Installing the OpenClaw CLI (npm, latest)'
+    Write-Host '[2/8] Installing the OpenClaw CLI (npm, latest)'
     & npm install -g --allow-scripts=$allowScripts openclaw@latest --loglevel error --logs-dir $logDir
     if ($LASTEXITCODE -ne 0) { throw "npm install openclaw failed: exit code $LASTEXITCODE" }
     Invoke-OpenClaw --version | Select-Object -Last 1
@@ -133,7 +134,7 @@ if (-not (Test-Cli)) {
 
 # 3. Onboard: Gateway on loopback with token auth, installed as a scheduled task; channels and skills are set up later
 if (-not (Test-Gateway)) {
-    Write-Host '[3/7] Running openclaw onboard (loopback + token, scheduled task)'
+    Write-Host '[3/8] Running openclaw onboard (loopback + token, scheduled task)'
     Invoke-OpenClaw onboard --non-interactive --accept-risk --mode local --flow quickstart `
         --auth-choice skip --gateway-bind loopback --gateway-auth token --install-daemon `
         --skip-channels --skip-skills --skip-search --skip-ui --suppress-gateway-token-output | Out-Null
@@ -142,7 +143,7 @@ if (-not (Test-Gateway)) {
 
 # 4. Default model and fallbacks (the list is rebuilt so the order always matches)
 if (-not (Test-Model)) {
-    Write-Host "[4/7] Setting the default model to $model, fallbacks: $(if ($fallbacks) { $fallbacks -join ', ' } else { 'none' })"
+    Write-Host "[4/8] Setting the default model to $model, fallbacks: $(if ($fallbacks) { $fallbacks -join ', ' } else { 'none' })"
     Invoke-OpenClaw models set $model | Out-Null
     Invoke-OpenClaw models fallbacks clear | Out-Null
     foreach ($fallback in $fallbacks) { Invoke-OpenClaw models fallbacks add $fallback | Out-Null }
@@ -150,17 +151,17 @@ if (-not (Test-Model)) {
 
 # 5. OpenRouter API key
 if (-not $apiKey) {
-    Write-Host "[5/7] OPENROUTER_API_KEY is empty in $envFile. Add the key and run this step again."
+    Write-Host "[5/8] OPENROUTER_API_KEY is empty in $envFile. Add the key and run this step again."
 } elseif (-not (Test-Key openrouter $apiKey)) {
-    Write-Host '[5/7] Saving the OpenRouter API key'
+    Write-Host '[5/8] Saving the OpenRouter API key'
     Save-ApiKey openrouter $apiKey
 }
 
 # 6. Gemini API key: needed by the google/* default model and fallbacks set in step 4
 if (-not $geminiKey) {
-    Write-Host "[6/7] GEMINI_API_KEY is empty in $envFile. Add the key and run this step again to use Gemini."
+    Write-Host "[6/8] GEMINI_API_KEY is empty in $envFile. Add the key and run this step again to use Gemini."
 } elseif (-not (Test-Key google $geminiKey)) {
-    Write-Host '[6/7] Saving the Gemini API key'
+    Write-Host '[6/8] Saving the Gemini API key'
     Save-ApiKey google $geminiKey
     # The running Gateway only picks up new provider settings after a restart
     Write-Host 'Restarting the Gateway to apply the Gemini provider settings'
@@ -171,11 +172,18 @@ if (-not $geminiKey) {
 # which the iOS/Android apps need for full access; plain LAN ws:// would only get limited access
 $domain = Get-TailscaleDomain
 if (-not $domain) {
-    Write-Host '[7/7] Tailscale is not installed, not logged in or has HTTPS certificates off; phone apps cannot connect yet. Run this step again after setting it up.'
+    Write-Host '[7/8] Tailscale is not installed, not logged in or has HTTPS certificates off; phone apps cannot connect yet. Run this step again after setting it up.'
 } elseif (-not (Test-Tailscale)) {
     # The Gateway restarts by itself after this config change
-    Write-Host "[7/7] Enabling Tailscale Serve: https://$domain"
+    Write-Host "[7/8] Enabling Tailscale Serve: https://$domain"
     Invoke-OpenClaw config set gateway.tailscale.mode serve | Out-Null
+}
+
+# 8. OpenAI-compatible /v1/chat/completions: Home Assistant (Extended OpenAI Conversation on the NAS) talks to
+# the agent through it over Tailscale Serve. The Gateway token is required, so the endpoint stays off the LAN
+if (-not (Test-ChatApi)) {
+    Write-Host '[8/8] Enabling the OpenAI-compatible HTTP endpoint (/v1/chat/completions)'
+    Invoke-OpenClaw config set gateway.http.endpoints.chatCompletions.enabled true | Out-Null
 }
 
 Write-Host 'Local OpenClaw Gateway setup done: ws://localhost:18789 (loopback, token auth)'

@@ -153,8 +153,8 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
 
 ### OpenClaw (로컬 Gateway)
 
-- Setup: [scripts/setup-openclaw-gateway.ps1](scripts/setup-openclaw-gateway.ps1) (Node.js(winget) 최신, OpenClaw CLI(npm) 최신, 이 PC에서만 접속되는 Gateway `ws://localhost:18789`를 token 인증으로 설치, 무료 기본 모델과 대체 모델 설정, 휴대폰 앱용 Tailscale Serve)
-  - 다시 실행 시: `openclaw` 명령이 있고, 작업 스케줄러에 `OpenClaw Gateway`가 있고, `gateway.bind=loopback`이고, 기본 모델·대체 모델 목록이 아래 표와 같고, `.env`에 키가 있으면 OpenRouter·Gemini 키도 등록돼 있고, Tailscale을 쓸 수 있으면 `gateway.tailscale.mode=serve`일 때 건너뜀. `openclaw` 명령이 있으면 Node.js·CLI 설치(업데이트) 없이 빠진 설정만 적용
+- Setup: [scripts/setup-openclaw-gateway.ps1](scripts/setup-openclaw-gateway.ps1) (Node.js(winget) 최신, OpenClaw CLI(npm) 최신, 이 PC에서만 접속되는 Gateway `ws://localhost:18789`를 token 인증으로 설치, 무료 기본 모델과 대체 모델 설정, 휴대폰 앱용 Tailscale Serve, OpenAI 호환 HTTP 엔드포인트)
+  - 다시 실행 시: `openclaw` 명령이 있고, 작업 스케줄러에 `OpenClaw Gateway`가 있고, `gateway.bind=loopback`이고, 기본 모델·대체 모델 목록이 아래 표와 같고, `.env`에 키가 있으면 OpenRouter·Gemini 키도 등록돼 있고, Tailscale을 쓸 수 있으면 `gateway.tailscale.mode=serve`이고, `gateway.http.endpoints.chatCompletions.enabled=true`일 때 건너뜀. `openclaw` 명령이 있으면 Node.js·CLI 설치(업데이트) 없이 빠진 설정만 적용
 - 모델: 무료 사용량이 다 되거나(429) 과부하면 다음 모델로 자동 전환
 
 | 순서 | 모델 | 조건 |
@@ -170,6 +170,9 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
   - 미리 할 일: 이 PC와 휴대폰에 Tailscale 설치·같은 계정 로그인, Tailscale 관리 페이지 DNS에서 HTTPS Certificates 켜기 (안 돼 있으면 이 단계만 건너뜀)
   - 연결: `openclaw qr`로 QR을 띄우고 앱의 Settings → Gateway에서 스캔
   - 휴대폰의 Tailscale은 집에서도 항상 켜 둘 것 (앱 주소가 tailnet 이름이라 꺼지면 집 Wi-Fi에서도 연결 안 됨)
+- Home Assistant(ds218plus) 대화 에이전트: Extended OpenAI Conversation이 `https://<이 PC>.<tailnet>.ts.net/v1`(OpenAI 호환 엔드포인트)로 접속함
+  - API Key는 Gateway token(`~\.openclaw\openclaw.json`의 `gateway.auth.token`, OpenClaw 전체 관리자 권한), Completion Model은 `openclaw/default`
+  - NAS가 tailnet 이름을 풀지 못해 HA compose의 `extra_hosts`에 이 PC의 tailnet IP를 지정함 ([compose](../ds218plus/projects/home-assistant/compose.yaml))
 - 업데이트: `npm i -g openclaw@latest`
 
 

@@ -6,6 +6,10 @@ services:
     # network_mode: bridge
     # ports:
     #   - "8123:8123"
+    # Extended OpenAI Conversation이 desktop의 OpenClaw Gateway(Tailscale Serve)에 접속하기 위함
+    # NAS는 tailnet 이름(MagicDNS)을 풀지 못하므로 desktop의 tailnet IP를 직접 지정 (Base Url: https://silent-desktop.tail77a702.ts.net/v1)
+    extra_hosts:
+      - "silent-desktop.tail77a702.ts.net:100.88.66.83"
     devices:
       - /dev/ttyUSB0:/dev/ttyUSB0
     volumes:
