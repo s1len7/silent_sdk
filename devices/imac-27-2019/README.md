@@ -15,6 +15,23 @@
 | 무선 | Wi-Fi 802.11ac |
 
 
+## 단축키
+
+macOS 기본 단축키 (Windows 키보드를 쓰면 `Command` = Windows 키, `Option` = Alt)
+
+| 기능 | macOS | Windows에서는 |
+| --- | --- | --- |
+| 화면 잠금 | `Control` + `Command` + `Q` | `Win` + `L` |
+| 로그아웃 (확인 창) | `Shift` + `Command` + `Q` | |
+| 로그아웃 (바로) | `Option` + `Shift` + `Command` + `Q` | |
+| 검색 (Spotlight) | `Command` + `Space` | `Win` + `S` |
+| 한/영 전환 | `Control` + `Space` (설정에 따라 `Caps Lock`) | `한/영` |
+| 앱 전환 | `Command` + `Tab` | `Alt` + `Tab` |
+| 앱 종료 | `Command` + `Q` | `Alt` + `F4` |
+| 강제 종료 | `Option` + `Command` + `Esc` | `Ctrl` + `Shift` + `Esc` |
+| 스크린샷 (전체 / 영역 / 도구) | `Shift` + `Command` + `3` / `4` / `5` | `Win` + `Shift` + `S` |
+
+
 ## 기능
 
 - 전체 Setup: 터미널에서 이 한 줄만 실행 ([setup.sh](setup.sh)). 파일 없이 실행하면 저장소를 `~/silent_sdk`에 받은 뒤(이미 받았으면 `git pull`) 그 안의 `setup.sh`로 전체 설치:
