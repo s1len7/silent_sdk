@@ -169,6 +169,7 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
 - 휴대폰 앱(iOS·Android): Gateway는 localhost에만 열어 두고, Tailscale이 tailnet 안에서만 `wss://<이 PC>.<tailnet>.ts.net`으로 중계함 (암호화 연결이라 전체 기능 사용 가능)
   - 미리 할 일: 이 PC와 휴대폰에 Tailscale 설치·같은 계정 로그인, Tailscale 관리 페이지 DNS에서 HTTPS Certificates 켜기 (안 돼 있으면 이 단계만 건너뜀)
   - 연결: `openclaw qr`로 QR을 띄우고 앱의 Settings → Gateway에서 스캔
+  - 휴대폰의 Tailscale은 집에서도 항상 켜 둘 것 (앱 주소가 tailnet 이름이라 꺼지면 집 Wi-Fi에서도 연결 안 됨)
 - 업데이트: `npm i -g openclaw@latest`
 
 
