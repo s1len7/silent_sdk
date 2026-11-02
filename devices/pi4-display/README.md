@@ -232,7 +232,7 @@ compose 파일: `docker/dozzle/docker-compose.yml`
 
 - Setup: [scripts/setup_magic_mirror.sh](scripts/setup_magic_mirror.sh)
   - 다시 실행 시: `.env`, 전원 polkit 규칙(`/etc/polkit-1/rules.d/50-magicmirror-power.rules`), 실행 중인 컨테이너가 모두 있으면 건너뜀 (위치를 다시 묻지 않음)
-  - 웹 리모컨(`http://<장비 이름>.local:8080/remote.html`)의 전원 끄기·재부팅을 위해, 장비 사용자가 인증 없이 전원을 끄고 재부팅할 수 있는 polkit 규칙을 설치함 (집 안 네트워크에서 리모컨에 접속할 수 있으면 누구나 장비를 끌 수 있음)
+  - 웹 리모컨(`http://<장비 이름>.local:8080/remote.html`)과 화면 관리자 페이지(QR 버튼)의 전원 끄기·재부팅 버튼을 위해, 장비 사용자가 인증 없이 전원을 끄고 재부팅할 수 있는 polkit 규칙을 설치함 (집 안 네트워크에서 리모컨에 접속할 수 있으면 누구나 장비를 끌 수 있음)
   - 날씨 위치(`MM_LAT`, `MM_LON`)는 `docker/magic_mirror/.env`에서 읽음. 없으면 실행 중에 1) 공인 IP로 위치 추정(기본값, [ipinfo.io](https://ipinfo.io) 사용) 2) 좌표 직접 입력 3) 건너뛰기 중에서 선택 (직접 만들려면 `.env.example`을 `.env`로 복사해 채움)
 
 - MMPM 웹 UI: `http://<장비 주소>:7890` (로그 뷰어는 6789, MM 상태 표시와 모듈 표시/숨김은 8907 포트를 함께 사용)

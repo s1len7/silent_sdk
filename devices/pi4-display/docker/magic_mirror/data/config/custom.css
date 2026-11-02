@@ -163,6 +163,19 @@ header {
     padding: 8px 14px;
 }
 
+/* 관리자 페이지의 종료·재부팅 버튼: 잘못 누르지 않게 크게 만들고 둘 사이를 아이콘 1개(48px)만큼 띄움
+   (아이콘 바깥 margin 5px씩이 더해지므로 38px + 10px = 48px) */
+.power_buttons .touchButtonRootWrapper {
+    column-gap: 38px;
+}
+
+/* 모듈 CSS(.MMM-TouchButton .touchButton .button.icon, 20px)보다 우선하도록 구체적으로 지정 */
+.MMM-TouchButton .touchButton .button.icon.button-reboot,
+.MMM-TouchButton .touchButton .button.icon.button-shutdown {
+    font-size: 3rem;
+    padding: 12px 0;
+}
+
 /* --- 기존 설정 유지 --- */
 
 .weather {

@@ -54,12 +54,14 @@ let config = {
                     "MMM-pages",
                     "MMM-page-indicator",
                     "MMM-Modulebar",
-                    "MMM-TouchButton",
+                    // 모듈 이름도 class로 매칭되므로, 전원 버튼(power_buttons)까지 항상 보이지 않게 class로 지정
+                    "admin_buttons",
                 ],
                 hiddenPages: {                   // modules that are only shown on specific pages
                     "admin": [
                         "MMM-Remote-Control",
-                        "MMM-TouchButton",
+                        "admin_buttons",
+                        "power_buttons",
                     ],
                 },
             },
@@ -96,6 +98,7 @@ let config = {
         // MMM-pages의 hiddenPages는 알림으로만 열 수 있어 화면에 진입 버튼이 필요함
         {
             module: "MMM-TouchButton",
+            classes: "admin_buttons",
             position: "bottom_right",
             config: {
                 buttons: [
@@ -109,6 +112,30 @@ let config = {
                         name: "leave",
                         icon: "fa fa-undo",
                         notification: "LEAVE_HIDDEN_PAGE",
+                    },
+                ],
+            },
+        },
+
+        // 관리자 페이지에서만 표시하는 재부팅·종료 버튼 (장비에서 직접 실행)
+        // MMM-Remote-Control이 REMOTE_ACTION 알림을 받아 customCommand의 rebootCommand·shutdownCommand를 실행함
+        {
+            module: "MMM-TouchButton",
+            classes: "power_buttons",
+            position: "bottom_center",
+            config: {
+                buttons: [
+                    {
+                        name: "shutdown",
+                        icon: "fa fa-power-off",
+                        notification: "REMOTE_ACTION",
+                        payload: { action: "SHUTDOWN" },
+                    },
+                    {
+                        name: "reboot",
+                        icon: "fa fa-rotate-right",
+                        notification: "REMOTE_ACTION",
+                        payload: { action: "REBOOT" },
                     },
                 ],
             },
