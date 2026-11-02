@@ -48,3 +48,8 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 
 - Setup: [scripts/setup_hangul_input.sh](scripts/setup_hangul_input.sh) (macOS 기본 한글 입력기의 두벌식을 입력 소스에 추가, 기존 입력 소스는 그대로 둠. 메뉴 막대에 바로 나타나지 않으면 로그아웃 후 다시 로그인해야 적용됨)
 - 다시 실행 시: 두벌식 입력 소스가 이미 있으면 건너뜀
+
+### nodejs
+
+- Setup: [scripts/setup_nodejs.sh](scripts/setup_nodejs.sh) (Node.js 최신 LTS를 [nodejs.org](https://nodejs.org/) 공식 압축 파일로 관리자 권한 없이 `~/.local/node`에 설치하고, `node`·`npm`·`npx`를 `~/.local/bin`에 링크. OpenCode 설치에 필요)
+- 다시 실행 시: `~/.local/node`에 Node.js 20.18.1 이상이 있고 링크가 모두 있으면 건너뜀. 설치만 돼 있으면 링크만 다시 만듦

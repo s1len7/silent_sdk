@@ -53,6 +53,7 @@ modules=(
     setup_claude_code
     setup_scroll_direction
     setup_hangul_input
+    setup_nodejs
 )
 
 for name in "${modules[@]}"; do
