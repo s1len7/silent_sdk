@@ -52,6 +52,7 @@ modules=(
     setup_git
     setup_claude_code
     setup_scroll_direction
+    setup_hangul_input
 )
 
 for name in "${modules[@]}"; do

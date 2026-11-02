@@ -43,3 +43,8 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 
 - Setup: [scripts/setup_scroll_direction.sh](scripts/setup_scroll_direction.sh) (마우스·트랙패드의 "자연스러운 스크롤"을 꺼서 Windows와 같은 방향으로 스크롤, 로그아웃 후 다시 로그인해야 적용됨)
 - 다시 실행 시: 자연스러운 스크롤이 이미 꺼져 있으면 건너뜀
+
+### hangul input
+
+- Setup: [scripts/setup_hangul_input.sh](scripts/setup_hangul_input.sh) (macOS 기본 한글 입력기의 두벌식을 입력 소스에 추가, 기존 입력 소스는 그대로 둠. 메뉴 막대에 바로 나타나지 않으면 로그아웃 후 다시 로그인해야 적용됨)
+- 다시 실행 시: 두벌식 입력 소스가 이미 있으면 건너뜀
