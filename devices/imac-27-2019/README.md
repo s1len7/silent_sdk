@@ -3,6 +3,7 @@
 - 제조사: [Apple](https://www.apple.com/)
 - 모델명: iMac (Retina 5K, 27-inch, 2019), 모델 식별자 iMac19,1
 - 지원OS: macOS Sequoia 15
+- 제약: 이 장비는 `sudo` 권한을 받을 수 없어 모든 Setup과 모듈은 관리자 권한 없이 사용자 계정으로 실행함
 - 작성 원칙: [AGENTS.md](AGENTS.md) 참고 (공통 규칙은 [상위 AGENTS.md](../../AGENTS.md))
 
 | 항목 | 사양 |
@@ -27,6 +28,8 @@ macOS 기본 단축키 (Windows 키보드를 쓰면 `Command` = Windows 키, `Op
 | 검색 (Spotlight) | `Command` + `Space` | `Win` + `S` |
 | 한/영 전환 | `Control` + `Space` (설정에 따라 `Caps Lock`) | `한/영` |
 | 앱 전환 | `Command` + `Tab` | `Alt` + `Tab` |
+| 같은 앱의 창 전환 (VSCode 등) | `Command` + `` ` `` | `Alt` + `` ` `` |
+| VSCode 탭 전환 | `Control` + `Tab` | `Ctrl` + `Tab` |
 | 앱 종료 | `Command` + `Q` | `Alt` + `F4` |
 | 강제 종료 | `Option` + `Command` + `Esc` | `Ctrl` + `Shift` + `Esc` |
 | 스크린샷 (전체 / 영역 / 도구) | `Shift` + `Command` + `3` / `4` / `5` | `Win` + `Shift` + `S` |
@@ -42,6 +45,7 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 
 - 다시 실행: 이미 받았으면 `bash ~/silent_sdk/devices/imac-27-2019/setup.sh` (이미 설정된 모듈은 건너뛰고, 실패·누락된 부분만 진행)
 - 로그: `logs/imac-27-2019-<yyyyMMdd-HHmmss>/setup.log`
+- 재부팅: 전체 Setup 끝에 재부팅. 모든 모듈이 OK면 묻지 않고 자동 재부팅, FAIL/SKIP이 하나라도 있으면 재부팅 여부를 물음(인터랙티브) 또는 안내만 출력(비대화형). sudo 없음 (`osascript`). 스크롤 방향·입력 소스 등은 재부팅/재로그인 후 적용됨
 - 이미 설치돼 있는 프로그램 (setup으로 설치하지 않음)
   - Git (`/usr/local/bin/git`)
   - Visual Studio Code (`/Applications/Visual Studio Code.app`, `code` 명령 사용 가능)
@@ -50,6 +54,11 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 
 - Setup: [scripts/setup_git.sh](scripts/setup_git.sh) (전역 `user.name=silent`, `user.email`은 GitHub noreply 주소로 설정)
 - 다시 실행 시: `user.name`·`user.email`이 모두 같으면 건너뜀. 다르거나 빠진 값만 설정
+
+### shell path
+
+- Setup: [scripts/setup_shell_path.sh](scripts/setup_shell_path.sh) (`~/.local/bin`을 `~/.zshrc`의 PATH에 추가해 `claude`·`node`·`opencode`를 새 터미널에서 바로 실행. 다른 내용은 그대로 둠)
+- 다시 실행 시: `~/.zshrc`에 같은 PATH 줄이 있으면 건너뜀
 
 ### claude code
 
@@ -63,8 +72,14 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 
 ### hangul input
 
-- Setup: [scripts/setup_hangul_input.sh](scripts/setup_hangul_input.sh) (macOS 기본 한글 입력기의 두벌식을 입력 소스에 추가, 기존 입력 소스는 그대로 둠. 메뉴 막대에 바로 나타나지 않으면 로그아웃 후 다시 로그인해야 적용됨)
-- 다시 실행 시: 두벌식 입력 소스가 이미 있으면 건너뜀
+- Setup: [scripts/setup_hangul_input.sh](scripts/setup_hangul_input.sh) (macOS 기본 한글 입력기의 두벌식을 입력 소스에 추가, 입력 방법과 입력 모드 항목을 모두 넣고 입력 메뉴를 다시 시작해 바로 반영. 기존 입력 소스는 그대로 둠. 메뉴 막대에 나타나지 않으면 로그아웃 후 다시 로그인)
+- 다시 실행 시: 두벌식 입력 방법과 입력 모드 항목이 모두 있으면 건너뜀. 빠진 항목만 추가
+
+### dock apps
+
+- Setup: [scripts/setup_dock_apps.sh](scripts/setup_dock_apps.sh) (Dock에 `Chrome`, `Terminal`, `VSCode`, `Discord` 바로가기를 이 순서로 추가, 다른 Dock 항목은 그대로 둠)
+- 제거: `bash scripts/setup_dock_apps.sh --remove` (Dock에 고정된 `Mail`, `TV`, `Music` 제거, 다른 Dock 항목은 그대로 둠)
+- 다시 실행 시: Dock 마지막 네 항목이 `Chrome`, `Terminal`, `VSCode`, `Discord` 순서이고 중복이 없으면 건너뜀. 아니면 순서를 맞춤. `--remove`는 세 앱이 모두 없으면 건너뜀
 
 ### nodejs
 
@@ -76,6 +91,21 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 - Setup: [scripts/setup_opencode.sh](scripts/setup_opencode.sh) (OpenCode CLI를 npm `opencode-ai` 최신으로 설치하고 `~/.local/bin/opencode`로 링크, 무료 기본 모델 `opencode/deepseek-v4.1-flash-free`와 대체 모델 플러그인·목록을 `~/.config/opencode/`에 설정, 다른 키는 그대로 둠)
 - 다시 실행 시: `opencode` 명령이 있고 기본 모델·대체 모델 설정이 모두 같으면 건너뜀. 설치만 돼 있으면 설정만 적용
 - 무료 `opencode/*` 모델은 로그인이 필요 없음. 공용 장비이므로 API 키는 설정하지 않음
+
+### humanizer
+
+- Setup: [scripts/setup_humanizer.sh](scripts/setup_humanizer.sh) ([blader/humanizer](https://github.com/blader/humanizer) 스킬을 `npx skills`로 전역 설치. Claude Code와 OpenCode에서 `/humanizer`로 사용, 다른 키는 그대로 둠)
+- 다시 실행 시: `~/.agents/skills/humanizer/SKILL.md`가 있으면 건너뜀. 새 버전이 필요하면 `npx skills remove humanizer -g` 후 재실행
+
+### discord
+
+- Setup: [scripts/setup_discord.sh](scripts/setup_discord.sh) (Discord DMG를 받아 `~/Applications`에 설치, 자체 업데이트. 관리자 권한 불필요, 다른 Dock 항목은 그대로 둠)
+- 다시 실행 시: `/Applications` 또는 `~/Applications`에 `Discord.app`이 있으면 건너뜀
+
+### opencli
+
+- Setup: [scripts/setup_opencli.sh](scripts/setup_opencli.sh) ([@jackwener/opencli](https://github.com/jackwener/opencli)를 npm으로 사용자 범위에 설치해 `opencli` 명령으로 사용, AI 에이전트용 스킬(opencli-browser 등)도 함께 전역 설치)
+- 다시 실행 시: `opencli` 명령과 `~/.agents/skills/opencli-browser/SKILL.md`가 모두 있으면 건너뜀. 빠진 부분만 설치
 ### codyssey proxy
 
 - Setup: [scripts/setup_codyssey_proxy.sh](scripts/setup_codyssey_proxy.sh) (Codyssey 게이트웨이 앞단의 통합 프록시, `~/.codyssey-proxy/`에 설치)

@@ -46,16 +46,24 @@ echo "OS:       macOS $(sw_vers -productVersion) ($(uname -m))"
 echo "Repo:     $repo @ $(git -C "$repo" rev-parse --short HEAD 2>/dev/null || echo unknown)"
 echo "Logs:     $log_dir"
 
+# 모듈이 ~/.local/bin의 명령을 바로 쓸 수 있게 함 (새 터미널의 PATH는 setup_shell_path가 설정)
+export PATH="$HOME/.local/bin:$PATH"
+
 summary=()
 failed=0
+all_ok=1
 modules=(
     setup_git
+    setup_shell_path
     setup_claude_code
     setup_codyssey_proxy
     setup_scroll_direction
     setup_hangul_input
+    setup_dock_apps
     setup_nodejs
     setup_opencode
+    setup_humanizer
+    setup_discord
 )
 
 for name in "${modules[@]}"; do
@@ -72,8 +80,8 @@ for name in "${modules[@]}"; do
     fi
     case $code in
         0) result=OK ;;
-        3) result=SKIP ;;
-        *) result="FAIL (exit $code)"; failed=$((failed + 1)) ;;
+        3) result=SKIP; all_ok=0 ;;
+        *) result="FAIL (exit $code)"; failed=$((failed + 1)); all_ok=0 ;;
     esac
     echo "=== [$name] $result ($((SECONDS - start))s)"
     summary+=("$(printf '%-24s %s' "$name" "$result")")
@@ -88,3 +96,26 @@ else
     echo "All ${#summary[@]} modules succeeded or were already set up."
 fi
 echo "Log: $log_dir/setup.log"
+
+# 전체 Setup 끝에 재부팅
+# - 모든 모듈이 OK(exit 0)였으면 묻지 않고 자동 재부팅
+# - FAIL 또는 SKIP이 하나라도 있으면 재부팅 여부를 물음 (인터랙티브) / 안내만 출력 (비대화형)
+if (( all_ok )); then
+    echo "All modules succeeded. Rebooting to apply changes..."
+    osascript -e 'tell application "System Events" to restart' 2>/dev/null || echo "Reboot failed. Please reboot manually."
+else
+    if [[ -t 0 && -t 1 ]]; then
+        read -r -p "Some modules failed or were skipped. Reboot now? [y/N] " reboot_answer || reboot_answer=""
+        case "$reboot_answer" in
+            [yY]|[yY][eE][sS])
+                echo "Rebooting..."
+                osascript -e 'tell application "System Events" to restart' 2>/dev/null || echo "Reboot failed. Please reboot manually."
+                ;;
+            *)
+                echo "Skipped reboot. Reboot manually to apply changes that need it (scroll direction, input sources, etc.)."
+                ;;
+        esac
+    else
+        echo "Non-interactive session: some modules failed or were skipped. Reboot manually to apply changes that need it."
+    fi
+fi
