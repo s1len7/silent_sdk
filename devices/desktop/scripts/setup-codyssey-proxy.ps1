@@ -1,5 +1,5 @@
 # Install and run the Claude Code proxy (unified Anthropic + OpenAI proxy to the Codyssey gateway).
-# Reads COPA_API_KEY from devices/desktop/.env (skipped when empty).
+# Reads CODYSSEY_OPENAI_API_KEY from devices/desktop/.env (skipped when empty).
 # Installs the codyssey-proxy tool (pip, editable from the repo), writes ~/.codyssey-proxy/.env,
 # registers an auto-start entry, and points Claude Code (~/.claude/settings.json) at the proxy.
 # Claude Code must be installed (~/.claude exists) for the settings update; proxy still installs otherwise.
@@ -17,10 +17,10 @@ if (Test-Path $envFile) {
         }
     }
 }
-$copaKey = $values['COPA_API_KEY']
+$openaiKey = $values['CODYSSEY_OPENAI_API_KEY']
 
-if (-not $copaKey) {
-    Write-Host "COPA_API_KEY is empty in $envFile, skipped. Add it and run again."
+if (-not $openaiKey) {
+    Write-Host "CODYSSEY_OPENAI_API_KEY is empty in $envFile, skipped. Add it and run again."
     $global:SetupStepSkipped = $true
     return
 }
@@ -46,8 +46,8 @@ if ($pipExit -ne 0) { throw "pip install codyssey-proxy failed (exit $pipExit)" 
 # Write .env
 $envPath = Join-Path $proxyDir '.env'
 $envContent = @"
-OPENAI_API_BASE=https://copa.codyssey.kr/v1
-OPENAI_API_KEY=$copaKey
+CODYSSEY_BASE_URL=https://copa.codyssey.kr
+CODYSSEY_OPENAI_API_KEY=$openaiKey
 BIG_MODEL=claude-sonnet-4
 SMALL_MODEL=claude-haiku-4
 PROXY_HOST=127.0.0.1

@@ -28,8 +28,8 @@ if [[ ! -f "$env_path" ]]; then
         cp "$repo/tools/codyssey-proxy/.env.example" "$env_path"
     else
         cat > "$env_path" <<'EOF'
-OPENAI_API_BASE=https://copa.codyssey.kr/v1
-OPENAI_API_KEY=
+CODYSSEY_BASE_URL=https://copa.codyssey.kr
+CODYSSEY_OPENAI_API_KEY=
 BIG_MODEL=claude-sonnet-4
 SMALL_MODEL=claude-haiku-4
 PROXY_HOST=127.0.0.1
@@ -41,8 +41,8 @@ EOF
 fi
 
 # Check key present
-if ! grep -qE '^[[:space:]]*OPENAI_API_KEY[[:space:]]*=[[:space:]]*[^[:space:]]+' "$env_path"; then
-    echo "OPENAI_API_KEY is empty in $env_path. Fill it in and run again." >&2
+if ! grep -qE '^[[:space:]]*CODYSSEY_OPENAI_API_KEY[[:space:]]*=[[:space:]]*[^[:space:]]+' "$env_path"; then
+    echo "CODYSSEY_OPENAI_API_KEY is empty in $env_path. Fill it in and run again." >&2
     exit "$SKIP_EXIT"
 fi
 

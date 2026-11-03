@@ -267,7 +267,7 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
 ### Codyssey 프록시
 
 - Setup: [scripts/setup-codyssey-proxy.ps1](scripts/setup-codyssey-proxy.ps1) (Codyssey 게이트웨이 앞단의 통합 프록시, `~/.codyssey-proxy/`에 설치)
-  - `devices/desktop/.env`의 `COPA_API_KEY`가 비어 있으면 건너뜀
+  - `devices/desktop/.env`의 `CODYSSEY_OPENAI_API_KEY`가 비어 있으면 건너뜀 (Anthropic 키는 proxy에서 사용하지 않음)
   - Python이 없으면 건너뜀 (setup-python 먼저 실행)
   - `tools/codyssey-proxy`를 pip으로 editable 설치, `~/.codyssey-proxy/.env` 작성, 자동 시작(Startup 폴더) 등록, 프록시 즉시 실행
   - `~/.claude/settings.json`의 `env`를 프록시 주소(`http://localhost:8082`)와 모델명으로 갱신
