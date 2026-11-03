@@ -46,10 +46,14 @@ echo "OS:       macOS $(sw_vers -productVersion) ($(uname -m))"
 echo "Repo:     $repo @ $(git -C "$repo" rev-parse --short HEAD 2>/dev/null || echo unknown)"
 echo "Logs:     $log_dir"
 
+# 모듈이 ~/.local/bin의 명령을 바로 쓸 수 있게 함 (새 터미널의 PATH는 setup_shell_path가 설정)
+export PATH="$HOME/.local/bin:$PATH"
+
 summary=()
 failed=0
 modules=(
     setup_git
+    setup_shell_path
     setup_claude_code
     setup_codyssey_proxy
     setup_scroll_direction

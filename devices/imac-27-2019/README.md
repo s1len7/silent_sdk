@@ -51,6 +51,11 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 - Setup: [scripts/setup_git.sh](scripts/setup_git.sh) (전역 `user.name=silent`, `user.email`은 GitHub noreply 주소로 설정)
 - 다시 실행 시: `user.name`·`user.email`이 모두 같으면 건너뜀. 다르거나 빠진 값만 설정
 
+### shell path
+
+- Setup: [scripts/setup_shell_path.sh](scripts/setup_shell_path.sh) (`~/.local/bin`을 `~/.zshrc`의 PATH에 추가해 `claude`·`node`·`opencode`를 새 터미널에서 바로 실행. 다른 내용은 그대로 둠)
+- 다시 실행 시: `~/.zshrc`에 같은 PATH 줄이 있으면 건너뜀
+
 ### claude code
 
 - Setup: [scripts/setup_claude_code.sh](scripts/setup_claude_code.sh) (공식 네이티브 설치 스크립트로 `~/.local/bin/claude`에 설치, 원본 [config/claude-settings.json](config/claude-settings.json)의 키와 저장소 경로(`permissions.additionalDirectories`)를 `~/.claude/settings.json`에 넣음, 다른 키는 그대로 둠)
