@@ -79,8 +79,8 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 ### codyssey proxy
 
 - Setup: [scripts/setup_codyssey_proxy.sh](scripts/setup_codyssey_proxy.sh) (Codyssey 게이트웨이 앞단의 통합 프록시, `~/.codyssey-proxy/`에 설치)
-  - `~/.codyssey-proxy/.env`가 없으면 예시 파일을 복사하고 건너뜀 (OPENAI_API_KEY 채운 뒤 재실행)
-  - `OPENAI_API_KEY`가 비어 있으면 건너뜀
+  - `~/.codyssey-proxy/.env`가 없으면 예시 파일을 복사하고 건너뜀 (CODYSSEY_OPENAI_API_KEY 채운 뒤 재실행)
+  - `CODYSSEY_OPENAI_API_KEY`가 비어 있으면 건너뜀
   - Python 3가 없으면 실패
   - `tools/codyssey-proxy`를 pip으로 editable 설치, `~/.claude/settings.json`을 프록시 주소(`http://localhost:8082`)로 갱신
   - LaunchAgent(`com.silent.codyssey-proxy`) 등록으로 자동 시작, 즉시 실행

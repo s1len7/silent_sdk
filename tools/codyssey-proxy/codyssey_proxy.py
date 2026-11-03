@@ -19,12 +19,12 @@ try:
 except Exception:
     pass
 
-raw_base = os.environ.get("CODYSSEY_BASE_URL") or os.environ.get("OPENAI_API_BASE", "https://copa.codyssey.kr")
+raw_base = os.environ.get("CODYSSEY_BASE_URL", "https://copa.codyssey.kr")
 GATEWAY = raw_base.strip().rstrip("/")
 if not GATEWAY.endswith("/v1"):
     GATEWAY += "/v1"
 
-API_KEY = (os.environ.get("CODYSSEY_OPENAI_API_KEY") or os.environ.get("OPENAI_API_KEY") or "").strip()
+API_KEY = (os.environ.get("CODYSSEY_OPENAI_API_KEY") or "").strip()
 
 
 def _key_valid(key):
@@ -46,7 +46,8 @@ def _key_valid(key):
 if not _key_valid(API_KEY):
     raise RuntimeError("No valid Codyssey OpenAI-compatible API key found")
 
-# claude-code-proxy reads these values when it is imported.
+# claude-code-proxy reads these values when it is imported. They are internal
+# compatibility variables, not user-facing configuration keys.
 os.environ["OPENAI_API_KEY"] = API_KEY
 os.environ["OPENAI_API_BASE"] = GATEWAY
 
