@@ -3,6 +3,7 @@
 - 제조사: [Apple](https://www.apple.com/)
 - 모델명: iMac (Retina 5K, 27-inch, 2019), 모델 식별자 iMac19,1
 - 지원OS: macOS Sequoia 15
+- 제약: 이 장비는 `sudo` 권한을 받을 수 없어 모든 Setup과 모듈은 관리자 권한 없이 사용자 계정으로 실행함
 - 작성 원칙: [AGENTS.md](AGENTS.md) 참고 (공통 규칙은 [상위 AGENTS.md](../../AGENTS.md))
 
 | 항목 | 사양 |
