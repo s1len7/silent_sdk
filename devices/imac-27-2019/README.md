@@ -93,7 +93,7 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 
 ### humanizer
 
-- Setup: [scripts/setup_humanizer.sh](scripts/setup_humanizer.sh) (blader/humanizer 스킬을 `npx skills`로 전역 설치. Claude Code와 OpenCode에서 `/humanizer`로 사용, 다른 키는 그대로 둠)
+- Setup: [scripts/setup_humanizer.sh](scripts/setup_humanizer.sh) ([blader/humanizer](https://github.com/blader/humanizer) 스킬을 `npx skills`로 전역 설치. Claude Code와 OpenCode에서 `/humanizer`로 사용, 다른 키는 그대로 둠)
 - 다시 실행 시: `~/.agents/skills/humanizer/SKILL.md`가 있으면 건너뜀. 새 버전이 필요하면 `npx skills remove humanizer -g` 후 재실행
 ### codyssey proxy
 
