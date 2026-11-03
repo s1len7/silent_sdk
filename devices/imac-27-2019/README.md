@@ -71,6 +71,12 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 - Setup: [scripts/setup_hangul_input.sh](scripts/setup_hangul_input.sh) (macOS 기본 한글 입력기의 두벌식을 입력 소스에 추가, 입력 방법과 입력 모드 항목을 모두 넣고 입력 메뉴를 다시 시작해 바로 반영. 기존 입력 소스는 그대로 둠. 메뉴 막대에 나타나지 않으면 로그아웃 후 다시 로그인)
 - 다시 실행 시: 두벌식 입력 방법과 입력 모드 항목이 모두 있으면 건너뜀. 빠진 항목만 추가
 
+### dock apps
+
+- Setup: [scripts/setup_dock_apps.sh](scripts/setup_dock_apps.sh) (Dock에 `Chrome`, `Terminal`, `VSCode` 바로가기를 이 순서로 추가, 다른 Dock 항목은 그대로 둠)
+- 제거: `bash scripts/setup_dock_apps.sh --remove` (Dock에 고정된 `Mail`, `TV`, `Music` 제거, 다른 Dock 항목은 그대로 둠)
+- 다시 실행 시: Dock 마지막 세 항목이 `Chrome`, `Terminal`, `VSCode` 순서이고 중복이 없으면 건너뜀. 아니면 순서를 맞춤. `--remove`는 세 앱이 모두 없으면 건너뜀
+
 ### nodejs
 
 - Setup: [scripts/setup_nodejs.sh](scripts/setup_nodejs.sh) (Node.js 최신 LTS를 [nodejs.org](https://nodejs.org/) 공식 압축 파일로 관리자 권한 없이 `~/.local/node`에 설치하고, `node`·`npm`·`npx`를 `~/.local/bin`에 링크. OpenCode 설치에 필요)

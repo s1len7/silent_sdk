@@ -58,6 +58,7 @@ modules=(
     setup_codyssey_proxy
     setup_scroll_direction
     setup_hangul_input
+    setup_dock_apps
     setup_nodejs
     setup_opencode
 )
