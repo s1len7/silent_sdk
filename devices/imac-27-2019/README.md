@@ -45,6 +45,7 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 
 - 다시 실행: 이미 받았으면 `bash ~/silent_sdk/devices/imac-27-2019/setup.sh` (이미 설정된 모듈은 건너뛰고, 실패·누락된 부분만 진행)
 - 로그: `logs/imac-27-2019-<yyyyMMdd-HHmmss>/setup.log`
+- 재부팅: 전체 Setup 끝에 재부팅. 모든 모듈이 OK면 묻지 않고 자동 재부팅, FAIL/SKIP이 하나라도 있으면 재부팅 여부를 물음(인터랙티브) 또는 안내만 출력(비대화형). sudo 없음 (`osascript`). 스크롤 방향·입력 소스 등은 재부팅/재로그인 후 적용됨
 - 이미 설치돼 있는 프로그램 (setup으로 설치하지 않음)
   - Git (`/usr/local/bin/git`)
   - Visual Studio Code (`/Applications/Visual Studio Code.app`, `code` 명령 사용 가능)
@@ -100,6 +101,11 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 
 - Setup: [scripts/setup_discord.sh](scripts/setup_discord.sh) (Discord DMG를 받아 `~/Applications`에 설치, 자체 업데이트. 관리자 권한 불필요, 다른 Dock 항목은 그대로 둠)
 - 다시 실행 시: `/Applications` 또는 `~/Applications`에 `Discord.app`이 있으면 건너뜀
+
+### opencli
+
+- Setup: [scripts/setup_opencli.sh](scripts/setup_opencli.sh) ([@jackwener/opencli](https://github.com/jackwener/opencli)를 npm으로 사용자 범위에 설치해 `opencli` 명령으로 사용, AI 에이전트용 스킬(opencli-browser 등)도 함께 전역 설치)
+- 다시 실행 시: `opencli` 명령과 `~/.agents/skills/opencli-browser/SKILL.md`가 모두 있으면 건너뜀. 빠진 부분만 설치
 ### codyssey proxy
 
 - Setup: [scripts/setup_codyssey_proxy.sh](scripts/setup_codyssey_proxy.sh) (Codyssey 게이트웨이 앞단의 통합 프록시, `~/.codyssey-proxy/`에 설치)
