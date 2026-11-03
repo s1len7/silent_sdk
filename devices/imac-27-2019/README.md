@@ -68,8 +68,8 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 
 ### hangul input
 
-- Setup: [scripts/setup_hangul_input.sh](scripts/setup_hangul_input.sh) (macOS 기본 한글 입력기의 두벌식을 입력 소스에 추가, 기존 입력 소스는 그대로 둠. 메뉴 막대에 바로 나타나지 않으면 로그아웃 후 다시 로그인해야 적용됨)
-- 다시 실행 시: 두벌식 입력 소스가 이미 있으면 건너뜀
+- Setup: [scripts/setup_hangul_input.sh](scripts/setup_hangul_input.sh) (macOS 기본 한글 입력기의 두벌식을 입력 소스에 추가, 입력 방법과 입력 모드 항목을 모두 넣고 입력 메뉴를 다시 시작해 바로 반영. 기존 입력 소스는 그대로 둠. 메뉴 막대에 나타나지 않으면 로그아웃 후 다시 로그인)
+- 다시 실행 시: 두벌식 입력 방법과 입력 모드 항목이 모두 있으면 건너뜀. 빠진 항목만 추가
 
 ### nodejs
 
