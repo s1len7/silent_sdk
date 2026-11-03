@@ -62,6 +62,7 @@ modules=(
     setup_nodejs
     setup_opencode
     setup_humanizer
+    setup_discord
 )
 
 for name in "${modules[@]}"; do

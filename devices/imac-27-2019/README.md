@@ -76,9 +76,9 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 
 ### dock apps
 
-- Setup: [scripts/setup_dock_apps.sh](scripts/setup_dock_apps.sh) (Dock에 `Chrome`, `Terminal`, `VSCode` 바로가기를 이 순서로 추가, 다른 Dock 항목은 그대로 둠)
+- Setup: [scripts/setup_dock_apps.sh](scripts/setup_dock_apps.sh) (Dock에 `Chrome`, `Terminal`, `VSCode`, `Discord` 바로가기를 이 순서로 추가, 다른 Dock 항목은 그대로 둠)
 - 제거: `bash scripts/setup_dock_apps.sh --remove` (Dock에 고정된 `Mail`, `TV`, `Music` 제거, 다른 Dock 항목은 그대로 둠)
-- 다시 실행 시: Dock 마지막 세 항목이 `Chrome`, `Terminal`, `VSCode` 순서이고 중복이 없으면 건너뜀. 아니면 순서를 맞춤. `--remove`는 세 앱이 모두 없으면 건너뜀
+- 다시 실행 시: Dock 마지막 네 항목이 `Chrome`, `Terminal`, `VSCode`, `Discord` 순서이고 중복이 없으면 건너뜀. 아니면 순서를 맞춤. `--remove`는 세 앱이 모두 없으면 건너뜀
 
 ### nodejs
 
@@ -95,6 +95,11 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 
 - Setup: [scripts/setup_humanizer.sh](scripts/setup_humanizer.sh) ([blader/humanizer](https://github.com/blader/humanizer) 스킬을 `npx skills`로 전역 설치. Claude Code와 OpenCode에서 `/humanizer`로 사용, 다른 키는 그대로 둠)
 - 다시 실행 시: `~/.agents/skills/humanizer/SKILL.md`가 있으면 건너뜀. 새 버전이 필요하면 `npx skills remove humanizer -g` 후 재실행
+
+### discord
+
+- Setup: [scripts/setup_discord.sh](scripts/setup_discord.sh) (Discord DMG를 받아 `~/Applications`에 설치, 자체 업데이트. 관리자 권한 불필요, 다른 Dock 항목은 그대로 둠)
+- 다시 실행 시: `/Applications` 또는 `~/Applications`에 `Discord.app`이 있으면 건너뜀
 ### codyssey proxy
 
 - Setup: [scripts/setup_codyssey_proxy.sh](scripts/setup_codyssey_proxy.sh) (Codyssey 게이트웨이 앞단의 통합 프록시, `~/.codyssey-proxy/`에 설치)

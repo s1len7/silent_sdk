@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Dock(화면 아래 독)에 Chrome, Terminal, VSCode 바로가기를 Chrome, Terminal, VSCode 순서로 추가
+# Dock(화면 아래 독)에 Chrome, Terminal, VSCode, Discord 바로가기를 Chrome, Terminal, VSCode, Discord 순서로 추가
 # --remove를 주면 Dock에서 Mail, TV, Music을 제거함 (다른 Dock 항목은 그대로 둠)
 # 이미 있으면 마지막 세 항목이 되도록 순서를 맞추고, Dock이 바뀐 항목을 읽도록 다시 시작해 바로 보이게 함
 set -euo pipefail
@@ -25,6 +25,7 @@ add_apps = [
     ("/Applications/Google Chrome.app", "com.google.Chrome", "Google Chrome"),
     ("/System/Applications/Utilities/Terminal.app", "com.apple.Terminal", "Terminal"),
     ("/Applications/Visual Studio Code.app", "com.microsoft.VSCode", "Visual Studio Code"),
+    ("/Applications/Discord.app", "com.hnc.Discord", "Discord"),
 ]
 remove_apps = [
     ("/System/Applications/Mail.app", "com.apple.mail"),
@@ -97,7 +98,7 @@ if [[ $status -eq 3 ]]; then
     if [[ "$mode" == remove ]]; then
         skip_done "Mail, TV and Music are not in the Dock"
     fi
-    skip_done "Chrome, Terminal and Visual Studio Code are already in the Dock in that order"
+    skip_done "Chrome, Terminal, Visual Studio Code and Discord are already in the Dock in that order"
 elif [[ $status -ne 0 ]]; then
     echo "Failed to prepare the Dock items" >&2
     exit 1
@@ -108,5 +109,5 @@ killall Dock 2>/dev/null || true
 if [[ "$mode" == remove ]]; then
     echo "Mail, TV and Music removed from the Dock"
 else
-    echo "Chrome, Terminal and Visual Studio Code added to the Dock in that order"
+    echo "Chrome, Terminal, Visual Studio Code and Discord added to the Dock in that order"
 fi
