@@ -28,6 +28,8 @@ macOS 기본 단축키 (Windows 키보드를 쓰면 `Command` = Windows 키, `Op
 | 검색 (Spotlight) | `Command` + `Space` | `Win` + `S` |
 | 한/영 전환 | `Control` + `Space` (설정에 따라 `Caps Lock`) | `한/영` |
 | 앱 전환 | `Command` + `Tab` | `Alt` + `Tab` |
+| 같은 앱의 창 전환 (VSCode 등) | `Command` + `` ` `` | `Alt` + `` ` `` |
+| VSCode 탭 전환 | `Control` + `Tab` | `Ctrl` + `Tab` |
 | 앱 종료 | `Command` + `Q` | `Alt` + `F4` |
 | 강제 종료 | `Option` + `Command` + `Esc` | `Ctrl` + `Shift` + `Esc` |
 | 스크린샷 (전체 / 영역 / 도구) | `Shift` + `Command` + `3` / `4` / `5` | `Win` + `Shift` + `S` |
@@ -88,6 +90,11 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 - Setup: [scripts/setup_opencode.sh](scripts/setup_opencode.sh) (OpenCode CLI를 npm `opencode-ai` 최신으로 설치하고 `~/.local/bin/opencode`로 링크, 무료 기본 모델 `opencode/deepseek-v4.1-flash-free`와 대체 모델 플러그인·목록을 `~/.config/opencode/`에 설정, 다른 키는 그대로 둠)
 - 다시 실행 시: `opencode` 명령이 있고 기본 모델·대체 모델 설정이 모두 같으면 건너뜀. 설치만 돼 있으면 설정만 적용
 - 무료 `opencode/*` 모델은 로그인이 필요 없음. 공용 장비이므로 API 키는 설정하지 않음
+
+### humanizer
+
+- Setup: [scripts/setup_humanizer.sh](scripts/setup_humanizer.sh) (blader/humanizer 스킬을 `npx skills`로 전역 설치. Claude Code와 OpenCode에서 `/humanizer`로 사용, 다른 키는 그대로 둠)
+- 다시 실행 시: `~/.agents/skills/humanizer/SKILL.md`가 있으면 건너뜀. 새 버전이 필요하면 `npx skills remove humanizer -g` 후 재실행
 ### codyssey proxy
 
 - Setup: [scripts/setup_codyssey_proxy.sh](scripts/setup_codyssey_proxy.sh) (Codyssey 게이트웨이 앞단의 통합 프록시, `~/.codyssey-proxy/`에 설치)

@@ -61,6 +61,7 @@ modules=(
     setup_dock_apps
     setup_nodejs
     setup_opencode
+    setup_humanizer
 )
 
 for name in "${modules[@]}"; do
