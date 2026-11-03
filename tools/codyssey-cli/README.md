@@ -71,3 +71,7 @@ OpenCode 전역 설정(`~/.config/opencode/opencode.json`)에 OpenAI 호환 공�
   - GPT-5 계열: OpenCode가 `reasoning_effort`를 넣는데 Codyssey가 지원하지 않음 (`unsupported_feature`)
   - Claude 계열: OpenCode가 메시지에 `cache_control`을 붙이는데 Codyssey가 지원하지 않음 (`unsupported_feature`)
   - 둘 다 OpenCode가 모델 ID로 정하는 동작이라 설정으로 끌 수 없음
+
+
+## 참고자료
+- https://nimble-ceder-40b.notion.site/Codyssey-API-44817efd202c825a87670170c00e7f94

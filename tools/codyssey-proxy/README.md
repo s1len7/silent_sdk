@@ -17,3 +17,6 @@ codyssey-proxy
 
 ## 설정
 `.env.example`을 `.env`로 복사 후 `OPENAI_API_KEY`에 Codyssey 키를 채웁니다.
+
+## 참고자료
+- https://nimble-ceder-40b.notion.site/Codyssey-API-44817efd202c825a87670170c00e7f94
