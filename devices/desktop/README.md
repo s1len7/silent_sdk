@@ -273,6 +273,15 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
   - `~/.claude/settings.json`의 `env`를 프록시 주소(`http://localhost:8082`)와 모델명으로 갱신
   - 재실행 시: 프록시가 이미 실행 중이고 설정이 모두 같으면 건너뜀
 
+### FreeLLM API
+
+- Setup: [scripts/setup-freellm-api.ps1](scripts/setup-freellm-api.ps1) (FreeLLM API Docker Compose 설치, `devices/desktop/docker/freellmapi`에 저장)
+  - Docker Desktop이 없으면 건너뜀 (setup-docker 먼저 실행)
+  - 저장소를 clone/update하고 `.env`에 `ENCRYPTION_KEY`를 생성 (값은 출력하지 않음)
+  - `docker compose up -d`로 컨테이너 실행 후 `http://localhost:3001/api/ping` 준비 대기
+  - 재실행 시: 이미 실행 중이면 건너뜀
+  - 설치 후 수동 작업: 첫 계정 생성, 프로바이더 키 추가, 통합 키 복사, `FREELLMAPI_API_KEY` 설정, `npx freellmapi setup-claude --url http://localhost:3001 --dry-run` 확인 후 적용
+
 ## 백업 대상
 
 - `~\.ssh\` (`C:\Users\<사용자>\.ssh\`): 장비 접속용 ssh 키(`id_rsa`, `id_rsa.pub`, `id_rsa.putty.pub`, `id_rsa.ppk`), 장비별 접속 설정(`config`), 장비 서버 키 목록(`known_hosts`)
