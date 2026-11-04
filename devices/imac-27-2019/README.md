@@ -162,3 +162,16 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
   - `tools/codyssey-proxy`를 pip으로 editable 설치, `~/.claude/settings.json`을 프록시 주소(`http://localhost:8082`)로 갱신
   - LaunchAgent(`com.silent.codyssey-proxy`) 등록으로 자동 시작, 즉시 실행
   - 재실행 시: 키가 있고 설정이 같으면 LaunchAgent 재로드 후 상태 확인
+
+### 텔레그램 알림
+
+- Setup: [scripts/notify_telegram.sh](scripts/notify_telegram.sh) (알림 전용 봇으로 메시지 전송, 설치 없이 바로 실행)
+  - 메시지 형식: `[<호스트>][<에이전트>] <내용>` (4096자를 넘으면 자름)
+  - 설정: `devices/imac-27-2019/.env`의 `TELEGRAM_NOTIFY_BOT_TOKEN`, `TELEGRAM_NOTIFY_CHAT_ID`
+  - 알림 봇은 발신 전용이므로 이 토큰으로 `getUpdates`를 호출하지 말 것 (폴러를 띄우면 409 충돌)
+  - 전송에 실패해도 경고만 남기고 종료 코드 0을 돌려줌 (알림이 작업을 막지 않게)
+  - 다시 실행 시: 해당 없음 (보낼 때마다 실행)
+
+```bash
+bash scripts/notify_telegram.sh "setup finished" opencode
+```

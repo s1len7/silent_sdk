@@ -29,6 +29,18 @@
 - Setup: [scripts/setup_korean_input.sh](scripts/setup_korean_input.sh) (Ubuntu 한글 입력: 빠진 패키지만 설치 후 입력 소스에 hangul 추가)
 - 다시 실행 시: ibus/ibus-hangul/fonts-nanum 설치 여부와 GNOME 입력 소스(`org.gnome.desktop.input-sources`)에 hangul이 있는지 확인
 
+### 텔레그램 알림
+- Setup: [scripts/notify_telegram.sh](scripts/notify_telegram.sh) (알림 전용 봇으로 메시지 전송, 설치 없이 바로 실행)
+- 메시지 형식: `[<호스트>][<에이전트>] <내용>` (4096자를 넘으면 자름)
+- 설정: `devices/generic-ubuntu/.env`의 `TELEGRAM_NOTIFY_BOT_TOKEN`, `TELEGRAM_NOTIFY_CHAT_ID` ([.env.example](.env.example) 참고)
+- 알림 봇은 발신 전용이므로 이 토큰으로 `getUpdates`를 호출하지 말 것 (폴러를 띄우면 409 충돌)
+- 전송에 실패해도 경고만 남기고 종료 코드 0을 돌려줌 (알림이 작업을 막지 않게)
+- 다시 실행 시: 해당 없음 (보낼 때마다 실행)
+
+```bash
+bash scripts/notify_telegram.sh "setup finished" opencode
+```
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/generic-ubuntu/setup.sh | bash
 ```

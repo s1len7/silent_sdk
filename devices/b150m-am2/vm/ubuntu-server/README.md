@@ -11,7 +11,7 @@
 | CPU | 2코어 (host 타입) |
 | RAM | 2048MB |
 | 디스크 | 32GB (local-lvm) |
-| 네트워크 | vmbr0 (유선 브리지), DHCP (현재 192.168.0.22) |
+| 네트워크 | vmbr0 (유선 브리지), DHCP (현재 192.168.0.19) |
 | 계정 | silent (SSH 키 로그인, 비밀번호 없이 sudo) |
 
 
@@ -45,13 +45,13 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/b150
   - `OPENROUTER_API_KEY`: OpenRouter API 키
   - `GEMINI_API_KEY`: Gemini API 키 (비우면 Gemini 연결 안 함, `google/*` 모델을 고를 수 있게 됨)
   - `OPENCLAW_TRUSTED_PROXY`, `OPENCLAW_PUBLIC_ORIGIN`: 리버스 프록시 IP와 외부 https 주소 (프록시로 `wss://` 주소를 쓸 때만)
-- Gateway는 랜에 열려 있음 (`ws://192.168.0.22:18789`, token 인증)
+- Gateway는 랜에 열려 있음 (`ws://192.168.0.19:18789`, token 인증)
 - 데스크탑 OpenClaw 트레이 앱 연결: 새 연결에 Gateway URL과 공유 토큰을 넣음
-  - Gateway URL: 리버스 프록시를 쓰면 `wss://<OPENCLAW_PUBLIC_ORIGIN의 호스트>`, 아니면 `ws://192.168.0.22:18789`
+  - Gateway URL: 리버스 프록시를 쓰면 `wss://<OPENCLAW_PUBLIC_ORIGIN의 호스트>`, 아니면 `ws://192.168.0.19:18789`
   - 공유 토큰 확인 (`openclaw config get`은 값을 가려서 보여 주므로 설정 파일에서 읽음):
 
 ```bash
-ssh silent@192.168.0.22 "python3 -c \"import json,os;print(json.load(open(os.path.expanduser('~/.openclaw/openclaw.json')))['gateway']['auth']['token'])\""
+ssh silent@192.168.0.19 "python3 -c \"import json,os;print(json.load(open(os.path.expanduser('~/.openclaw/openclaw.json')))['gateway']['auth']['token'])\""
 ```
 
   - 연결 후 승인 대기가 뜨면 VM에서 `openclaw devices list` → `openclaw devices approve <요청 ID>`

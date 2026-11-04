@@ -301,6 +301,19 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
   - 재실행 시: 이미 실행 중이면 건너뜀
   - 설치 후 수동 작업: 첫 계정 생성, 프로바이더 키 추가, 통합 키 복사, `FREELLMAPI_API_KEY` 설정, `npx freellmapi setup-claude --url http://localhost:3001 --dry-run` 확인 후 적용
 
+### 텔레그램 알림
+
+- Setup: [scripts/notify-telegram.ps1](scripts/notify-telegram.ps1) (알림 전용 봇으로 메시지 전송, 설치 없이 바로 실행)
+  - 메시지 형식: `[<호스트>][<에이전트>] <내용>` (4096자를 넘으면 자름)
+  - 설정: `devices/desktop/.env`의 `TELEGRAM_NOTIFY_BOT_TOKEN`, `TELEGRAM_NOTIFY_CHAT_ID` (CHAT_ID가 비면 `TELEGRAM_ALLOW_FROM`을 씀)
+  - 알림 봇은 발신 전용이므로 이 토큰으로 `getUpdates`를 호출하지 말 것 (폴러를 띄우면 409 충돌)
+  - 전송에 실패해도 경고만 남기고 종료 코드 0을 돌려줌 (알림이 작업을 막지 않게)
+  - 다시 실행 시: 해당 없음 (보낼 때마다 실행)
+
+```powershell
+.\scripts\notify-telegram.ps1 -Text "setup finished" -Agent opencode
+```
+
 ## 백업 대상
 
 - `~\.ssh\` (`C:\Users\<사용자>\.ssh\`): 장비 접속용 ssh 키(`id_rsa`, `id_rsa.pub`, `id_rsa.putty.pub`, `id_rsa.ppk`), 장비별 접속 설정(`config`), 장비 서버 키 목록(`known_hosts`)

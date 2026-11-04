@@ -129,5 +129,5 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/thinkpad-s2
 
 - Setup: [desktop/scripts/setup-openclaw-remote.ps1](../desktop/scripts/setup-openclaw-remote.ps1) (이 노트북에는 Gateway를 설치하지 않고, 트레이 앱을 b150m-am2 VM의 Gateway에 연결)
   - 다시 실행 시: 트레이 앱이 원격 Gateway에 연결·페어링돼 있으면 건너뜀
-- 설정: `devices/desktop/.env`의 `OPENCLAW_GATEWAY_URL`(외부에서도 쓰면 리버스 프록시의 `wss://` 주소, 랜에서만 쓰면 `ws://192.168.0.22:18789`), `OPENCLAW_GATEWAY_TOKEN`, `OPENCLAW_GATEWAY_SSH`(`silent@192.168.0.22`) (하나라도 비우면 건너뜀)
+- 설정: `devices/desktop/.env`의 `OPENCLAW_GATEWAY_URL`(외부에서도 쓰면 리버스 프록시의 `wss://` 주소, 랜에서만 쓰면 `ws://192.168.0.19:18789`), `OPENCLAW_GATEWAY_TOKEN`, `OPENCLAW_GATEWAY_SSH`(`silent@b150m-am2-vm`) (하나라도 비우면 건너뜀)
 - 페어링 승인을 VM에서 ssh로 하므로, Setup은 VM에 ssh 키로 접속되는 랜에서 실행해야 함
