@@ -131,8 +131,9 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 
 ### discord
 
-- Setup: [scripts/setup_discord.sh](scripts/setup_discord.sh) (Discord DMG를 받아 `~/Applications`에 설치, 자체 업데이트. 관리자 권한 불필요, 다른 Dock 항목은 그대로 둠)
-- 다시 실행 시: `/Applications` 또는 `~/Applications`에 `Discord.app`이 있으면 건너뜀
+- Setup: [scripts/setup_discord.sh](scripts/setup_discord.sh) (Discord DMG를 받아 `~/Applications`에 설치하고, 자동 업데이트 확인을 꺼서 관리자 권한 헬퍼 설치 팝업이 뜨지 않게 함. 설정은 `~/Library/Application Support/discord/settings.json`의 `SKIP_HOST_UPDATE=true`, 다른 키는 그대로 둠. 관리자 권한 불필요)
+- 다시 실행 시: `Discord.app`이 설치돼 있고 `SKIP_HOST_UPDATE`가 이미 `true`면 건너뜀. 설치만 돼 있으면 설정만 적용
+- 참고: 자동 업데이트를 끄므로 새 버전은 직접 받아 설치해야 함. `/Applications`에 설치된 앱을 업데이트하려면 관리자 권한이 필요하며, Discord가 실행 중이면 설정 적용을 위해 다시 시작해야 함
 
 ### tailscale
 
