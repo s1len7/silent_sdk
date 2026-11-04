@@ -66,6 +66,7 @@ modules=(
     setup_display_brightness_max
     setup_true_tone_off
     setup_night_shift_off
+    setup_vscode_auto_update_off
     setup_opencode
     setup_humanizer
     setup_discord

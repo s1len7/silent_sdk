@@ -101,6 +101,11 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 - Setup: [scripts/setup_night_shift_off.sh](scripts/setup_night_shift_off.sh) (시간대에 따른 화면 색온도 자동 변경인 Night Shift를 끔, 관리자 권한 불필요, 사용자별 설정)
 - 다시 실행 시: Night Shift가 이미 꺼져 있으면 건너뜀
 
+### vscode auto update off
+
+- Setup: [scripts/setup_vscode_auto_update_off.sh](scripts/setup_vscode_auto_update_off.sh) (VS Code 자동 업데이트 확인과 업데이트 안내 팝업을 끔. 사용자 설정 `settings.json`의 `update.mode`를 `none`으로 바꾸고 다른 설정은 그대로 둠. 이미 실행 중이면 VS Code를 다시 시작한 뒤 적용됨)
+- 다시 실행 시: `update.mode`가 이미 `none`이면 건너뜀. `settings.json`에 주석이 있어 읽을 수 없으면 덮어쓰지 않고 실패
+
 ### nodejs
 
 - Setup: [scripts/setup_nodejs.sh](scripts/setup_nodejs.sh) (Node.js 최신 LTS를 [nodejs.org](https://nodejs.org/) 공식 압축 파일로 관리자 권한 없이 `~/.local/node`에 설치하고, `node`·`npm`·`npx`를 `~/.local/bin`에 링크. OpenCode 설치에 필요)
