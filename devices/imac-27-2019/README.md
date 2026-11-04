@@ -91,6 +91,11 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 - Setup: [scripts/setup_display_brightness_max.sh](scripts/setup_display_brightness_max.sh) (주 디스플레이인 내장 디스플레이의 밝기를 최대로 설정, 관리자 권한 불필요, 외장 디스플레이는 대상 아님)
 - 다시 실행 시: 주 디스플레이 밝기가 이미 최대면 건너뜀
 
+### true tone
+
+- Setup: [scripts/setup_true_tone_off.sh](scripts/setup_true_tone_off.sh) (주변광에 따른 색온도 자동 보정인 True Tone을 끔, 관리자 권한 불필요, 사용자별 설정)
+- 다시 실행 시: True Tone이 이미 꺼져 있거나 이 디스플레이가 지원하지 않으면 건너뜀
+
 ### nodejs
 
 - Setup: [scripts/setup_nodejs.sh](scripts/setup_nodejs.sh) (Node.js 최신 LTS를 [nodejs.org](https://nodejs.org/) 공식 압축 파일로 관리자 권한 없이 `~/.local/node`에 설치하고, `node`·`npm`·`npx`를 `~/.local/bin`에 링크. OpenCode 설치에 필요)

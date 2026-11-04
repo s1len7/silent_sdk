@@ -64,6 +64,7 @@ modules=(
     setup_dock_apps
     setup_finder_home
     setup_display_brightness_max
+    setup_true_tone_off
     setup_opencode
     setup_humanizer
     setup_discord
