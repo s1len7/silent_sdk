@@ -18,7 +18,7 @@
 - 진입점(`setup.ps1`)은 각 단계를 `devices/generic-windows/scripts/lib-log.ps1`의 `Invoke-Step`으로 실행함 (실패해도 다음 단계 진행, 로그는 저장소 `logs/<플랫폼>-<시각>/`)
 - Windows 공통 모듈(git, vscode, winget, opencode)은 `devices/generic-windows/scripts/`에 있고 desktop도 그것을 호출함 (수정 시 titan-s260·thinkpad-s2-2g에 미치는 영향도 확인할 것)
 - desktop에서 쓰는 모든 AI 에이전트의 전역 지침서에 `~/silent_sdk/AGENTS.md`를 따르라는 내용을 넣을 것 (지침서가 없으면 만들 것)
-  - 현재 대상은 Claude Code·OpenClaw·OpenCode이며, 에이전트를 새로 추가할 때도 빠뜨리지 말 것
+  - 현재 대상은 Claude Code·OpenClaw·OpenCode·Kilo이며, 에이전트를 새로 추가할 때도 빠뜨리지 말 것
   - 저장소 스킬(`.agents/skills/`)을 못 읽는 에이전트에는 `scripts/setup-agent-rules.ps1`이 공용 스킬을 그 에이전트의 스킬 폴더로 복사함 (새 에이전트는 `$agents`에 지침서와 스킬 폴더를 함께 적을 것)
   - Claude Code는 같은 스크립트가 개인 스킬 폴더(`~\.claude\skills`)에 저장소 스킬마다 링크(junction)를 만들어 모든 프로젝트에서 쓰게 함 (복사하지 않음)
 - Claude Code 전역 설정(`~\.claude\settings.json`)에 넣을 값은 `config/claude-settings.json`에 두고 `scripts/setup-claude-settings.ps1`로 반영할 것 (전역 설정 파일을 직접 고치지 않음)

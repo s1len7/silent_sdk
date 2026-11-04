@@ -228,9 +228,17 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
 - 업데이트: `npm i -g --allow-scripts=opencode-ai opencode-ai@latest`
 
 
+### Kilo CLI
+
+- Setup: [scripts/setup-kilo-cli.ps1](scripts/setup-kilo-cli.ps1) ([Kilo Code CLI](https://kilo.ai/docs/code-with-ai/platforms/cli)를 npm `@kilocode/cli` 최신으로 설치. OpenCode 단계에서 설치한 Node.js 사용)
+  - 다시 실행 시: `kilo` 명령이 있으면 건너뜀
+- 로그인·API 키는 설정하지 않음. 첫 실행에서 `/connect`로 계정 또는 모델 제공자를 연결
+- 업데이트: `npm i -g --allow-scripts=@kilocode/cli @kilocode/cli@latest`
+
+
 ### Bitwarden CLI
 
-- Setup: [scripts/setup-bitwarden-cli.ps1](scripts/setup-bitwarden-cli.ps1) (공식 `@bitwarden/cli`를 npm으로 설치하고, `.env`의 `VAULTWARDEN_URL`을 Vaultwarden 서버로 설정. 전체 Setup에서 OpenCode 다음에 실행)
+- Setup: [scripts/setup-bitwarden-cli.ps1](scripts/setup-bitwarden-cli.ps1) (공식 `@bitwarden/cli`를 npm으로 설치하고, `.env`의 `VAULTWARDEN_URL`을 Vaultwarden 서버로 설정. 전체 Setup에서 Kilo CLI 다음에 실행)
   - 다시 실행 시: `bw`가 설치돼 있고 `.env`의 `VAULTWARDEN_URL`과 `bw config server` 값이 같으면 건너뜀. `.env`가 없으면 예시에서 만들고, `VAULTWARDEN_URL`이 비어 있거나 예시 값이면 URL을 입력할 때까지 SKIP
   - 설정: `.env`의 `VAULTWARDEN_URL`을 실제 HTTPS 주소로 바꿈. 예시 형식은 [.env.example](.env.example) 참고. `.env`는 Git에서 무시됨
   - Node.js 22 이상이 필요 (OpenCode 단계에서 설치)
@@ -248,10 +256,11 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
 | --- | --- | --- |
 | Claude Code | `~\.claude\CLAUDE.md` | `@<경로>` 불러오기 (항상 읽힘) |
 | OpenCode | `~\.config\opencode\AGENTS.md`, `~\.config\opencode\opencode.json` | 경로를 읽고 따르라는 문장 + `instructions`에 경로 추가 (항상 읽힘, AGENTS.md 안의 경로는 자동으로 읽지 않으므로) |
+| Kilo | `~\.config\kilo\AGENTS.md` | 경로를 읽고 따르라는 문장 (전역 AGENTS.md를 자동으로 읽음) |
 | OpenClaw | `<작업 폴더>\AGENTS.md` (기본 `~\.openclaw\workspace`) | 경로를 읽고 따르라는 문장 |
 
 - 지침서와 `opencode.json`의 기존 내용은 그대로 둠
-- 스킬: 원본은 이 PC의 저장소 `.agents/skills` (git에 올리지 않음, OpenCode·Codex·Gemini CLI가 저장소에서 바로 읽음). Claude Code용 `.claude/skills`는 이 폴더를 가리키는 링크(junction)로 만듦 (실제 폴더가 있으면 경고만 하고 그대로 둠). 이 폴더가 없으면 링크와 스킬 복사는 건너뜀. 저장소 밖에서 일하는 OpenClaw에는 공용 스킬(`oss-review`, `openclaw-ops`, `free-model-check`)을 `~\.openclaw\skills`로 복사 (공용 스킬 목록은 스크립트의 `$sharedSkills`)
+- 스킬: 원본은 이 PC의 저장소 `.agents/skills` (git에 올리지 않음, OpenCode·Kilo·Codex·Gemini CLI가 저장소에서 바로 읽음). Claude Code용 `.claude/skills`는 이 폴더를 가리키는 링크(junction)로 만듦 (실제 폴더가 있으면 경고만 하고 그대로 둠). 이 폴더가 없으면 링크와 스킬 복사는 건너뜀. 저장소 밖에서 일하는 OpenClaw에는 공용 스킬(`oss-review`, `openclaw-ops`, `free-model-check`)을 `~\.openclaw\skills`로 복사 (공용 스킬 목록은 스크립트의 `$sharedSkills`)
   - 복사본에는 `.silent-sdk-managed` 표시 파일을 남기고, 목록에서 빠진 스킬은 이 표시가 있는 복사본만 지움 (다른 곳에서 설치한 스킬은 건드리지 않음)
   - 같은 이름인데 표시가 없는 스킬은 덮어쓰지 않고 경고만 표시 (지우면 다음 실행 때 저장소 스킬로 복사)
 - 모든 프로젝트에서 저장소 스킬 쓰기: Claude Code 개인 스킬 폴더 `~\.claude\skills`에 저장소 스킬마다 `<스킬>` 링크(junction)를 만듦 (복사하지 않으므로 저장소에서 고치면 바로 반영)

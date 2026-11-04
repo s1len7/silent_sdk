@@ -42,6 +42,7 @@ if (Get-Command openclaw -ErrorAction SilentlyContinue) {
 $agents = @(
     @{ Name = 'Claude Code'; Home = "$HOME\.claude"; File = "$HOME\.claude\CLAUDE.md"; Import = $true; Links = "$HOME\.claude\skills" }
     @{ Name = 'OpenCode'; Home = "$HOME\.config\opencode"; File = "$HOME\.config\opencode\AGENTS.md"; Import = $false; Config = "$HOME\.config\opencode\opencode.json" }
+    @{ Name = 'Kilo'; Home = "$HOME\.config\kilo"; File = "$HOME\.config\kilo\AGENTS.md"; Import = $false }
     @{ Name = 'OpenClaw'; Home = "$HOME\.openclaw"; File = "$openClawWorkspace\AGENTS.md"; Import = $false; Skills = "$HOME\.openclaw\skills" }
 )
 
