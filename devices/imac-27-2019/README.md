@@ -86,6 +86,11 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 - Setup: [scripts/setup_finder_home.sh](scripts/setup_finder_home.sh) (Finder의 새 윈도우 기본 위치를 홈 폴더(`~`)로 설정. 값을 바꾼 뒤 Finder를 다시 시작해 바로 적용하며, 열려 있던 Finder 창은 닫힘)
 - 다시 실행 시: 새 윈도우 위치가 이미 홈 폴더면 건너뜀
 
+### display brightness
+
+- Setup: [scripts/setup_display_brightness_max.sh](scripts/setup_display_brightness_max.sh) (주 디스플레이인 내장 디스플레이의 밝기를 최대로 설정, 관리자 권한 불필요, 외장 디스플레이는 대상 아님)
+- 다시 실행 시: 주 디스플레이 밝기가 이미 최대면 건너뜀
+
 ### nodejs
 
 - Setup: [scripts/setup_nodejs.sh](scripts/setup_nodejs.sh) (Node.js 최신 LTS를 [nodejs.org](https://nodejs.org/) 공식 압축 파일로 관리자 권한 없이 `~/.local/node`에 설치하고, `node`·`npm`·`npx`를 `~/.local/bin`에 링크. OpenCode 설치에 필요)
