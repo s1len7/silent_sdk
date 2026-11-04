@@ -124,6 +124,12 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 - 다시 실행 시: `opencode` 명령이 있고 기본 모델·대체 모델 설정이 모두 같으면 건너뜀. 설치만 돼 있으면 설정만 적용
 - 무료 `opencode/*` 모델은 로그인이 필요 없음. 공용 장비이므로 API 키는 설정하지 않음
 
+### kilo cli
+
+- Setup: [scripts/setup_kilo_cli.sh](scripts/setup_kilo_cli.sh) ([Kilo Code CLI](https://kilo.ai/docs/code-with-ai/platforms/cli)를 npm `@kilocode/cli` 최신으로 설치하고 `~/.local/bin/kilo`로 링크)
+- 다시 실행 시: `kilo` 명령이 있으면 건너뜀
+- 로그인·API 키는 설정하지 않음. 첫 실행에서 `/connect`로 계정 또는 모델 제공자를 연결
+
 ### humanizer
 
 - Setup: [scripts/setup_humanizer.sh](scripts/setup_humanizer.sh) ([blader/humanizer](https://github.com/blader/humanizer) 스킬을 `npx skills`로 전역 설치. Claude Code와 OpenCode에서 `/humanizer`로 사용, 다른 키는 그대로 둠)

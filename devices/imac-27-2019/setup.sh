@@ -68,6 +68,7 @@ modules=(
     setup_night_shift_off
     setup_vscode_auto_update_off
     setup_opencode
+    setup_kilo_cli
     setup_humanizer
     setup_discord
     setup_tailscale
