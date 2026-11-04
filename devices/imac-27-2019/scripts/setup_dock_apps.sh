@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# Dock(화면 아래 독)에 Chrome, Terminal, VSCode, Discord 바로가기를 Chrome, Terminal, VSCode, Discord 순서로 추가
-# --remove를 주면 Dock에서 Mail, TV, Music을 제거함 (다른 Dock 항목은 그대로 둠)
-# 이미 있으면 마지막 세 항목이 되도록 순서를 맞추고, Dock이 바뀐 항목을 읽도록 다시 시작해 바로 보이게 함
+# Dock(화면 아래 독)에 Chrome, Terminal, VSCode, Discord 바로가기를 Chrome, Terminal, VSCode, Discord 순서로 추가하고
+# Mail, TV, Music은 제거함 (다른 Dock 항목은 그대로 둠)
+# --remove를 주면 Mail, TV, Music만 제거함
+# 이미 있으면 마지막 네 항목이 되도록 순서를 맞추고, Dock이 바뀐 항목을 읽도록 다시 시작해 바로 보이게 함
 set -euo pipefail
 source "$(dirname "$0")/lib.sh"
 
@@ -83,9 +84,11 @@ else:
         matches(e, path, bid) for e, (path, bid, _) in zip(tail, add_apps)
     )
     others = [e for e in current[:-len(add_apps)] if any(matches(e, path, bid) for path, bid, _ in add_apps)]
-    if tail_ok and not others:
+    has_remove_apps = any(matches(e, path, bid) for e in current for path, bid in remove_apps)
+    if tail_ok and not others and not has_remove_apps:
         sys.exit(3)
     new = [e for e in current if not any(matches(e, path, bid) for path, bid, _ in add_apps)]
+    new = [e for e in new if not any(matches(e, path, bid) for path, bid in remove_apps)]
     new += [entry(*app) for app in add_apps]
 
 sys.stdout.write(plistlib.dumps(new, fmt=plistlib.FMT_XML).decode())
@@ -98,7 +101,7 @@ if [[ $status -eq 3 ]]; then
     if [[ "$mode" == remove ]]; then
         skip_done "Mail, TV and Music are not in the Dock"
     fi
-    skip_done "Chrome, Terminal, Visual Studio Code and Discord are already in the Dock in that order"
+    skip_done "Chrome, Terminal, Visual Studio Code and Discord are already in the Dock in that order, and Mail, TV and Music are removed"
 elif [[ $status -ne 0 ]]; then
     echo "Failed to prepare the Dock items" >&2
     exit 1
@@ -109,5 +112,5 @@ killall Dock 2>/dev/null || true
 if [[ "$mode" == remove ]]; then
     echo "Mail, TV and Music removed from the Dock"
 else
-    echo "Chrome, Terminal, Visual Studio Code and Discord added to the Dock in that order"
+    echo "Chrome, Terminal, Visual Studio Code and Discord added to the Dock in that order, Mail, TV and Music removed"
 fi

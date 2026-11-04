@@ -77,9 +77,9 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 
 ### dock apps
 
-- Setup: [scripts/setup_dock_apps.sh](scripts/setup_dock_apps.sh) (Dock에 `Chrome`, `Terminal`, `VSCode`, `Discord` 바로가기를 이 순서로 추가, 다른 Dock 항목은 그대로 둠)
-- 제거: `bash scripts/setup_dock_apps.sh --remove` (Dock에 고정된 `Mail`, `TV`, `Music` 제거, 다른 Dock 항목은 그대로 둠)
-- 다시 실행 시: Dock 마지막 네 항목이 `Chrome`, `Terminal`, `VSCode`, `Discord` 순서이고 중복이 없으면 건너뜀. 아니면 순서를 맞춤. `--remove`는 세 앱이 모두 없으면 건너뜀
+- Setup: [scripts/setup_dock_apps.sh](scripts/setup_dock_apps.sh) (Dock에 `Chrome`, `Terminal`, `VSCode`, `Discord` 바로가기를 이 순서로 추가하고, 기본으로 고정된 `Mail`, `TV`, `Music`을 제거. 다른 Dock 항목은 그대로 둠)
+- 제거만: `bash scripts/setup_dock_apps.sh --remove` (`Mail`, `TV`, `Music`만 제거, 다른 Dock 항목은 그대로 둠)
+- 다시 실행 시: Dock 마지막 네 항목이 `Chrome`, `Terminal`, `VSCode`, `Discord` 순서이고 중복이 없으며 `Mail`, `TV`, `Music`이 모두 없으면 건너뜀. 아니면 순서를 맞추고 세 앱을 제거. `--remove`는 세 앱이 모두 없으면 건너뜀
 
 ### finder home
 
