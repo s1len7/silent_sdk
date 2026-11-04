@@ -228,6 +228,16 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
 - 업데이트: `npm i -g --allow-scripts=opencode-ai opencode-ai@latest`
 
 
+### Bitwarden CLI
+
+- Setup: [scripts/setup-bitwarden-cli.ps1](scripts/setup-bitwarden-cli.ps1) (공식 `@bitwarden/cli`를 npm으로 설치하고, `.env`의 `VAULTWARDEN_URL`을 Vaultwarden 서버로 설정. 전체 Setup에서 OpenCode 다음에 실행)
+  - 다시 실행 시: `bw`가 설치돼 있고 `.env`의 `VAULTWARDEN_URL`과 `bw config server` 값이 같으면 건너뜀. `.env`가 없으면 예시에서 만들고, `VAULTWARDEN_URL`이 비어 있거나 예시 값이면 URL을 입력할 때까지 SKIP
+  - 설정: `.env`의 `VAULTWARDEN_URL`을 실제 HTTPS 주소로 바꿈. 예시 형식은 [.env.example](.env.example) 참고. `.env`는 Git에서 무시됨
+  - Node.js 22 이상이 필요 (OpenCode 단계에서 설치)
+  - 금고 로그인/잠금 해제는 필요할 때 직접 `bw login` / `bw unlock`으로 진행. 마스터 암호와 세션 키는 설정 파일이나 로그에 저장하지 않음
+  - 업데이트: `npm i -g @bitwarden/cli@latest`
+
+
 ### AI 에이전트 공통 규칙 연결
 
 - Setup: [scripts/setup-agent-rules.ps1](scripts/setup-agent-rules.ps1) (설치된 AI 에이전트의 전역 지침서 끝에 저장소 루트 [AGENTS.md](../../AGENTS.md)를 따르라는 블록 추가, 지침서가 없으면 만듦)
@@ -286,5 +296,5 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
 
 - `~\.ssh\` (`C:\Users\<사용자>\.ssh\`): 장비 접속용 ssh 키(`id_rsa`, `id_rsa.pub`, `id_rsa.putty.pub`, `id_rsa.ppk`), 장비별 접속 설정(`config`), 장비 서버 키 목록(`known_hosts`)
   - 개인 키가 들어 있으므로 암호화된 위치에만 백업하고, 이 저장소에는 올리지 말 것
-- `devices\desktop\.env` (전체 Setup 기준 `C:\silent_sdk\devices\desktop\.env`): OpenRouter·Gemini API 키, 원격 OpenClaw Gateway 주소·token·ssh 대상 ([.env.example](.env.example) 참고)
+- `devices\desktop\.env` (전체 Setup 기준 `C:\silent_sdk\devices\desktop\.env`): OpenRouter·Gemini API 키, 원격 OpenClaw Gateway 주소·token·ssh 대상, Vaultwarden 주소 ([.env.example](.env.example) 참고)
   - git에 올라가지 않으므로 직접 백업하고, 위와 같이 암호화된 위치에만 둘 것

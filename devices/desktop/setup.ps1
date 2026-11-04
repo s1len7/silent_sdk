@@ -123,6 +123,8 @@ $results += Invoke-Step 'openclaw-companion' { & "$s\setup-openclaw-companion.ps
 # Websites and apps as commands for OpenClaw (the app installs the skills OpenClaw loads)
 $results += Invoke-Step 'opencli'      { & "$s\setup-opencli.ps1" }
 $results += Invoke-Step 'opencode'     { & "$g\setup-opencode.ps1" }
+# After OpenCode, which installs Node.js (the Bitwarden CLI is an npm package)
+$results += Invoke-Step 'bitwarden-cli' { & "$s\setup-bitwarden-cli.ps1" }
 # After the agents are installed, so their config folders exist
 $results += Invoke-Step 'agent-rules'  { & "$s\setup-agent-rules.ps1" }
 $results += Invoke-Step 'claude-settings' { & "$s\setup-claude-settings.ps1" }
