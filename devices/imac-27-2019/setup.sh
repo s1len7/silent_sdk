@@ -53,6 +53,8 @@ summary=()
 failed=0
 all_ok=1
 modules=(
+    setup_nodejs
+    setup_bitwarden_cli
     setup_git
     setup_shell_path
     setup_claude_code
@@ -60,10 +62,10 @@ modules=(
     setup_scroll_direction
     setup_hangul_input
     setup_dock_apps
-    setup_nodejs
     setup_opencode
     setup_humanizer
     setup_discord
+    setup_tailscale
 )
 
 for name in "${modules[@]}"; do

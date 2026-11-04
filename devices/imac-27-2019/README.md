@@ -86,6 +86,13 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 - Setup: [scripts/setup_nodejs.sh](scripts/setup_nodejs.sh) (Node.js 최신 LTS를 [nodejs.org](https://nodejs.org/) 공식 압축 파일로 관리자 권한 없이 `~/.local/node`에 설치하고, `node`·`npm`·`npx`를 `~/.local/bin`에 링크. OpenCode 설치에 필요)
 - 다시 실행 시: `~/.local/node`에 Node.js 20.18.1 이상이 있고 링크가 모두 있으면 건너뜀. 설치만 돼 있으면 링크만 다시 만듦
 
+### bitwarden cli
+
+- Setup: [scripts/setup_bitwarden_cli.sh](scripts/setup_bitwarden_cli.sh) (공식 `@bitwarden/cli`를 사용자 범위에 설치하고 Vaultwarden 서버에 연결. 전체 Setup에서 Node.js 다음에 실행)
+- 다시 실행 시: `bw`가 설치돼 있고 `.env`의 `VAULTWARDEN_URL`과 서버 설정이 같으면 건너뜀. `.env`가 없으면 예시에서 만들고 URL을 입력할 때까지 SKIP
+- 설정: 첫 실행에서 만든 `.env`의 `VAULTWARDEN_URL`을 실제 HTTPS 주소로 바꿈. 예시 형식은 [.env.example](.env.example) 참고. `.env`는 Git에서 무시됨
+- 금고 로그인/잠금 해제는 Tailscale 미연결 상태에서만 필요할 때 대화형으로 요청. 마스터 암호와 세션 키는 설정 파일이나 로그에 저장하지 않음
+
 ### opencode
 
 - Setup: [scripts/setup_opencode.sh](scripts/setup_opencode.sh) (OpenCode CLI를 npm `opencode-ai` 최신으로 설치하고 `~/.local/bin/opencode`로 링크, 무료 기본 모델 `opencode/deepseek-v4.1-flash-free`와 대체 모델 플러그인·목록을 `~/.config/opencode/`에 설정, 다른 키는 그대로 둠)
@@ -102,10 +109,18 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 - Setup: [scripts/setup_discord.sh](scripts/setup_discord.sh) (Discord DMG를 받아 `~/Applications`에 설치, 자체 업데이트. 관리자 권한 불필요, 다른 Dock 항목은 그대로 둠)
 - 다시 실행 시: `/Applications` 또는 `~/Applications`에 `Discord.app`이 있으면 건너뜀
 
+### tailscale
+
+- Setup: [scripts/setup_tailscale.sh](scripts/setup_tailscale.sh) (Mac App Store판 앱이 설치돼 있고 미연결 상태일 때 Vaultwarden의 `Tailscale Auth Key` 항목으로 연결. 미설치면 공식 [Tailscale 앱](https://apps.apple.com/app/tailscale/id1475387142) 링크를 안내)
+- 다시 실행 시: 앱이 미설치됐거나 터미널이 없으면 건너뜀. 이미 연결돼 있으면 Vaultwarden을 열지 않고 건너뜀
+- 키 준비: Vaultwarden에 `Tailscale Auth Key`라는 항목을 만들고 password 필드에 짧은 만료의 일회용 Tailscale 인증 키를 저장. 사용된 키는 자동 무효화되므로 다시 인증할 때 새 키로 교체
+- 키는 `.env`에 복사하지 않으며, 연결 중 권한 제한 임시 파일로만 전달하고 삭제
+
 ### opencli
 
 - Setup: [scripts/setup_opencli.sh](scripts/setup_opencli.sh) ([@jackwener/opencli](https://github.com/jackwener/opencli)를 npm으로 사용자 범위에 설치해 `opencli` 명령으로 사용, AI 에이전트용 스킬(opencli-browser 등)도 함께 전역 설치)
 - 다시 실행 시: `opencli` 명령과 `~/.agents/skills/opencli-browser/SKILL.md`가 모두 있으면 건너뜀. 빠진 부분만 설치
+
 ### codyssey proxy
 
 - Setup: [scripts/setup_codyssey_proxy.sh](scripts/setup_codyssey_proxy.sh) (Codyssey 게이트웨이 앞단의 통합 프록시, `~/.codyssey-proxy/`에 설치)
