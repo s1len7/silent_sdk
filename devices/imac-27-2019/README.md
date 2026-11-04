@@ -77,9 +77,9 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 
 ### dock apps
 
-- Setup: [scripts/setup_dock_apps.sh](scripts/setup_dock_apps.sh) (Dock에 `Chrome`, `Terminal`, `VSCode`, `Discord` 바로가기를 이 순서로 추가하고, 기본으로 고정된 `Mail`, `TV`, `Music`을 제거. 다른 Dock 항목은 그대로 둠)
-- 제거만: `bash scripts/setup_dock_apps.sh --remove` (`Mail`, `TV`, `Music`만 제거, 다른 Dock 항목은 그대로 둠)
-- 다시 실행 시: Dock 마지막 네 항목이 `Chrome`, `Terminal`, `VSCode`, `Discord` 순서이고 중복이 없으며 `Mail`, `TV`, `Music`이 모두 없으면 건너뜀. 아니면 순서를 맞추고 세 앱을 제거. `--remove`는 세 앱이 모두 없으면 건너뜀
+- Setup: [scripts/setup_dock_apps.sh](scripts/setup_dock_apps.sh) (Dock에 `Chrome`, `Terminal`, `VSCode`, `Discord` 바로가기를 이 순서로 추가하고, 기본으로 고정된 `Mail`, `TV`, `Music`, `Games`를 제거. 다른 Dock 항목은 그대로 둠. `Games`는 macOS Tahoe 26 이상에만 있음)
+- 제거만: `bash scripts/setup_dock_apps.sh --remove` (`Mail`, `TV`, `Music`, `Games`만 제거, 다른 Dock 항목은 그대로 둠)
+- 다시 실행 시: Dock 마지막 네 항목이 `Chrome`, `Terminal`, `VSCode`, `Discord` 순서이고 중복이 없으며 `Mail`, `TV`, `Music`, `Games`가 모두 없으면 건너뜀. 아니면 순서를 맞추고 네 앱을 제거. `--remove`는 네 앱이 모두 없으면 건너뜀
 
 ### finder home
 
@@ -141,6 +141,13 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 - 다시 실행 시: 앱이 미설치됐거나 터미널이 없으면 건너뜀. 이미 연결돼 있으면 Vaultwarden을 열지 않고 건너뜀
 - 키 준비: Vaultwarden에 `Tailscale Auth Key`라는 항목을 만들고 password 필드에 짧은 만료의 일회용 Tailscale 인증 키를 저장. 사용된 키는 자동 무효화되므로 다시 인증할 때 새 키로 교체
 - 키는 `.env`에 복사하지 않으며, 연결 중 권한 제한 임시 파일로만 전달하고 삭제
+
+### rustdesk
+
+- Setup: [scripts/setup_rustdesk.sh](scripts/setup_rustdesk.sh) (Chrome Remote Desktop 호스트가 관리자 권한을 요구해 대신 쓰는 원격 데스크톱. GitHub 공식 릴리스의 DMG를 받아 `~/Applications`에 설치. `/Applications`에 이미 있으면 그대로 사용. 관리자 권한 없이 설치)
+- 다시 실행 시: `RustDesk.app`이 `~/Applications` 또는 `/Applications`에 있으면 건너뜀
+- 설치 후: RustDesk를 열고 `시스템 설정 > 개인정보 보호 및 보안`에서 `화면 기록`, `손쉬운 사용`, 필요한 경우 `입력 모니터링`을 허용. RustDesk 설정에서 `Start at login`을 켜야 로그인 후 원격 접속 가능
+- 제한: 로그아웃/로그인 화면 접속과 백그라운드 서비스 설치는 관리자 권한이 필요해 이 모듈에서 다루지 않음. macOS가 앱 실행을 막으면 `개인정보 보호 및 보안`에서 `Open Anyway`로 허용
 
 ### opencli
 

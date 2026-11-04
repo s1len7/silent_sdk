@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Dock(화면 아래 독)에 Chrome, Terminal, VSCode, Discord 바로가기를 Chrome, Terminal, VSCode, Discord 순서로 추가하고
-# Mail, TV, Music은 제거함 (다른 Dock 항목은 그대로 둠)
-# --remove를 주면 Mail, TV, Music만 제거함
+# Mail, TV, Music, Games는 제거함 (다른 Dock 항목은 그대로 둠, Games는 macOS Tahoe 26 이상에만 있음)
+# --remove를 주면 Mail, TV, Music, Games만 제거함
 # 이미 있으면 마지막 네 항목이 되도록 순서를 맞추고, Dock이 바뀐 항목을 읽도록 다시 시작해 바로 보이게 함
 set -euo pipefail
 source "$(dirname "$0")/lib.sh"
@@ -32,6 +32,7 @@ remove_apps = [
     ("/System/Applications/Mail.app", "com.apple.mail"),
     ("/System/Applications/TV.app", "com.apple.TV"),
     ("/System/Applications/Music.app", "com.apple.Music"),
+    ("/System/Applications/Games.app", "com.apple.games"),
 ]
 
 
@@ -99,9 +100,9 @@ set -e
 
 if [[ $status -eq 3 ]]; then
     if [[ "$mode" == remove ]]; then
-        skip_done "Mail, TV and Music are not in the Dock"
+        skip_done "Mail, TV, Music and Games are not in the Dock"
     fi
-    skip_done "Chrome, Terminal, Visual Studio Code and Discord are already in the Dock in that order, and Mail, TV and Music are removed"
+    skip_done "Chrome, Terminal, Visual Studio Code and Discord are already in the Dock in that order, and Mail, TV, Music and Games are removed"
 elif [[ $status -ne 0 ]]; then
     echo "Failed to prepare the Dock items" >&2
     exit 1
@@ -110,7 +111,7 @@ fi
 defaults write com.apple.dock persistent-apps "$apps_xml"
 killall Dock 2>/dev/null || true
 if [[ "$mode" == remove ]]; then
-    echo "Mail, TV and Music removed from the Dock"
+    echo "Mail, TV, Music and Games removed from the Dock"
 else
-    echo "Chrome, Terminal, Visual Studio Code and Discord added to the Dock in that order, Mail, TV and Music removed"
+    echo "Chrome, Terminal, Visual Studio Code and Discord added to the Dock in that order, Mail, TV, Music and Games removed"
 fi
