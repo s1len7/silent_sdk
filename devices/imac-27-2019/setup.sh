@@ -71,7 +71,6 @@ modules=(
     setup_humanizer
     setup_discord
     setup_tailscale
-    setup_rustdesk
 )
 
 for name in "${modules[@]}"; do
