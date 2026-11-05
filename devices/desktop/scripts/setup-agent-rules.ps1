@@ -7,7 +7,7 @@
 # (~\.claude\skills\<skill>); a junction whose skill was removed from the repo is deleted, other skills there are never touched.
 # Agents that cannot read the repo skills get copies of the shared skills in their own skills folder; a changed skill is copied again.
 # Copies carry a marker file, so a skill dropped from $sharedSkills is removed and skills from elsewhere are never touched.
-# The repo skills are local only (.agents/ is not in git), so without that folder the junction and skill copying are skipped.
+# The repo skills are tracked in git (.agents/). Without that folder the junction and skill copying are skipped.
 # To cover a new agent, add one entry to $agents below.
 # The block is English because .ps1 files here are ASCII-only (Windows PowerShell 5.1 misreads non-ASCII files without a BOM).
 
