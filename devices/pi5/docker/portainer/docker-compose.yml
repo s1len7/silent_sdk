@@ -1,0 +1,17 @@
+# Portainer CE 서버 (ds218plus projects/portainer와 같은 구성)
+# 이 장비의 Docker는 docker.sock으로 직접 관리함 (setup_docker.sh의 Portainer Agent는 다른 Portainer 서버용으로 그대로 둠)
+# 설치는 scripts/setup_portainer.sh
+services:
+  portainer:
+    image: portainer/portainer-ce:lts
+    container_name: portainer
+    restart: unless-stopped
+    ports:
+      # Edge Agent 터널
+      - 8000:8000
+      # 웹 UI (http)
+      - 9000:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      # 상대 경로(./data)는 이 compose 파일 위치(docker/portainer/data)를 기준으로 풀림
+      - ./data:/data
