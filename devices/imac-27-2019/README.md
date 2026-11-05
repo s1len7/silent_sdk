@@ -72,8 +72,9 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 
 ### hangul input
 
-- Setup: [scripts/setup_hangul_input.sh](scripts/setup_hangul_input.sh) (macOS 기본 한글 입력기의 두벌식을 입력 소스에 추가, 입력 방법과 입력 모드 항목을 모두 넣고 입력 메뉴를 다시 시작해 바로 반영. 기존 입력 소스는 그대로 둠. 메뉴 막대에 나타나지 않으면 로그아웃 후 다시 로그인)
-- 다시 실행 시: 두벌식 입력 방법과 입력 모드 항목이 모두 있으면 건너뜀. 빠진 항목만 추가
+- Setup: [scripts/setup_hangul_input.sh](scripts/setup_hangul_input.sh) (구름 입력기(`/Library/Input Methods/Gureum.app`)가 있으면 서드파티 입력 소스 저장소(`com.apple.inputsources`)에 구름 두벌식을 등록하고, 없으면 macOS 기본 한글 두벌식을 입력 소스에 추가. 입력 방법과 입력 모드 항목을 모두 넣고 입력 메뉴를 다시 시작해 바로 반영. 기존 입력 소스는 그대로 둠. 메뉴 막대에 나타나지 않으면 로그아웃 후 다시 로그인)
+- 회사 로그인 스크립트(`kr.codyssey.gureum.init`)가 애플 한글을 끄고 구름을 선택하므로, 구름이 설치돼 있으면 구름을 등록함
+- 다시 실행 시: 해당 입력기의 입력 방법과 입력 모드 항목이 모두 있으면 건너뜀. 빠진 항목만 추가
 
 ### dock apps
 
