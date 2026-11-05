@@ -89,8 +89,8 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 
 ### display brightness
 
-- Setup: [scripts/setup_display_brightness_max.sh](scripts/setup_display_brightness_max.sh) (주 디스플레이인 내장 디스플레이의 밝기를 최대로 설정, 관리자 권한 불필요, 외장 디스플레이는 대상 아님)
-- 다시 실행 시: 주 디스플레이 밝기가 이미 최대면 건너뜀
+- Setup: [scripts/setup_display_brightness_max.sh](scripts/setup_display_brightness_max.sh) (주 디스플레이인 내장 디스플레이의 밝기를 최대로 설정하고, 재부팅/로그인 후에도 유지되도록 사용자 LaunchAgent `com.silent.display-brightness-max`를 등록. 로그인 5초·15초 뒤 두 번 다시 설정. 관리자 권한 불필요, 외장 디스플레이는 대상 아님)
+- 다시 실행 시: 주 디스플레이 밝기가 이미 최대면 건너뜀. 로그인 에이전트는 항상 최신 내용으로 갱신
 
 ### true tone
 
