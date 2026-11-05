@@ -102,7 +102,12 @@ modules=(
     setup_vscode_autostart
     ../pi4-display/scripts/setup_shutdown_shortcut
     ../pi4-display/scripts/setup_opencode
+    # Kilo CLI는 OpenCode 모듈이 설치한 Node.js·npm을 씀 (라즈베리파이 공통 모듈)
+    ../pi4-display/scripts/setup_kilo_cli
+    # Docker 메모리 상한(mem_limit)이 OpenClaw용으로 필요해 일단 비활성화 (재부팅 필요)
+    # setup_memory_cgroup
     ../pi4-display/scripts/setup_docker
+    # setup_openclaw
     setup_tailscale
 )
 for entry in "${modules[@]}"; do

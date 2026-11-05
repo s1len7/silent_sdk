@@ -90,6 +90,19 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/pi5/
   - 개별 실행: 이 폴더에서 `sudo bash ../pi4-display/scripts/setup_opencode.sh`
 
 
+### Kilo CLI
+
+- Setup: [../pi4-display/scripts/setup_kilo_cli.sh](../pi4-display/scripts/setup_kilo_cli.sh) (라즈베리파이 공통 모듈, [Kilo Code CLI](https://kilo.ai/docs/code-with-ai/platforms/cli)를 npm `@kilocode/cli` 최신으로 설치하고 `~/.local/bin/kilo`로 링크. OpenCode 단계에서 설치한 Node.js·npm 사용)
+  - 다시 실행 시: `~/.local/bin/kilo`가 있고 실행되면 건너뜀
+  - 개별 실행: 이 폴더에서 `sudo bash ../pi4-display/scripts/setup_kilo_cli.sh`
+- 로그인·API 키는 설정하지 않음. 첫 실행에서 `/connect`로 계정 또는 모델 제공자를 연결
+- 업데이트 (sudo 불필요):
+
+```bash
+npm install -g --prefix ~/.local @kilocode/cli@latest
+```
+
+
 ### docker
 
 - Setup: [../pi4-display/scripts/setup_docker.sh](../pi4-display/scripts/setup_docker.sh) (라즈베리파이 공통 모듈, Raspberry Pi OS 저장소의 `docker.io`·`docker-compose` 설치, 사용자를 `docker` 그룹에 추가, Portainer Agent(포트 9001) 실행. 설명은 [pi4-display README](../pi4-display/README.md#docker) 참고)
