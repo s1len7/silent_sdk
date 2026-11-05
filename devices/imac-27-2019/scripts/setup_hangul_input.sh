@@ -9,6 +9,11 @@
 set -euo pipefail
 source "$(dirname "$0")/lib.sh"
 
+if ! command -v jq >/dev/null 2>&1; then
+    echo "jq not found. Install jq, then run this step again" >&2
+    exit 1
+fi
+
 if [[ -d "/Library/Input Methods/Gureum.app" ]]; then
     domain=com.apple.inputsources
     source_key=AppleEnabledThirdPartyInputSources
@@ -26,8 +31,21 @@ fi
 mode_entry="<dict><key>Bundle ID</key><string>$bundle_id</string><key>Input Mode</key><string>$input_mode</string><key>InputSourceKind</key><string>Input Mode</string></dict>"
 method_entry="<dict><key>Bundle ID</key><string>$bundle_id</string><key>InputSourceKind</key><string>Keyboard Input Method</string></dict>"
 
-# 현재 항목을 JSON으로 읽음 (키가 없으면 빈 배열)
-enabled_json="$(defaults read "$domain" "$source_key" 2>/dev/null | plutil -convert json -o - - 2>/dev/null || echo '[]')"
+# 현재 항목을 JSON 배열로 읽음. defaults/plutil 출력은 임시 파일로만 처리해 stderr나 빈 stdin이
+# JSON 파싱 결과에 섞이지 않게 함 (키가 없거나 변환 실패 시 빈 배열)
+enabled_json="[]"
+plist_tmp="$(mktemp "${TMPDIR:-/tmp}/imac-hangul.XXXXXX")"
+json_tmp="$(mktemp "${TMPDIR:-/tmp}/imac-hangul.XXXXXX")"
+trap 'rm -f "$plist_tmp" "$json_tmp"' EXIT
+
+if defaults read "$domain" "$source_key" >"$plist_tmp" 2>/dev/null; then
+    if [[ -s "$plist_tmp" ]] && plutil -convert json -o "$json_tmp" "$plist_tmp" >/dev/null 2>&1 && [[ -s "$json_tmp" ]]; then
+        if jq -e 'type == "array"' "$json_tmp" >/dev/null 2>&1; then
+            enabled_json="$(cat "$json_tmp")"
+        fi
+    fi
+fi
+
 has_mode="$(jq --arg b "$bundle_id" --arg m "$input_mode" \
     'any(.[]; .["Bundle ID"] == $b and .["Input Mode"] == $m and .InputSourceKind == "Input Mode")' <<<"$enabled_json")"
 has_method="$(jq --arg b "$bundle_id" \
