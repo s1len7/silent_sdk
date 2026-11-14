@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Node.js 최신 LTS를 관리자 권한 없이 ~/.local/node에 설치 (OpenCode의 npm 설치에 필요)
+# Node.js 최신 LTS를 관리자 권한 없이 ~/.local/node에 설치 (OpenCode·Kilo·npx skills에 필요)
 # nodejs.org 공식 압축 파일을 받아 SHA-256을 확인한 뒤 풀고, node·npm·npx를 ~/.local/bin에 링크
 # 셸 프로필은 고치지 않음 (~/.local/bin이 PATH에 없으면 추가할 줄만 안내)
 set -euo pipefail
 source "$(dirname "$0")/lib.sh"
 
-# 이보다 오래된 설치는 새로 받음 (OpenCode는 최소 버전을 정하지 않음)
-min_version=20.18.1
+# 이보다 오래된 설치는 새로 받음 (npx skills가 Node.js 22.20 이상을 요구)
+min_version=22.20.0
 dist_url=https://nodejs.org/dist
 
 # 버전 a가 b 이상이면 성공 (점으로 나눈 세 숫자 비교)

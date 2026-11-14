@@ -283,6 +283,18 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
 - `settings.json`이 올바른 JSON이 아니면 덮어쓰지 않고 실패함
 
 
+### AI 에이전트 스킬
+
+- Setup: [scripts/setup-agent-skills.ps1](scripts/setup-agent-skills.ps1) (서드파티 스킬·플러그인을 설치된 에이전트에 맞는 방식으로 설치)
+  - Claude Code: 공식 마켓플레이스에서 `superpowers`, `ponytail`, `document-skills`, `example-skills` 플러그인을 사용자 범위로 설치
+  - OpenCode: `superpowers`, `ponytail`을 플러그인으로 설치하고, Anthropic 문서·예제 스킬은 `npx skills`로 설치
+  - Kilo: `ponytail`을 플러그인으로 설치하고, Superpowers와 Anthropic 문서·예제 스킬은 `npx skills`로 설치 (Superpowers는 Kilo용 공식 플러그인이 없어 스킬만 설치)
+  - OpenClaw: `ponytail`과 관련 명령 5개를 ClawHub로 설치하고, Superpowers와 Anthropic 문서·예제 스킬은 `npx skills`로 설치 (Superpowers는 OpenClaw용 공식 플러그인이 없어 스킬만 설치)
+  - Anthropic 스킬: `document-skills`의 xlsx·docx·pptx·pdf와 `example-skills`의 12개 스킬. 문서 스킬은 처음 사용할 때 필요한 Python·npm 패키지를 설치해야 할 수 있음
+  - 다시 실행 시: 각 에이전트의 플러그인이 설정에 있고, OpenCode·Kilo는 `~\.agents\skills`, OpenClaw는 `~\.openclaw\skills`에 `SKILL.md`가 모두 있으면 건너뜀. 빠진 플러그인·스킬만 설치
+  - 업데이트: Claude Code `claude plugin update <플러그인 ID>`, OpenCode `opencode plugin update`, Kilo `kilo plugin @dietrichgebert/ponytail --global --force`, OpenClaw `openclaw skills update --all --global`, `npx skills update -g`
+
+
 ### Codyssey 프록시
 
 - Setup: [scripts/setup-codyssey-proxy.ps1](scripts/setup-codyssey-proxy.ps1) (Codyssey 게이트웨이 앞단의 통합 프록시, `~/.codyssey-proxy/`에 설치)

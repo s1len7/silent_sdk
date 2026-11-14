@@ -109,8 +109,8 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 
 ### nodejs
 
-- Setup: [scripts/setup_nodejs.sh](scripts/setup_nodejs.sh) (Node.js 최신 LTS를 [nodejs.org](https://nodejs.org/) 공식 압축 파일로 관리자 권한 없이 `~/.local/node`에 설치하고, `node`·`npm`·`npx`를 `~/.local/bin`에 링크. OpenCode 설치에 필요)
-- 다시 실행 시: `~/.local/node`에 Node.js 20.18.1 이상이 있고 링크가 모두 있으면 건너뜀. 설치만 돼 있으면 링크만 다시 만듦
+- Setup: [scripts/setup_nodejs.sh](scripts/setup_nodejs.sh) (Node.js 최신 LTS를 [nodejs.org](https://nodejs.org/) 공식 압축 파일로 관리자 권한 없이 `~/.local/node`에 설치하고, `node`·`npm`·`npx`를 `~/.local/bin`에 링크. OpenCode·Kilo와 `npx skills`에 필요)
+- 다시 실행 시: `~/.local/node`에 Node.js 22.20 이상이 있고 링크가 모두 있으면 건너뜀. 설치만 돼 있으면 링크만 다시 만듦
 
 ### bitwarden cli
 
@@ -135,6 +135,16 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 
 - Setup: [scripts/setup_humanizer.sh](scripts/setup_humanizer.sh) ([blader/humanizer](https://github.com/blader/humanizer) 스킬을 `npx skills`로 전역 설치. Claude Code와 OpenCode에서 `/humanizer`로 사용, 다른 키는 그대로 둠)
 - 다시 실행 시: `~/.agents/skills/humanizer/SKILL.md`가 있으면 건너뜀. 새 버전이 필요하면 `npx skills remove humanizer -g` 후 재실행
+
+### AI 에이전트 스킬
+
+- Setup: [scripts/setup_agent_skills.sh](scripts/setup_agent_skills.sh) (서드파티 스킬·플러그인을 설치된 에이전트에 맞는 방식으로 설치, `npx skills` 때문에 Node.js 22.20 이상 필요)
+  - Claude Code: 공식 마켓플레이스에서 `superpowers`, `ponytail`, `document-skills`, `example-skills` 플러그인을 사용자 범위로 설치
+  - OpenCode: `superpowers`, `ponytail`을 플러그인으로 설치하고, Anthropic 문서·예제 스킬은 `npx skills`로 설치
+  - Kilo: `ponytail`을 플러그인으로 설치하고, Superpowers와 Anthropic 문서·예제 스킬은 `npx skills`로 설치 (Superpowers는 Kilo용 공식 플러그인이 없어 스킬만 설치)
+  - Anthropic 스킬: `document-skills`의 xlsx·docx·pptx·pdf와 `example-skills`의 12개 스킬. 문서 스킬은 처음 사용할 때 필요한 Python·npm 패키지를 설치해야 할 수 있음
+  - 다시 실행 시: 각 에이전트의 플러그인이 설정에 있고, OpenCode·Kilo는 `~/.agents/skills`에 `SKILL.md`가 모두 있으면 건너뜀. 빠진 플러그인·스킬만 설치
+  - 업데이트: Claude Code `claude plugin update <플러그인 ID>`, OpenCode `opencode plugin update`, Kilo `kilo plugin @dietrichgebert/ponytail --global --force`, `npx skills update -g`
 
 ### discord
 

@@ -70,6 +70,7 @@ modules=(
     setup_opencode
     setup_kilo_cli
     setup_humanizer
+    setup_agent_skills
     setup_discord
     setup_tailscale
 )

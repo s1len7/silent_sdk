@@ -129,6 +129,8 @@ $results += Invoke-Step 'bitwarden-cli' { & "$s\setup-bitwarden-cli.ps1" }
 # After the agents are installed, so their config folders exist
 $results += Invoke-Step 'agent-rules'  { & "$s\setup-agent-rules.ps1" }
 $results += Invoke-Step 'claude-settings' { & "$s\setup-claude-settings.ps1" }
+# After the agent config folders and Claude settings, so plugin installs keep those settings
+$results += Invoke-Step 'agent-skills' { & "$s\setup-agent-skills.ps1" }
 $results += Invoke-Step 'codyssey-proxy'     { & "$s\setup-codyssey-proxy.ps1" }
 $results += Invoke-Step 'freellm-api'    { & "$s\setup-freellm-api.ps1" }
 
