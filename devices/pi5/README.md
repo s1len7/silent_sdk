@@ -119,3 +119,10 @@ npm install -g --prefix ~/.local @kilocode/cli@latest
   - 키 설정: `.env.example`을 `.env`로 복사해 `TS_AUTHKEY`를 채움 (키는 Tailscale 관리 페이지 Settings → Keys에서 만듦)
   - 키도 터미널도 없으면 로그인만 건너뜀 (SKIP). 나중에 `sudo tailscale up`으로 로그인
 - 업데이트는 apt로 받음 (`sudo apt update && sudo apt upgrade`)
+
+
+## 반납 전 정리 (Cleanup)
+
+- [../pi4-display/scripts/cleanup.sh](../pi4-display/scripts/cleanup.sh) (라즈베리파이 공통 모듈, 설명은 [pi4-display README](../pi4-display/README.md#반납-전-정리-cleanup) 참고)
+- 실행: `sudo bash ~/silent_sdk/devices/pi4-display/scripts/cleanup.sh` (`--dry-run`, `--force`)
+- 저장소 데이터를 쓰는 Docker 컨테이너(OpenClaw, Portainer 등)가 있으면 먼저 중지할 것

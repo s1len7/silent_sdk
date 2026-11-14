@@ -257,6 +257,23 @@ compose 파일: `docker/magic_mirror/docker-compose.yml`
 compose 파일: `docker/theengs-gateway/docker-compose.yml`
 
 
+## 반납 전 정리 (Cleanup)
+
+설치된 프로그램과 Docker 컨테이너는 유지하고, `silent_sdk` 저장소(다른 `silent_sdk*` 복사본 포함)와 개인정보(저장소 안 `.env`, `~/.gh_token`, 브라우저 로그인 정보)를 삭제합니다. 다른 프로젝트의 `.env`는 지우지 않습니다.
+
+브라우저(Chrome, Edge, Chromium, Firefox)는 프로필마다 쿠키·세션·저장된 비밀번호·계정 토큰·사이트 저장소만 지우고 북마크·기록·확장은 남깁니다. 실행 중인 브라우저는 확인(y/N) 후 종료합니다.
+
+> 저장소 데이터를 쓰는 Docker 컨테이너가 있으면 먼저 중지하세요. 이 스크립트는 컨테이너를 중지·삭제하지 않습니다.
+
+```bash
+sudo bash ~/silent_sdk/devices/pi4-display/scripts/cleanup.sh
+sudo bash ~/silent_sdk/devices/pi4-display/scripts/cleanup.sh --dry-run
+sudo bash ~/silent_sdk/devices/pi4-display/scripts/cleanup.sh --force
+```
+
+주의: 저장소 루트 전체를 삭제합니다. 설치된 패키지는 제거하지 않습니다.
+
+
 <!-- 여기까지 진행 -->
 <!-- 
 ## 진행 예정

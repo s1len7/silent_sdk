@@ -104,3 +104,10 @@ timeout 300s sudo docker run --rm -it --network flight_feeder_default \
 ```
 
 Plane Finder (`PLANEFINDER_SHARECODE`): [Create Sharecode](https://planefinder.net/sharing/create-sharecode)에서 발급, 무료 Premium은 Plane Finder 팀에 요청해야 함
+
+
+## 반납 전 정리 (Cleanup)
+
+- [../pi4-display/scripts/cleanup.sh](../pi4-display/scripts/cleanup.sh) (라즈베리파이 공통 모듈, 설명은 [pi4-display README](../pi4-display/README.md#반납-전-정리-cleanup) 참고)
+- 실행: `sudo bash ~/silent_sdk/devices/pi4-display/scripts/cleanup.sh` (`--dry-run`, `--force`)
+- 저장소 데이터를 쓰는 Docker 컨테이너(flight_feeder 등)가 있으면 먼저 중지할 것
