@@ -92,7 +92,9 @@ EOF
 # 로그인 에이전트를 최신 내용으로 다시 로드
 launchctl unload "$plist" 2>/dev/null || true
 launchctl load "$plist" 2>/dev/null || true
-if ! launchctl list 2>/dev/null | grep -q "$label"; then
+# launchctl list | grep -q는 출력이 파이프 버퍼를 넘으면 grep의 조기 종료로 SIGPIPE(141)가 나고
+# set -o pipefail 때문에 정상 로드도 실패로 보임 → GUI 도메인에서 직접 확인
+if ! launchctl print "gui/$(id -u)/$label" >/dev/null 2>&1; then
     echo "Failed to load $label" >&2
     exit 1
 fi
