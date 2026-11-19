@@ -170,9 +170,18 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
   - `~/.codyssey-proxy/.env`가 없으면 예시 파일을 복사하고 건너뜀 (CODYSSEY_OPENAI_API_KEY 채운 뒤 재실행)
   - `CODYSSEY_OPENAI_API_KEY`가 비어 있으면 건너뜀
   - Python 3가 없으면 실패
-  - `tools/codyssey-proxy`를 pip으로 editable 설치, `~/.claude/settings.json`을 프록시 주소(`http://localhost:8082`)로 갱신
+  - `tools/codyssey-proxy`를 pip으로 editable 설치, `~/.claude/settings.json`을 프록시 주소(`http://localhost:8082`)와 새 모델 ID(`claude-opus-4-8`, `claude-haiku-4`)로 갱신
+  - 기존 `~/.codyssey-proxy/.env`의 `BIG_MODEL`·`SMALL_MODEL`도 새 모델 ID로 맞춤 (키는 그대로 둠)
   - LaunchAgent(`com.silent.codyssey-proxy`) 등록으로 자동 시작, 즉시 실행
   - 재실행 시: 키가 있고 설정이 같으면 LaunchAgent 재로드 후 상태 확인
+
+### codyssey claude
+
+- Setup: [scripts/setup_codyssey_claude.sh](scripts/setup_codyssey_claude.sh) (`~/.claude/settings.json`의 `env`를 Codyssey 공개 API로 설정: `ANTHROPIC_BASE_URL=https://copa.codyssey.kr`, `ANTHROPIC_MODEL=claude-opus-4-8`, `ANTHROPIC_SMALL_FAST_MODEL=claude-haiku-4`. 다른 키는 그대로 둠)
+  - `ANTHROPIC_API_KEY`가 실제 키(`sk-…` 등)면 키 입력을 건너뜀
+  - 키가 없거나 `<virtual-key>` 같은 자리표시자면 브라우저에 마스킹된 입력창(눈 아이콘으로 값 보기)을 띄워 저장(엔터/저장 버튼). python3 필요
+  - `setup_codyssey_proxy` 다음에 실행되어, 프록시가 쓴 설정을 직접 연결 설정으로 덮어씀
+- 다시 실행 시: 실제 키가 있고 base URL·모델이 모두 같으면 건너뜀
 
 ### 텔레그램 알림
 

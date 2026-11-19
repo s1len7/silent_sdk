@@ -58,7 +58,8 @@ modules=(
     setup_git
     setup_shell_path
     setup_claude_code
-    setup_codyssey_proxy
+    # setup_codyssey_proxy
+    setup_codyssey_claude
     setup_scroll_direction
     setup_hangul_input
     setup_dock_apps
@@ -71,6 +72,7 @@ modules=(
     setup_kilo_cli
     setup_humanizer
     setup_agent_skills
+    setup_opencli
     setup_discord
     setup_tailscale
 )

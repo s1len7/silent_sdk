@@ -30,7 +30,7 @@ fi
 
 if (( ! skill_done )); then
     echo "Installing OpenCLI skills for AI agents"
-    PATH="$LOCAL_BIN:$PATH" npx --yes skills add jackwener/opencli -g -a '*' -y >/dev/null 2>&1 || true
+    PATH="$LOCAL_BIN:$PATH" npx --yes skills@latest add jackwener/opencli -g -a '*' -y || true
     if [[ ! -f "$HOME/.agents/skills/opencli-browser/SKILL.md" ]]; then
         echo "OpenCLI skills are not installed after running npx skills" >&2
         exit 1

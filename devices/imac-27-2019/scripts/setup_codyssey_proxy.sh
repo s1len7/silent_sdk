@@ -30,7 +30,7 @@ if [[ ! -f "$env_path" ]]; then
         cat > "$env_path" <<'EOF'
 CODYSSEY_BASE_URL=https://copa.codyssey.kr
 CODYSSEY_OPENAI_API_KEY=
-BIG_MODEL=claude-sonnet-4
+BIG_MODEL=claude-opus-4-8
 SMALL_MODEL=claude-haiku-4
 PROXY_HOST=127.0.0.1
 PROXY_PORT=8082
@@ -44,6 +44,18 @@ fi
 if ! grep -qE '^[[:space:]]*CODYSSEY_OPENAI_API_KEY[[:space:]]*=[[:space:]]*[^[:space:]]+' "$env_path"; then
     echo "CODYSSEY_OPENAI_API_KEY is empty in $env_path. Fill it in and run again." >&2
     exit "$SKIP_EXIT"
+fi
+
+# 기존 .env의 모델 ID도 새 값으로 맞춤 (키는 그대로 둠)
+if ! grep -qE '^[[:space:]]*BIG_MODEL[[:space:]]*=[[:space:]]*claude-opus-4-8[[:space:]]*$' "$env_path" ||
+    ! grep -qE '^[[:space:]]*SMALL_MODEL[[:space:]]*=[[:space:]]*claude-haiku-4[[:space:]]*$' "$env_path"; then
+    tmp_env="$(mktemp "$proxy_dir/.env.XXXXXX")"
+    awk '
+        /^[[:space:]]*BIG_MODEL[[:space:]]*=/ { print "BIG_MODEL=claude-opus-4-8"; next }
+        /^[[:space:]]*SMALL_MODEL[[:space:]]*=/ { print "SMALL_MODEL=claude-haiku-4"; next }
+        { print }
+    ' "$env_path" > "$tmp_env"
+    mv "$tmp_env" "$env_path"
 fi
 
 # Install codyssey-proxy (editable from repo)
@@ -69,11 +81,11 @@ fi
 merged="$(jq --arg repo "$repo" '
     .env = ((.env // {}) + {
         "ANTHROPIC_BASE_URL": "http://localhost:8082",
-        "ANTHROPIC_MODEL": "claude-sonnet-4-5",
-        "ANTHROPIC_SMALL_FAST_MODEL": "claude-haiku-4-5",
+        "ANTHROPIC_MODEL": "claude-opus-4-8",
+        "ANTHROPIC_SMALL_FAST_MODEL": "claude-haiku-4",
         "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4-5",
-        "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-4-5",
-        "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-7"
+        "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-4",
+        "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-8"
     })
     | .permissions.additionalDirectories |= (
         (. // [])
