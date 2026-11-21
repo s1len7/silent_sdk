@@ -252,6 +252,16 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
 - 업데이트: `npm i -g --allow-scripts=cline cline@latest`
 
 
+### Reason Network
+
+- Setup: [scripts/setup-reason-network.ps1](scripts/setup-reason-network.ps1) (Reason CLI를 사용자 단위로 설치하고 `reason network`를 실행해 브라우저에서 로그인·네트워크 생성/참여. 설치된 에이전트에 Reason Network MCP를 등록)
+  - Reason CLI가 직접 등록하는 에이전트: Claude Code, Codex, Cursor, Gemini CLI, Copilot CLI, OpenCode, Pi
+  - 이 스크립트가 등록하는 에이전트: Kilo Code(`~\.config\kilo\kilo.jsonc`의 `mcp`), Cline CLI(`~\.cline\data\settings\cline_mcp_settings.json`의 `mcpServers`), OpenClaw(`openclaw mcp add`로 `~\.openclaw\openclaw.json`의 `mcp.servers`). 설치되지 않은 에이전트는 건너뜀
+  - 다시 실행 시: 설치·로그인은 `reason.exe`가 있고 `~\.reason\network`가 있으며 계정이 로그인 상태면 건너뜀 (`reason logout` 후에는 재실행됨). 에이전트 MCP 등록은 매번 확인해 빠진 항목만 추가하고, `REASON_NETWORK_AGENT`가 없는 예전 항목은 갱신함
+  - 첫 실행 시 브라우저 로그인이 필요함. 로그인하지 않으면 sign-in 링크가 출력되고 완료될 때까지 대기함
+  - NO_PROXY 등 상속된 프록시 환경 변수는 이 단계에서만 해제함
+  - 업데이트: Reason Network의 백그라운드 프로세스가 약 하루에 한 번 CLI를 자동 업데이트함
+
 ### Bitwarden CLI
 
 - Setup: [scripts/setup-bitwarden-cli.ps1](scripts/setup-bitwarden-cli.ps1) (공식 `@bitwarden/cli`를 npm으로 설치하고, `.env`의 `VAULTWARDEN_URL`을 Vaultwarden 서버로 설정. 전체 Setup에서 Kilo CLI 다음에 실행)

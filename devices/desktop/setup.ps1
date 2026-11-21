@@ -133,6 +133,8 @@ $results += Invoke-Step 'agent-rules'  { & "$s\setup-agent-rules.ps1" }
 $results += Invoke-Step 'claude-settings' { & "$s\setup-claude-settings.ps1" }
 # After the agent config folders and Claude settings, so plugin installs keep those settings
 $results += Invoke-Step 'agent-skills' { & "$s\setup-agent-skills.ps1" }
+# Reason Network after the agents and their config folders exist
+$results += Invoke-Step 'reason-network' { & "$s\setup-reason-network.ps1" }
 $results += Invoke-Step 'codyssey-proxy'     { & "$s\setup-codyssey-proxy.ps1" }
 # After the proxy: point Claude Code directly at the Codyssey API (overrides the proxy settings)
 $results += Invoke-Step 'codyssey-claude'    { & "$s\setup-codyssey-claude.ps1" }
