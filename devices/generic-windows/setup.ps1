@@ -33,13 +33,6 @@ if ($Cleanup) {
         }
     } catch {}
 
-    # Check for .env files that might be related copies (outside repo) - be conservative
-    try {
-        Get-ChildItem -Path $HOME -Recurse -Force -File -ErrorAction SilentlyContinue -Filter '.env' | Where-Object { $_.FullName -notmatch '\\\.git\\' -and $_.FullName -notlike "$dir\*" } | ForEach-Object {
-            $targets += $_.FullName
-        }
-    } catch {}
-
     # Bootstrap/temp logs related to this setup
     try {
         Get-ChildItem -Path $env:TEMP -Force -ErrorAction SilentlyContinue | Where-Object { $_.Name -match 'silent_sdk.*generic-windows' } | ForEach-Object {
@@ -142,7 +135,7 @@ if ($Cleanup) {
     $scriptPath = $MyInvocation.MyCommand.Definition
     if ($scriptPath -and $scriptPath -like "$dir\*") {
         $wrapper = Join-Path $env:TEMP "silent_sdk_cleanup_wrapper_$(Get-Date -Format 'yyyyMMddHHmmss').ps1"
-        $targetsList = $targets | ForEach-Object { "'" + $_.Replace("'", "''") + "'" } | Join-String -Separator ','
+        $targetsList = ($targets | ForEach-Object { "'" + $_.Replace("'", "''") + "'" }) -join ','
         $wrapperContent = @"
 # Cleanup wrapper
 `$ErrorActionPreference = 'SilentlyContinue'

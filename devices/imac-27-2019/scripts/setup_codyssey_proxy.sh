@@ -32,7 +32,7 @@ CODYSSEY_BASE_URL=https://copa.codyssey.kr
 CODYSSEY_OPENAI_API_KEY=
 BIG_MODEL=claude-opus-4-8
 SMALL_MODEL=claude-haiku-4
-PROXY_HOST=127.0.0.1
+PROXY_HOST=localhost
 PROXY_PORT=8082
 EOF
     fi
@@ -129,7 +129,7 @@ EOF
 launchctl unload "$plist" 2>/dev/null || true
 launchctl load "$plist" 2>/dev/null || true
 sleep 4
-if curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8082/ | grep -q 200; then
+if curl -s -o /dev/null -w "%{http_code}" http://localhost:8082/ | grep -q 200; then
     echo "Codyssey proxy running on http://localhost:8082"
 else
     echo "Proxy may not have started; check $proxy_dir/proxy.log" >&2

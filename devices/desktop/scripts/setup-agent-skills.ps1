@@ -219,6 +219,30 @@ function Install-SkillSet {
     $script:didWork = $true
 }
 
+# Install one skill set for one agent; skip when already present and record any failure
+function Ensure-SkillSet {
+    param([string]$Label, [string]$Dir, [string]$Agent, [string]$Source, [string]$SetName, [string[]]$Names)
+    if (Test-SkillSet $Dir $Names) {
+        Write-Host "$Label`: $SetName skills are already installed"
+        return
+    }
+    if (-not $npx) {
+        $script:failures += "$Label`: npx not found. Run setup-opencode.ps1 first to install Node.js"
+        return
+    }
+    try {
+        $skillArgs = @()
+        foreach ($skill in $Names) { $skillArgs += @('--skill', $skill) }
+        Install-SkillSet $npx $Agent $Source $skillArgs
+        if (-not (Test-SkillSet $Dir $Names)) {
+            throw "$SetName skills were not all found in $Dir"
+        }
+        Write-Host "$Label`: installed $SetName skills"
+    } catch {
+        $script:failures += "$Label`: $($_.Exception.Message)"
+    }
+}
+
 function Install-ClawHub {
     $clawhub = Get-CommandPath 'clawhub'
     if ($clawhub) { return $clawhub }
@@ -302,23 +326,7 @@ if (Test-Path $openCodeHome) {
             }
         }
     }
-    if (Test-SkillSet $agentsSkills $anthropicSkills) {
-        Write-Host 'OpenCode: Anthropic skills are already installed'
-    } elseif (-not $npx) {
-        $failures += 'OpenCode: npx not found. Run setup-opencode.ps1 first to install Node.js'
-    } else {
-        try {
-            $skillArgs = @()
-            foreach ($skill in $anthropicSkills) { $skillArgs += @('--skill', $skill) }
-            Install-SkillSet $npx 'opencode' 'anthropics/skills' $skillArgs
-            if (-not (Test-SkillSet $agentsSkills $anthropicSkills)) {
-                throw "Anthropic skills were not all found in $agentsSkills"
-            }
-            Write-Host 'OpenCode: installed Anthropic skills'
-        } catch {
-            $failures += "OpenCode: $($_.Exception.Message)"
-        }
-    }
+    Ensure-SkillSet 'OpenCode' $agentsSkills 'opencode' 'anthropics/skills' 'Anthropic' $anthropicSkills
 } else {
     Write-Host "OpenCode is not installed ($openCodeHome not found), skipped"
 }
@@ -349,40 +357,8 @@ if (Test-Path $kiloHome) {
             $failures += "Kilo: $($_.Exception.Message)"
         }
     }
-    if (Test-SkillSet $agentsSkills $superpowersSkills) {
-        Write-Host 'Kilo: Superpowers skills are already installed'
-    } elseif (-not $npx) {
-        $failures += 'Kilo: npx not found. Run setup-opencode.ps1 first to install Node.js'
-    } else {
-        try {
-            $skillArgs = @()
-            foreach ($skill in $superpowersSkills) { $skillArgs += @('--skill', $skill) }
-            Install-SkillSet $npx 'kilo' 'obra/superpowers' $skillArgs
-            if (-not (Test-SkillSet $agentsSkills $superpowersSkills)) {
-                throw "Superpowers skills were not all found in $agentsSkills"
-            }
-            Write-Host 'Kilo: installed Superpowers skills'
-        } catch {
-            $failures += "Kilo: $($_.Exception.Message)"
-        }
-    }
-    if (Test-SkillSet $agentsSkills $anthropicSkills) {
-        Write-Host 'Kilo: Anthropic skills are already installed'
-    } elseif (-not $npx) {
-        $failures += 'Kilo: npx not found. Run setup-opencode.ps1 first to install Node.js'
-    } else {
-        try {
-            $skillArgs = @()
-            foreach ($skill in $anthropicSkills) { $skillArgs += @('--skill', $skill) }
-            Install-SkillSet $npx 'kilo' 'anthropics/skills' $skillArgs
-            if (-not (Test-SkillSet $agentsSkills $anthropicSkills)) {
-                throw "Anthropic skills were not all found in $agentsSkills"
-            }
-            Write-Host 'Kilo: installed Anthropic skills'
-        } catch {
-            $failures += "Kilo: $($_.Exception.Message)"
-        }
-    }
+    Ensure-SkillSet 'Kilo' $agentsSkills 'kilo' 'obra/superpowers' 'Superpowers' $superpowersSkills
+    Ensure-SkillSet 'Kilo' $agentsSkills 'kilo' 'anthropics/skills' 'Anthropic' $anthropicSkills
 } else {
     Write-Host "Kilo is not installed ($kiloHome not found), skipped"
 }
@@ -403,40 +379,8 @@ if (Test-Path $openClawHome) {
             $failures += "OpenClaw: $($_.Exception.Message)"
         }
     }
-    if (Test-SkillSet $openClawSkills $superpowersSkills) {
-        Write-Host 'OpenClaw: Superpowers skills are already installed'
-    } elseif (-not $npx) {
-        $failures += 'OpenClaw: npx not found. Run setup-opencode.ps1 first to install Node.js'
-    } else {
-        try {
-            $skillArgs = @()
-            foreach ($skill in $superpowersSkills) { $skillArgs += @('--skill', $skill) }
-            Install-SkillSet $npx 'openclaw' 'obra/superpowers' $skillArgs
-            if (-not (Test-SkillSet $openClawSkills $superpowersSkills)) {
-                throw "Superpowers skills were not all found in $openClawSkills"
-            }
-            Write-Host 'OpenClaw: installed Superpowers skills'
-        } catch {
-            $failures += "OpenClaw: $($_.Exception.Message)"
-        }
-    }
-    if (Test-SkillSet $openClawSkills $anthropicSkills) {
-        Write-Host 'OpenClaw: Anthropic skills are already installed'
-    } elseif (-not $npx) {
-        $failures += 'OpenClaw: npx not found. Run setup-opencode.ps1 first to install Node.js'
-    } else {
-        try {
-            $skillArgs = @()
-            foreach ($skill in $anthropicSkills) { $skillArgs += @('--skill', $skill) }
-            Install-SkillSet $npx 'openclaw' 'anthropics/skills' $skillArgs
-            if (-not (Test-SkillSet $openClawSkills $anthropicSkills)) {
-                throw "Anthropic skills were not all found in $openClawSkills"
-            }
-            Write-Host 'OpenClaw: installed Anthropic skills'
-        } catch {
-            $failures += "OpenClaw: $($_.Exception.Message)"
-        }
-    }
+    Ensure-SkillSet 'OpenClaw' $openClawSkills 'openclaw' 'obra/superpowers' 'Superpowers' $superpowersSkills
+    Ensure-SkillSet 'OpenClaw' $openClawSkills 'openclaw' 'anthropics/skills' 'Anthropic' $anthropicSkills
 } else {
     Write-Host "OpenClaw is not installed ($openClawHome not found), skipped"
 }

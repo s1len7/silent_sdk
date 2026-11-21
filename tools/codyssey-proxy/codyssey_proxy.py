@@ -3,7 +3,6 @@
 import json
 import os
 import sys
-import urllib.error
 import urllib.request
 
 if hasattr(sys.stdout, "reconfigure"):
@@ -37,14 +36,9 @@ def _key_valid(key):
         )
         with urllib.request.urlopen(request, timeout=10) as response:
             return response.status == 200
-    except urllib.error.HTTPError as error:
-        return error.code not in (401, 403)
     except Exception:
         return False
 
-
-if not _key_valid(API_KEY):
-    raise RuntimeError("No valid Codyssey OpenAI-compatible API key found")
 
 # claude-code-proxy reads these values when it is imported. They are internal
 # compatibility variables, not user-facing configuration keys.
@@ -108,7 +102,10 @@ async def chat_completions(request: Request):
 def run():
     import uvicorn
 
-    host = os.environ.get("PROXY_HOST", "127.0.0.1")
+    if not _key_valid(API_KEY):
+        raise RuntimeError("No valid Codyssey OpenAI-compatible API key found")
+
+    host = os.environ.get("PROXY_HOST", "localhost")
     port = int(os.environ.get("PROXY_PORT", "8082"))
     uvicorn.run(app, host=host, port=port, log_level="warning")
 

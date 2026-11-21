@@ -88,8 +88,6 @@ echo "OS:       $(. /etc/os-release && echo "$PRETTY_NAME") ($(uname -m))"
 echo "Repo:     $repo @ $(git -C "$repo" rev-parse --short HEAD 2>/dev/null || echo unknown)"
 echo "Logs:     $log_dir"
 
-summary=()
-failed=0
 # 실행할 모듈 (위에서부터 순서대로 실행, 새 모듈은 여기에 한 줄 추가)
 # 이름만 쓰면 이 장비의 scripts/<이름>.sh, '/'가 들어가면 이 장비 폴더 기준 상대 경로(.sh 생략)
 # 라즈베리파이 공통 모듈은 pi4-display/scripts에 두고 함께 씀
@@ -110,38 +108,5 @@ modules=(
     # setup_openclaw
     setup_tailscale
 )
-for entry in "${modules[@]}"; do
-    name="$(basename "$entry")"
-    if [[ "$entry" == */* ]]; then
-        module="$device_dir/$entry.sh"
-    else
-        module="$device_dir/scripts/$entry.sh"
-    fi
-    echo
-    echo "=== [$name] started $(date +%H:%M:%S)"
-    start=$SECONDS
-    if [[ -f "$module" ]]; then
-        bash "$module"
-        code=$?
-    else
-        echo "Module not found: $module" >&2
-        code=127
-    fi
-    case $code in
-        0) result=OK ;;
-        3) result=SKIP ;;
-        *) result="FAIL (exit $code)"; failed=$((failed + 1)) ;;
-    esac
-    echo "=== [$name] $result ($((SECONDS - start))s)"
-    summary+=("$(printf '%-24s %s' "$name" "$result")")
-done
-
-echo
-echo "=== Summary"
-printf '%s\n' "${summary[@]}"
-if (( failed )); then
-    echo "$failed of ${#summary[@]} modules failed. See the log, then run the setup again (finished modules are skipped)."
-else
-    echo "All ${#summary[@]} modules succeeded or were already set up."
-fi
-echo "Log: $log_dir/setup.log"
+source "$repo/devices/_shared/run_modules.sh"
+run_modules "$device_dir" scripts 24 "${modules[@]}"

@@ -75,12 +75,27 @@ def load_config() -> dict:
 
 
 def save_config(config: dict) -> None:
-    """설정을 .env에 쓴다. 다른 키는 그대로 두고, API 키가 들어가므로 현재 사용자만 읽을 수 있게 한다."""
-    values = read_env_file()
-    for name, env_key in ENV_KEYS.items():
-        if config.get(name):
-            values[env_key] = config[name]
-    lines = [f"{key}={value}" for key, value in values.items()]
+    """설정을 .env에 쓴다. 다른 줄(주석 포함)은 그대로 두고, API 키가 들어가므로 현재 사용자만 읽을 수 있게 한다."""
+    updates = {
+        ENV_KEYS[name]: value
+        for name, value in config.items()
+        if value and name in ENV_KEYS
+    }
+    lines = []
+    seen = set()
+    if CONFIG_PATH.exists():
+        for line in CONFIG_PATH.read_text(encoding="utf-8").splitlines():
+            key = None
+            if "=" in line and not line.lstrip().startswith("#"):
+                key = line.split("=", 1)[0].strip()
+            if key in updates:
+                lines.append(f"{key}={updates[key]}")
+                seen.add(key)
+            else:
+                lines.append(line)
+    for key, value in updates.items():
+        if key not in seen:
+            lines.append(f"{key}={value}")
     CONFIG_PATH.touch(mode=0o600, exist_ok=True)
     CONFIG_PATH.chmod(0o600)
     CONFIG_PATH.write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -250,9 +265,7 @@ def config_set_key(family: KeyFamily) -> None:
     """Save your virtual API key (Codyssey issues one for claude and one for openai)."""
     name = f"{family.value}_api_key"
     api_key = typer.prompt(ENV_KEYS[name], hide_input=True)
-    config = load_config()
-    config[name] = api_key
-    save_config(config)
+    save_config({name: api_key})
     console.print(f"Saved {ENV_KEYS[name]} to {CONFIG_PATH}")
 
 

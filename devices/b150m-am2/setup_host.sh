@@ -93,8 +93,6 @@ echo "OS:       $(. /etc/os-release && echo "$PRETTY_NAME") ($(uname -m)), $(pve
 echo "Repo:     $repo @ $(git -C "$repo" rev-parse --short HEAD 2>/dev/null || echo unknown)"
 echo "Logs:     $log_dir"
 
-summary=()
-failed=0
 # 실행할 모듈 (위에서부터 순서대로 실행, 새 모듈은 여기에 한 줄 추가)
 modules=(
     # 저장소 설정과 패치를 먼저 한 뒤 (Wi-Fi 패키지 설치에 필요) Wi-Fi 연결, VM 생성 (OpenClaw VM, Docker VM)
@@ -103,33 +101,5 @@ modules=(
     setup_vm_ubuntu_server
     setup_vm_ubuntu_docker
 )
-for name in "${modules[@]}"; do
-    module="$device_dir/scripts/host/$name.sh"
-    echo
-    echo "=== [$name] started $(date +%H:%M:%S)"
-    start=$SECONDS
-    if [[ -f "$module" ]]; then
-        bash "$module"
-        code=$?
-    else
-        echo "Module not found: $module" >&2
-        code=127
-    fi
-    case $code in
-        0) result=OK ;;
-        3) result=SKIP ;;
-        *) result="FAIL (exit $code)"; failed=$((failed + 1)) ;;
-    esac
-    echo "=== [$name] $result ($((SECONDS - start))s)"
-    summary+=("$(printf '%-28s %s' "$name" "$result")")
-done
-
-echo
-echo "=== Summary"
-printf '%s\n' "${summary[@]}"
-if (( failed )); then
-    echo "$failed of ${#summary[@]} modules failed. See the log, then run the setup again (finished modules are skipped)."
-else
-    echo "All ${#summary[@]} modules succeeded or were already set up."
-fi
-echo "Log: $log_dir/setup.log"
+source "$repo/devices/_shared/run_modules.sh"
+run_modules "$device_dir" scripts/host 28 "${modules[@]}"

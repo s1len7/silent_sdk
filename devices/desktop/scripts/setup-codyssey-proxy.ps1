@@ -48,9 +48,9 @@ $envPath = Join-Path $proxyDir '.env'
 $envContent = @"
 CODYSSEY_BASE_URL=https://copa.codyssey.kr
 CODYSSEY_OPENAI_API_KEY=$openaiKey
-BIG_MODEL=claude-sonnet-4
+BIG_MODEL=claude-opus-4-8
 SMALL_MODEL=claude-haiku-4
-PROXY_HOST=127.0.0.1
+PROXY_HOST=localhost
 PROXY_PORT=8082
 "@
 [IO.File]::WriteAllText($envPath, $envContent, (New-Object Text.UTF8Encoding($false)))
@@ -77,7 +77,7 @@ $sc.Save()
 # Start now if not running
 $running = $false
 try {
-    $t = Test-NetConnection -ComputerName 127.0.0.1 -Port 8082 -WarningAction SilentlyContinue
+    $t = Test-NetConnection -ComputerName localhost -Port 8082 -WarningAction SilentlyContinue
     $running = $t.TcpTestSucceeded
 } catch { $running = $false }
 if (-not $running) {
@@ -103,11 +103,11 @@ if (Test-Path $claudeHome) {
         $envObj = $settings.PSObject.Properties['env']
     }
     $envObj.Value | Add-Member -NotePropertyName ANTHROPIC_BASE_URL -NotePropertyValue 'http://localhost:8082' -Force
-    $envObj.Value | Add-Member -NotePropertyName ANTHROPIC_MODEL -NotePropertyValue 'claude-sonnet-4-5' -Force
-    $envObj.Value | Add-Member -NotePropertyName ANTHROPIC_SMALL_FAST_MODEL -NotePropertyValue 'claude-haiku-4-5' -Force
+    $envObj.Value | Add-Member -NotePropertyName ANTHROPIC_MODEL -NotePropertyValue 'claude-opus-4-8' -Force
+    $envObj.Value | Add-Member -NotePropertyName ANTHROPIC_SMALL_FAST_MODEL -NotePropertyValue 'claude-haiku-4' -Force
     $envObj.Value | Add-Member -NotePropertyName ANTHROPIC_DEFAULT_SONNET_MODEL -NotePropertyValue 'claude-sonnet-4-5' -Force
-    $envObj.Value | Add-Member -NotePropertyName ANTHROPIC_DEFAULT_HAIKU_MODEL -NotePropertyValue 'claude-haiku-4-5' -Force
-    $envObj.Value | Add-Member -NotePropertyName ANTHROPIC_DEFAULT_OPUS_MODEL -NotePropertyValue 'claude-opus-4-7' -Force
+    $envObj.Value | Add-Member -NotePropertyName ANTHROPIC_DEFAULT_HAIKU_MODEL -NotePropertyValue 'claude-haiku-4' -Force
+    $envObj.Value | Add-Member -NotePropertyName ANTHROPIC_DEFAULT_OPUS_MODEL -NotePropertyValue 'claude-opus-4-8' -Force
     [IO.File]::WriteAllText($settingsPath, ($settings | ConvertTo-Json -Depth 20), (New-Object Text.UTF8Encoding($false)))
     Write-Host "Claude Code settings updated to use the local proxy."
 } else {

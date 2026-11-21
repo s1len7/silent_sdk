@@ -308,7 +308,7 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
 
 - Setup: [scripts/setup-codyssey-claude.ps1](scripts/setup-codyssey-claude.ps1) (`~/.claude/settings.json`의 `env`를 Codyssey 공개 API로 설정: `ANTHROPIC_BASE_URL=https://copa.codyssey.kr`, `ANTHROPIC_MODEL=claude-opus-4-8`, `ANTHROPIC_SMALL_FAST_MODEL=claude-haiku-4`. 다른 키는 그대로 둠)
   - 기존 `ANTHROPIC_API_KEY`가 유효하면(HTTP 200) 다시 입력하지 않고, 없거나 무효(401/403)면 터미널에서 키를 입력받음 (화면에 표시되지 않음)
-  - `ANTHROPIC_DEFAULT_*` 모델도 직접 API 모델(`claude-opus-4-8`, `claude-sonnet-4`, `claude-haiku-4`)로 맞춤
+  - `ANTHROPIC_DEFAULT_*` 모델도 직접 API 모델(`claude-opus-4-8`, `claude-sonnet-4-5`, `claude-haiku-4`)로 맞춤
   - `~/.claude`가 없으면 건너뜀 (Claude Code 먼저 설치)
   - `setup-codyssey-proxy` 다음에 실행되어 프록시 설정을 직접 연결로 덮어씀 (프록시는 OpenAI 도구용으로 남음)
   - 다시 실행 시: 키가 유효하고 `env` 값이 모두 같으면 건너뜀

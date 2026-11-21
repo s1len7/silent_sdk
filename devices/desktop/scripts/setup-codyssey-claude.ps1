@@ -13,7 +13,7 @@ $baseUrl = 'https://copa.codyssey.kr'
 $model = 'claude-opus-4-8'
 $smallModel = 'claude-haiku-4'
 $defaultOpus = 'claude-opus-4-8'
-$defaultSonnet = 'claude-sonnet-4'
+$defaultSonnet = 'claude-sonnet-4-5'
 $defaultHaiku = 'claude-haiku-4'
 
 if (-not (Test-Path $claudeHome)) {

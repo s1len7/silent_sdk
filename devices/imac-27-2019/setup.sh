@@ -49,9 +49,6 @@ echo "Logs:     $log_dir"
 # 모듈이 ~/.local/bin의 명령을 바로 쓸 수 있게 함 (새 터미널의 PATH는 setup_shell_path가 설정)
 export PATH="$HOME/.local/bin:$PATH"
 
-summary=()
-failed=0
-all_ok=1
 modules=(
     setup_nodejs
     setup_bitwarden_cli
@@ -77,41 +74,13 @@ modules=(
     setup_tailscale
 )
 
-for name in "${modules[@]}"; do
-    module="$device_dir/scripts/$name.sh"
-    echo
-    echo "=== [$name] started $(date +%H:%M:%S)"
-    start=$SECONDS
-    if [[ -f "$module" ]]; then
-        bash "$module"
-        code=$?
-    else
-        echo "Module not found: $module" >&2
-        code=127
-    fi
-    case $code in
-        0) result=OK ;;
-        3) result=SKIP; all_ok=0 ;;
-        *) result="FAIL (exit $code)"; failed=$((failed + 1)); all_ok=0 ;;
-    esac
-    echo "=== [$name] $result ($((SECONDS - start))s)"
-    summary+=("$(printf '%-24s %s' "$name" "$result")")
-done
-
-echo
-echo "=== Summary"
-printf '%s\n' "${summary[@]}"
-if (( failed )); then
-    echo "$failed of ${#summary[@]} modules failed. See the log, then run the setup again (finished modules are skipped)."
-else
-    echo "All ${#summary[@]} modules succeeded or were already set up."
-fi
-echo "Log: $log_dir/setup.log"
+source "$repo/devices/_shared/run_modules.sh"
+run_modules "$device_dir" scripts 24 "${modules[@]}"
 
 # 전체 Setup 끝에 재부팅
 # - 모든 모듈이 OK(exit 0)였으면 묻지 않고 자동 재부팅
 # - FAIL 또는 SKIP이 하나라도 있으면 재부팅 여부를 물음 (인터랙티브) / 안내만 출력 (비대화형)
-if (( all_ok )); then
+if (( run_failed == 0 && run_skipped == 0 )); then
     echo "All modules succeeded. Rebooting to apply changes..."
     osascript -e 'tell application "System Events" to restart' 2>/dev/null || echo "Reboot failed. Please reboot manually."
 else

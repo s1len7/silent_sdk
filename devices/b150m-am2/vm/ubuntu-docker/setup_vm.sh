@@ -94,8 +94,6 @@ echo "OS:       $(. /etc/os-release && echo "$PRETTY_NAME") ($(uname -m))"
 echo "Repo:     $repo @ $(git -C "$repo" rev-parse --short HEAD 2>/dev/null || echo unknown)"
 echo "Logs:     $log_dir"
 
-summary=()
-failed=0
 # 실행할 모듈 (위에서부터 순서대로 실행, 새 모듈은 여기에 한 줄 추가)
 modules=(
     # mDNS(<이름>.local)와 Docker를 먼저 설치한 뒤 서비스 실행
@@ -103,33 +101,5 @@ modules=(
     setup_docker
     setup_metabase
 )
-for name in "${modules[@]}"; do
-    module="$vm_dir/scripts/$name.sh"
-    echo
-    echo "=== [$name] started $(date +%H:%M:%S)"
-    start=$SECONDS
-    if [[ -f "$module" ]]; then
-        bash "$module"
-        code=$?
-    else
-        echo "Module not found: $module" >&2
-        code=127
-    fi
-    case $code in
-        0) result=OK ;;
-        3) result=SKIP ;;
-        *) result="FAIL (exit $code)"; failed=$((failed + 1)) ;;
-    esac
-    echo "=== [$name] $result ($((SECONDS - start))s)"
-    summary+=("$(printf '%-24s %s' "$name" "$result")")
-done
-
-echo
-echo "=== Summary"
-printf '%s\n' "${summary[@]}"
-if (( failed )); then
-    echo "$failed of ${#summary[@]} modules failed. See the log, then run the setup again (finished modules are skipped)."
-else
-    echo "All ${#summary[@]} modules succeeded or were already set up."
-fi
-echo "Log: $log_dir/setup.log"
+source "$repo/devices/_shared/run_modules.sh"
+run_modules "$vm_dir" scripts 24 "${modules[@]}"
