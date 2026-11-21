@@ -125,6 +125,8 @@ $results += Invoke-Step 'opencli'      { & "$s\setup-opencli.ps1" }
 $results += Invoke-Step 'opencode'     { & "$g\setup-opencode.ps1" }
 # After OpenCode, which installs Node.js (Kilo and the Bitwarden CLI are npm packages)
 $results += Invoke-Step 'kilo-cli'     { & "$s\setup-kilo-cli.ps1" }
+$results += Invoke-Step 'gemini-cli'   { & "$s\setup-gemini-cli.ps1" }
+$results += Invoke-Step 'cline-cli'    { & "$s\setup-cline-cli.ps1" }
 $results += Invoke-Step 'bitwarden-cli' { & "$s\setup-bitwarden-cli.ps1" }
 # After the agents are installed, so their config folders exist
 $results += Invoke-Step 'agent-rules'  { & "$s\setup-agent-rules.ps1" }

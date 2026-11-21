@@ -131,6 +131,18 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 - 다시 실행 시: `kilo` 명령이 있으면 건너뜀
 - 로그인·API 키는 설정하지 않음. 첫 실행에서 `/connect`로 계정 또는 모델 제공자를 연결
 
+### gemini cli
+
+- Setup: [scripts/setup_gemini_cli.sh](scripts/setup_gemini_cli.sh) ([Gemini CLI](https://github.com/google-gemini/gemini-cli)를 npm `@google/gemini-cli` 최신으로 설치하고 `~/.local/bin/gemini`로 링크)
+- 다시 실행 시: `gemini` 명령이 있으면 건너뜀
+- 로그인·API 키는 설정하지 않음. 첫 실행에서 Google 계정으로 로그인하거나 API 키를 설정
+
+### cline cli
+
+- Setup: [scripts/setup_cline_cli.sh](scripts/setup_cline_cli.sh) ([Cline](https://cline.bot)을 npm `cline` 최신으로 설치하고 `~/.local/bin/cline`으로 링크)
+- 다시 실행 시: `cline` 명령이 있으면 건너뜀
+- 로그인·API 키는 설정하지 않음. 첫 실행에서 모델 제공자를 연결
+
 ### humanizer
 
 - Setup: [scripts/setup_humanizer.sh](scripts/setup_humanizer.sh) ([blader/humanizer](https://github.com/blader/humanizer) 스킬을 `npx skills`로 전역 설치. Claude Code와 OpenCode에서 `/humanizer`로 사용, 다른 키는 그대로 둠)

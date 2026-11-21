@@ -67,6 +67,8 @@ modules=(
     setup_vscode_auto_update_off
     setup_opencode
     setup_kilo_cli
+    setup_gemini_cli
+    setup_cline_cli
     setup_humanizer
     setup_agent_skills
     setup_opencli

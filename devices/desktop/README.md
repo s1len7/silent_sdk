@@ -236,6 +236,22 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
 - 업데이트: `npm i -g --allow-scripts=@kilocode/cli @kilocode/cli@latest`
 
 
+### Gemini CLI
+
+- Setup: [scripts/setup-gemini-cli.ps1](scripts/setup-gemini-cli.ps1) ([Gemini CLI](https://github.com/google-gemini/gemini-cli)를 npm `@google/gemini-cli` 최신으로 설치. OpenCode 단계에서 설치한 Node.js 사용)
+  - 다시 실행 시: `gemini` 명령이 있으면 건너뜀
+- 로그인·API 키는 설정하지 않음. 첫 실행에서 Google 계정으로 로그인하거나 API 키를 설정
+- 업데이트: `npm i -g --allow-scripts=@google/gemini-cli @google/gemini-cli@latest`
+
+
+### Cline CLI
+
+- Setup: [scripts/setup-cline-cli.ps1](scripts/setup-cline-cli.ps1) ([Cline](https://cline.bot)을 npm `cline` 최신으로 설치. OpenCode 단계에서 설치한 Node.js 사용)
+  - 다시 실행 시: `cline` 명령이 있으면 건너뜀
+- 로그인·API 키는 설정하지 않음. 첫 실행에서 모델 제공자를 연결
+- 업데이트: `npm i -g --allow-scripts=cline cline@latest`
+
+
 ### Bitwarden CLI
 
 - Setup: [scripts/setup-bitwarden-cli.ps1](scripts/setup-bitwarden-cli.ps1) (공식 `@bitwarden/cli`를 npm으로 설치하고, `.env`의 `VAULTWARDEN_URL`을 Vaultwarden 서버로 설정. 전체 Setup에서 Kilo CLI 다음에 실행)
