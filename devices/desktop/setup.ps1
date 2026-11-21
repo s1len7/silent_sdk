@@ -127,7 +127,12 @@ $results += Invoke-Step 'opencode'     { & "$g\setup-opencode.ps1" }
 $results += Invoke-Step 'kilo-cli'     { & "$s\setup-kilo-cli.ps1" }
 $results += Invoke-Step 'gemini-cli'   { & "$s\setup-gemini-cli.ps1" }
 $results += Invoke-Step 'cline-cli'    { & "$s\setup-cline-cli.ps1" }
+# Node.js / npm tools (Kilo step installed Node.js)
+$results += Invoke-Step 'codex-cli'    { & "$s\setup-codex-cli.ps1" }
+$results += Invoke-Step 'humanizer'    { & "$s\setup-humanizer.ps1" }
 $results += Invoke-Step 'bitwarden-cli' { & "$s\setup-bitwarden-cli.ps1" }
+# Tailscale connects to the tailnet with a one-off key from Vaultwarden (needs bw configured)
+$results += Invoke-Step 'tailscale'    { & "$s\setup-tailscale.ps1" }
 # After the agents are installed, so their config folders exist
 $results += Invoke-Step 'agent-rules'  { & "$s\setup-agent-rules.ps1" }
 $results += Invoke-Step 'claude-settings' { & "$s\setup-claude-settings.ps1" }

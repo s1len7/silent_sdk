@@ -252,6 +252,21 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
 - 업데이트: `npm i -g --allow-scripts=cline cline@latest`
 
 
+### Codex CLI
+
+- Setup: [scripts/setup-codex-cli.ps1](scripts/setup-codex-cli.ps1) ([Codex CLI](https://github.com/openai/codex)를 npm `@openai/codex` 최신으로 설치해 `codex` 명령으로 사용. OpenCode 단계에서 설치한 Node.js 사용)
+  - 다시 실행 시: `codex` 명령이 있으면 건너뜀
+- 로그인·API 키는 설정하지 않음. 첫 실행에서 OpenAI 계정으로 로그인
+- 업데이트: `npm i -g @openai/codex@latest`
+
+
+### Humanizer 스킬
+
+- Setup: [scripts/setup-humanizer.ps1](scripts/setup-humanizer.ps1) ([blader/humanizer](https://github.com/blader/humanizer) 스킬을 `npx skills`로 전역 설치해 `~\.agents\skills\humanizer`에 두고 Claude Code와 OpenCode에서 `/humanizer`로 사용. OpenCode 단계에서 설치한 Node.js 사용)
+  - 다시 실행 시: `~\.agents\skills\humanizer\SKILL.md`가 있으면 건너뜀
+- 업데이트: `npx skills update -g`
+
+
 ### Reason Network
 
 - Setup: [scripts/setup-reason-network.ps1](scripts/setup-reason-network.ps1) (Reason CLI를 사용자 단위로 설치하고 `reason network`를 실행해 브라우저에서 로그인·네트워크 생성/참여. 설치된 에이전트에 Reason Network MCP를 등록)
@@ -270,6 +285,15 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
   - Node.js 22 이상이 필요 (OpenCode 단계에서 설치)
   - 금고 로그인/잠금 해제는 필요할 때 직접 `bw login` / `bw unlock`으로 진행. 마스터 암호와 세션 키는 설정 파일이나 로그에 저장하지 않음
   - 업데이트: `npm i -g @bitwarden/cli@latest`
+
+
+### Tailscale
+
+- Setup: [scripts/setup-tailscale.ps1](scripts/setup-tailscale.ps1) (Tailscale 앱이 설치돼 있지 않으면 winget으로 설치하고, `VAULTWARDEN_URL`이 채워진 `.env`의 Vaultwarden `Tailscale Auth Key` 항목에서 일회용 인증 키를 읽어 연결)
+  - 다시 실행 시: Tailscale이 이미 연결돼 있으면 건너뜀. 앱이 미설치거나 터미널이 상호작용 환경이 아니면 건너뜀
+- 키 준비: Vaultwarden에 `Tailscale Auth Key`라는 항목을 만들고 password 필드에 짧은 만료의 일회용 Tailscale 인증 키를 저장. 사용된 키는 자동 무효화되므로 다시 인증할 때 새 키로 교체
+- 키는 `.env`에 복사하지 않으며, 연결 중 권한 제한 임시 파일로만 전달하고 삭제
+- 대화형 터미널이 필요해 비대화형 실행은 건너뜀
 
 
 ### AI 에이전트 공통 규칙 연결
