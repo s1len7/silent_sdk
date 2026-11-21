@@ -50,29 +50,40 @@ echo "Logs:     $log_dir"
 export PATH="$HOME/.local/bin:$PATH"
 
 modules=(
-    setup_nodejs
-    setup_bitwarden_cli
-    setup_git
-    setup_shell_path
-    setup_claude_code
-    # setup_codyssey_proxy
-    setup_codyssey_claude
+    # 1. 설치 없이 바뀌는 OS/사용자 설정
     setup_scroll_direction
     setup_hangul_input
-    setup_dock_apps
     setup_finder_home
     setup_display_brightness_max
     setup_true_tone_off
     setup_night_shift_off
     setup_vscode_auto_update_off
+    setup_dock_apps
+
+    # 2. 공통 전제 (npm/CLI 설치에 필요)
+    setup_nodejs
+    setup_git
+    setup_shell_path
+
+    # 3. 에이전트/CLI
+    setup_claude_code
+    # setup_codyssey_proxy  # 선택: 사용하려면 주석 해제 (setup_codyssey_claude보다 먼저 실행)
+    setup_codyssey_claude
     setup_opencode
     setup_kilo_cli
     setup_gemini_cli
     setup_cline_cli
-    setup_humanizer
+
+    # 4. 에이전트가 설치된 뒤 바로 필요한 스킬/플러그인
     setup_agent_skills
+
+    # 5. 그 밖의 npm 도구와 앱
+    setup_humanizer
     setup_opencli
+    setup_bitwarden_cli
     setup_discord
+
+    # 6. 수동 설치와 인증이 필요한 마지막 단계
     setup_tailscale
 )
 

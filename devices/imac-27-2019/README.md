@@ -50,21 +50,6 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
   - Git (`/usr/local/bin/git`)
   - Visual Studio Code (`/Applications/Visual Studio Code.app`, `code` 명령 사용 가능)
 
-### git
-
-- Setup: [scripts/setup_git.sh](scripts/setup_git.sh) (전역 `user.name=silent`, `user.email`은 GitHub noreply 주소로 설정)
-- 다시 실행 시: `user.name`·`user.email`이 모두 같으면 건너뜀. 다르거나 빠진 값만 설정
-
-### shell path
-
-- Setup: [scripts/setup_shell_path.sh](scripts/setup_shell_path.sh) (`~/.local/bin`을 `~/.zshrc`의 PATH에 추가해 `claude`·`node`·`opencode`를 새 터미널에서 바로 실행. 다른 내용은 그대로 둠)
-- 다시 실행 시: `~/.zshrc`에 같은 PATH 줄이 있으면 건너뜀
-
-### claude code
-
-- Setup: [scripts/setup_claude_code.sh](scripts/setup_claude_code.sh) (공식 네이티브 설치 스크립트로 `~/.local/bin/claude`에 설치, 원본 [config/claude-settings.json](config/claude-settings.json)의 키와 저장소 경로(`permissions.additionalDirectories`)를 `~/.claude/settings.json`에 넣음, 다른 키는 그대로 둠)
-- 다시 실행 시: `claude` 명령이 있고 설정이 모두 같으면 건너뜀. 설치만 돼 있으면 설정만 적용
-
 ### scroll direction
 
 - Setup: [scripts/setup_scroll_direction.sh](scripts/setup_scroll_direction.sh) (마우스·트랙패드의 "자연스러운 스크롤"을 꺼서 Windows와 같은 방향으로 스크롤, 로그아웃 후 다시 로그인해야 적용됨)
@@ -75,12 +60,6 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 - Setup: [scripts/setup_hangul_input.sh](scripts/setup_hangul_input.sh) (구름 입력기(`/Library/Input Methods/Gureum.app`)가 있으면 서드파티 입력 소스 저장소(`com.apple.inputsources`)에 구름 두벌식을 등록하고, 없으면 macOS 기본 한글 두벌식을 입력 소스에 추가. 입력 방법과 입력 모드 항목을 모두 넣고 입력 메뉴를 다시 시작해 바로 반영. 기존 입력 소스는 그대로 둠. 메뉴 막대에 나타나지 않으면 로그아웃 후 다시 로그인)
 - 회사 로그인 스크립트(`kr.codyssey.gureum.init`)가 애플 한글을 끄고 구름을 선택하므로, 구름이 설치돼 있으면 구름을 등록함
 - 다시 실행 시: 해당 입력기의 입력 방법과 입력 모드 항목이 모두 있으면 건너뜀. 빠진 항목만 추가
-
-### dock apps
-
-- Setup: [scripts/setup_dock_apps.sh](scripts/setup_dock_apps.sh) (Dock에 `Chrome`, `Terminal`, `VSCode`, `Discord` 바로가기를 이 순서로 추가하고, 기본으로 고정된 `Mail`, `TV`, `Music`, `Games`를 제거. 다른 Dock 항목은 그대로 둠. `Games`는 macOS Tahoe 26 이상에만 있음)
-- 제거만: `bash scripts/setup_dock_apps.sh --remove` (`Mail`, `TV`, `Music`, `Games`만 제거, 다른 Dock 항목은 그대로 둠)
-- 다시 실행 시: Dock 마지막 네 항목이 `Chrome`, `Terminal`, `VSCode`, `Discord` 순서이고 중복이 없으며 `Mail`, `TV`, `Music`, `Games`가 모두 없으면 건너뜀. 아니면 순서를 맞추고 네 앱을 제거. `--remove`는 네 앱이 모두 없으면 건너뜀
 
 ### finder home
 
@@ -107,17 +86,50 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 - Setup: [scripts/setup_vscode_auto_update_off.sh](scripts/setup_vscode_auto_update_off.sh) (VS Code 자동 업데이트 확인과 업데이트 안내 팝업을 끔. 사용자 설정 `settings.json`의 `update.mode`를 `none`으로 바꾸고 다른 설정은 그대로 둠. 이미 실행 중이면 VS Code를 다시 시작한 뒤 적용됨)
 - 다시 실행 시: `update.mode`가 이미 `none`이면 건너뜀. `settings.json`에 주석이 있어 읽을 수 없으면 덮어쓰지 않고 실패
 
+### dock apps
+
+- Setup: [scripts/setup_dock_apps.sh](scripts/setup_dock_apps.sh) (Dock에 `Chrome`, `Terminal`, `VSCode`, `Discord` 바로가기를 이 순서로 추가하고, 기본으로 고정된 `Mail`, `TV`, `Music`, `Games`를 제거. 다른 Dock 항목은 그대로 둠. `Games`는 macOS Tahoe 26 이상에만 있음)
+- 제거만: `bash scripts/setup_dock_apps.sh --remove` (`Mail`, `TV`, `Music`, `Games`만 제거, 다른 Dock 항목은 그대로 둠)
+- 다시 실행 시: Dock 마지막 네 항목이 `Chrome`, `Terminal`, `VSCode`, `Discord` 순서이고 중복이 없으며 `Mail`, `TV`, `Music`, `Games`가 모두 없으면 건너뜀. 아니면 순서를 맞추고 네 앱을 제거. `--remove`는 네 앱이 모두 없으면 건너뜀
+
 ### nodejs
 
 - Setup: [scripts/setup_nodejs.sh](scripts/setup_nodejs.sh) (Node.js 최신 LTS를 [nodejs.org](https://nodejs.org/) 공식 압축 파일로 관리자 권한 없이 `~/.local/node`에 설치하고, `node`·`npm`·`npx`를 `~/.local/bin`에 링크. OpenCode·Kilo와 `npx skills`에 필요)
 - 다시 실행 시: `~/.local/node`에 Node.js 22.20 이상이 있고 링크가 모두 있으면 건너뜀. 설치만 돼 있으면 링크만 다시 만듦
 
-### bitwarden cli
+### git
 
-- Setup: [scripts/setup_bitwarden_cli.sh](scripts/setup_bitwarden_cli.sh) (공식 `@bitwarden/cli`를 사용자 범위에 설치하고 Vaultwarden 서버에 연결. 전체 Setup에서 Node.js 다음에 실행)
-- 다시 실행 시: `bw`가 설치돼 있고 `.env`의 `VAULTWARDEN_URL`과 서버 설정이 같으면 건너뜀. `.env`가 없으면 예시에서 만들고 URL을 입력할 때까지 SKIP
-- 설정: 첫 실행에서 만든 `.env`의 `VAULTWARDEN_URL`을 실제 HTTPS 주소로 바꿈. 예시 형식은 [.env.example](.env.example) 참고. `.env`는 Git에서 무시됨
-- 금고 로그인/잠금 해제는 Tailscale 미연결 상태에서만 필요할 때 대화형으로 요청. 마스터 암호와 세션 키는 설정 파일이나 로그에 저장하지 않음
+- Setup: [scripts/setup_git.sh](scripts/setup_git.sh) (전역 `user.name=silent`, `user.email`은 GitHub noreply 주소로 설정)
+- 다시 실행 시: `user.name`·`user.email`이 모두 같으면 건너뜀. 다르거나 빠진 값만 설정
+
+### shell path
+
+- Setup: [scripts/setup_shell_path.sh](scripts/setup_shell_path.sh) (`~/.local/bin`을 `~/.zshrc`의 PATH에 추가해 `claude`·`node`·`opencode`를 새 터미널에서 바로 실행. 다른 내용은 그대로 둠)
+- 다시 실행 시: `~/.zshrc`에 같은 PATH 줄이 있으면 건너뜀
+
+### claude code
+
+- Setup: [scripts/setup_claude_code.sh](scripts/setup_claude_code.sh) (공식 네이티브 설치 스크립트로 `~/.local/bin/claude`에 설치, 원본 [config/claude-settings.json](config/claude-settings.json)의 키와 저장소 경로(`permissions.additionalDirectories`)를 `~/.claude/settings.json`에 넣음, 다른 키는 그대로 둠)
+- 다시 실행 시: `claude` 명령이 있고 설정이 모두 같으면 건너뜀. 설치만 돼 있으면 설정만 적용
+
+### codyssey proxy
+
+- Setup: [scripts/setup_codyssey_proxy.sh](scripts/setup_codyssey_proxy.sh) (Codyssey 게이트웨이 앞단의 통합 프록시, `~/.codyssey-proxy/`에 설치)
+  - `~/.codyssey-proxy/.env`가 없으면 예시 파일을 복사하고 건너뜀 (CODYSSEY_OPENAI_API_KEY 채운 뒤 재실행)
+  - `CODYSSEY_OPENAI_API_KEY`가 비어 있으면 건너뜀
+  - Python 3가 없으면 실패
+  - `tools/codyssey-proxy`를 pip으로 editable 설치, `~/.claude/settings.json`을 프록시 주소(`http://localhost:8082`)와 새 모델 ID(`claude-opus-4-8`, `claude-haiku-4`)로 갱신
+  - 기존 `~/.codyssey-proxy/.env`의 `BIG_MODEL`·`SMALL_MODEL`도 새 모델 ID로 맞춤 (키는 그대로 둠)
+  - LaunchAgent(`com.silent.codyssey-proxy`) 등록으로 자동 시작, 즉시 실행
+  - 재실행 시: 키가 있고 설정이 같으면 LaunchAgent 재로드 후 상태 확인
+
+### codyssey claude
+
+- Setup: [scripts/setup_codyssey_claude.sh](scripts/setup_codyssey_claude.sh) (`~/.claude/settings.json`의 `env`를 Codyssey 공개 API로 설정: `ANTHROPIC_BASE_URL=https://copa.codyssey.kr`, `ANTHROPIC_MODEL=claude-opus-4-8`, `ANTHROPIC_SMALL_FAST_MODEL=claude-haiku-4`. 다른 키는 그대로 둠)
+  - `ANTHROPIC_API_KEY`가 실제 키(`sk-…` 등)면 키 입력을 건너뜀
+  - 키가 없거나 `<virtual-key>` 같은 자리표시자면 브라우저에 마스킹된 입력창(눈 아이콘으로 값 보기)을 띄워 저장(엔터/저장 버튼). python3 필요
+  - `setup_codyssey_proxy` 다음에 실행되어, 프록시가 쓴 설정을 직접 연결 설정으로 덮어씀
+- 다시 실행 시: 실제 키가 있고 base URL·모델이 모두 같으면 건너뜀
 
 ### opencode
 
@@ -143,11 +155,6 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 - 다시 실행 시: `cline` 명령이 있으면 건너뜀
 - 로그인·API 키는 설정하지 않음. 첫 실행에서 모델 제공자를 연결
 
-### humanizer
-
-- Setup: [scripts/setup_humanizer.sh](scripts/setup_humanizer.sh) ([blader/humanizer](https://github.com/blader/humanizer) 스킬을 `npx skills`로 전역 설치. Claude Code와 OpenCode에서 `/humanizer`로 사용, 다른 키는 그대로 둠)
-- 다시 실행 시: `~/.agents/skills/humanizer/SKILL.md`가 있으면 건너뜀. 새 버전이 필요하면 `npx skills remove humanizer -g` 후 재실행
-
 ### AI 에이전트 스킬
 
 - Setup: [scripts/setup_agent_skills.sh](scripts/setup_agent_skills.sh) (서드파티 스킬·플러그인을 설치된 에이전트에 맞는 방식으로 설치, `npx skills` 때문에 Node.js 22.20 이상 필요)
@@ -157,6 +164,23 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
   - Anthropic 스킬: `document-skills`의 xlsx·docx·pptx·pdf와 `example-skills`의 12개 스킬. 문서 스킬은 처음 사용할 때 필요한 Python·npm 패키지를 설치해야 할 수 있음
   - 다시 실행 시: 각 에이전트의 플러그인이 설정에 있고, OpenCode·Kilo는 `~/.agents/skills`에 `SKILL.md`가 모두 있으면 건너뜀. 빠진 플러그인·스킬만 설치
   - 업데이트: Claude Code `claude plugin update <플러그인 ID>`, OpenCode `opencode plugin update`, Kilo `kilo plugin @dietrichgebert/ponytail --global --force`, `npx skills update -g`
+
+### humanizer
+
+- Setup: [scripts/setup_humanizer.sh](scripts/setup_humanizer.sh) ([blader/humanizer](https://github.com/blader/humanizer) 스킬을 `npx skills`로 전역 설치. Claude Code와 OpenCode에서 `/humanizer`로 사용, 다른 키는 그대로 둠)
+- 다시 실행 시: `~/.agents/skills/humanizer/SKILL.md`가 있으면 건너뜀. 새 버전이 필요하면 `npx skills remove humanizer -g` 후 재실행
+
+### opencli
+
+- Setup: [scripts/setup_opencli.sh](scripts/setup_opencli.sh) ([@jackwener/opencli](https://github.com/jackwener/opencli)를 npm으로 사용자 범위에 설치해 `opencli` 명령으로 사용, AI 에이전트용 스킬(opencli-browser 등)도 함께 전역 설치)
+- 다시 실행 시: `opencli` 명령과 `~/.agents/skills/opencli-browser/SKILL.md`가 모두 있으면 건너뜀. 빠진 부분만 설치
+
+### bitwarden cli
+
+- Setup: [scripts/setup_bitwarden_cli.sh](scripts/setup_bitwarden_cli.sh) (공식 `@bitwarden/cli`를 사용자 범위에 설치하고 Vaultwarden 서버에 연결. 전체 Setup에서 Node.js 다음에 실행)
+- 다시 실행 시: `bw`가 설치돼 있고 `.env`의 `VAULTWARDEN_URL`과 서버 설정이 같으면 건너뜀. `.env`가 없으면 예시에서 만들고 URL을 입력할 때까지 SKIP
+- 설정: 첫 실행에서 만든 `.env`의 `VAULTWARDEN_URL`을 실제 HTTPS 주소로 바꿈. 예시 형식은 [.env.example](.env.example) 참고. `.env`는 Git에서 무시됨
+- 금고 로그인/잠금 해제는 Tailscale 미연결 상태에서만 필요할 때 대화형으로 요청. 마스터 암호와 세션 키는 설정 파일이나 로그에 저장하지 않음
 
 ### discord
 
@@ -170,30 +194,6 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 - 다시 실행 시: 앱이 미설치됐거나 터미널이 없으면 건너뜀. 이미 연결돼 있으면 Vaultwarden을 열지 않고 건너뜀
 - 키 준비: Vaultwarden에 `Tailscale Auth Key`라는 항목을 만들고 password 필드에 짧은 만료의 일회용 Tailscale 인증 키를 저장. 사용된 키는 자동 무효화되므로 다시 인증할 때 새 키로 교체
 - 키는 `.env`에 복사하지 않으며, 연결 중 권한 제한 임시 파일로만 전달하고 삭제
-
-### opencli
-
-- Setup: [scripts/setup_opencli.sh](scripts/setup_opencli.sh) ([@jackwener/opencli](https://github.com/jackwener/opencli)를 npm으로 사용자 범위에 설치해 `opencli` 명령으로 사용, AI 에이전트용 스킬(opencli-browser 등)도 함께 전역 설치)
-- 다시 실행 시: `opencli` 명령과 `~/.agents/skills/opencli-browser/SKILL.md`가 모두 있으면 건너뜀. 빠진 부분만 설치
-
-### codyssey proxy
-
-- Setup: [scripts/setup_codyssey_proxy.sh](scripts/setup_codyssey_proxy.sh) (Codyssey 게이트웨이 앞단의 통합 프록시, `~/.codyssey-proxy/`에 설치)
-  - `~/.codyssey-proxy/.env`가 없으면 예시 파일을 복사하고 건너뜀 (CODYSSEY_OPENAI_API_KEY 채운 뒤 재실행)
-  - `CODYSSEY_OPENAI_API_KEY`가 비어 있으면 건너뜀
-  - Python 3가 없으면 실패
-  - `tools/codyssey-proxy`를 pip으로 editable 설치, `~/.claude/settings.json`을 프록시 주소(`http://localhost:8082`)와 새 모델 ID(`claude-opus-4-8`, `claude-haiku-4`)로 갱신
-  - 기존 `~/.codyssey-proxy/.env`의 `BIG_MODEL`·`SMALL_MODEL`도 새 모델 ID로 맞춤 (키는 그대로 둠)
-  - LaunchAgent(`com.silent.codyssey-proxy`) 등록으로 자동 시작, 즉시 실행
-  - 재실행 시: 키가 있고 설정이 같으면 LaunchAgent 재로드 후 상태 확인
-
-### codyssey claude
-
-- Setup: [scripts/setup_codyssey_claude.sh](scripts/setup_codyssey_claude.sh) (`~/.claude/settings.json`의 `env`를 Codyssey 공개 API로 설정: `ANTHROPIC_BASE_URL=https://copa.codyssey.kr`, `ANTHROPIC_MODEL=claude-opus-4-8`, `ANTHROPIC_SMALL_FAST_MODEL=claude-haiku-4`. 다른 키는 그대로 둠)
-  - `ANTHROPIC_API_KEY`가 실제 키(`sk-…` 등)면 키 입력을 건너뜀
-  - 키가 없거나 `<virtual-key>` 같은 자리표시자면 브라우저에 마스킹된 입력창(눈 아이콘으로 값 보기)을 띄워 저장(엔터/저장 버튼). python3 필요
-  - `setup_codyssey_proxy` 다음에 실행되어, 프록시가 쓴 설정을 직접 연결 설정으로 덮어씀
-- 다시 실행 시: 실제 키가 있고 base URL·모델이 모두 같으면 건너뜀
 
 ### 텔레그램 알림
 
