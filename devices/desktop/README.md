@@ -204,7 +204,7 @@ irm https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/desktop/set
 - 웹사이트·앱을 `opencli <사이트> <명령>`으로 다루는 CLI. OpenClaw가 명령으로 실행함 (브라우저를 직접 클릭하는 것보다 모델 호출이 적음)
 - 처음 설치 후 한 번: OpenCLIApp을 열고 System 화면에서 `opencli` 명령을 설치한 뒤 Setup을 다시 실행 (앱이 명령줄 설치 옵션을 제공하지 않음)
 - 크롬 확장: 로그인된 크롬을 쓰는 명령에는 [OpenCLI Browser Bridge](https://chromewebstore.google.com/detail/opencli/ildkmabpimmkaediidaifkhjpohdnifk)가 필요함 (없으면 Setup이 경고만 표시)
-- 에이전트 스킬: 앱이 `~\.agents\skills\opencli-*`에 설치·관리하고, OpenClaw가 이 폴더를 읽음
+- 에이전트 스킬: 앱이 `~\.agents\skills\opencli-*`에 설치·관리하고, OpenClaw가 이 폴더를 읽음. `opencli-browser` 스킬은 `~\.agents\skills\opencli-browser\SKILL.md`에 있어야 하며, 없으면 `opencli skills add opencli-browser`로 설치
 - 업데이트: OpenCLIApp 트레이 메뉴 (`opencli doctor`의 `npm install -g` 안내는 npm 설치용이라 따르지 않음)
 - 상태 확인: `opencli doctor` (데몬, 확장 연결)
 

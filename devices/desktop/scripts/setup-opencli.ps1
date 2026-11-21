@@ -23,6 +23,16 @@ function Write-ExtensionHint {
     }
 }
 
+# opencli-browser agent skill under ~/.agents/skills
+$opencliBrowserSkillDir = Join-Path $HOME '.agents\skills\opencli-browser'
+$opencliBrowserSkillFile = Join-Path $opencliBrowserSkillDir 'SKILL.md'
+
+if (Test-Path $opencliBrowserSkillFile) {
+    Write-Host 'opencli-browser skill is already installed, skipped.'
+} else {
+    Write-Warning "opencli-browser skill is not installed at $opencliBrowserSkillFile. Install it with 'opencli skills add opencli-browser' or via OpenCLIApp."
+}
+
 if (Test-Command) {
     Write-Host 'OpenCLI is already set up (opencli command found), skipped. Updates: OpenCLIApp tray menu'
     Write-ExtensionHint
