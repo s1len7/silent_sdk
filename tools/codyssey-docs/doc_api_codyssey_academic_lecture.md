@@ -26,10 +26,16 @@
 | `scdlGubunCd/Nm` | string | `AM/학사일정` 관찰 |
 | `fixedCd/fixedNm` | string | `01/예정`, `03/완료` 관찰 |
 | `myAtndAt` | string/null | 본인 참석/신청 관련 추정 |
+| `atndAt` | string | 2026-11-06 존재만 관찰. 값/역할/`myAtndAt`와의 관계 미확인 |
 
 ## 전문가 특강 관찰 사례
 - 2026-11월 캘린더에서 특강 1~3회차가 `academicList`에 포함됨.
 - 장소/신청기간/일시/예정 상태(`fixedNm=예정`, `cancelAt=0`) 확인.
+
+## 신청 저장 API 관찰(2026-11-06)
+- 학사일정(AM) 신청 시 `academicScheduleSave` 요청으로 상태 변경이 일어나는 것을 관찰함. 전체 경로/파라미터/응답 본문은 미캡처.
+- 신청 성공 후 상태 판별 후보 필드는 `atndAt`/`myAtndAt`(위 표). 캘린더 리소스 갱신 타이밍은 미확인.
+- 출처: Codyssey Improved 브라우저 확장 개발 중 네트워크 관찰(2026-11-05 인계 기록 기반). 실행 테스트는 하지 않음(상태 변경 실행 금지 정책).
 
 ## Google Calendar 동기화 메모(잠정)
 - 이벤트 키 후보: `AM:academic:${scheduleNo}` (서버 불변성 미확인).
@@ -37,6 +43,6 @@
 - 시간대/포맷 정규화 필요(`YYYY.MM.DD`, `YYYY-MM-DD HH:mm` 혼재 관찰).
 
 ## 미확인
-- 특강 상세 조회/신청/취소 전용 API.
+- 특강 상세 조회/취소 전용 API(신청 저장은 위 절의 `academicScheduleSave` 관찰).
 - `scheduleTypeCd` 전체 분류와 “전문가 특강”의 안정적 식별 규칙(현재는 제목/유형/맥락 기반 추정 위험).
 - `cancelAt` 외 삭제 표현 방식.

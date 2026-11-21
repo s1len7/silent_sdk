@@ -1,58 +1,37 @@
-# Codyssey API 문서 인덱스 (관찰 기반)
+# Codyssey API 문서 인덱스
 
-> 자료 보존: `docs/doc_api_codyssey_peer_review_schedule.md`는 기존 테스트 근거 문서로 **수정하지 않음**.  
-> 본 인덱스와 분리 문서는 opencli 로그인 세션(`muunzz2v`)에서 관찰한 읽기/조회 API를 종류별로 정리한 추가 문서다.
+> 네이티브 앱/웹 리버스 기반 관찰 문서. 시크릿/개인식별정보는 마스킹하거나 기록하지 않는다.
+> 관찰일/세션/화면이 다르면 동작이 달라질 수 있으므로, 새 캡처는 해당 문서에 날짜와 함께 추가한다.
 
-## 공통 전제
-- 사용자 사이트: `https://usr.codyssey.kr` (SPA)
-- API 호스트: `https://api.usr.codyssey.kr`
-- 인증: 로그인된 브라우저 세션 필요. 실제 호출에서 `X-Requested-With: XMLHttpRequest`, `X-XSRF-TOKEN: <redacted>` 관찰.
-- 비인증 `usr.codyssey.kr`/일부 경로 직접 호출은 SPA HTML 셸이 반환될 수 있음.
-- 브라우저 JS 임의 재호출은 CSRF로 거부될 수 있음(`403 CSRF_TOKEN_INVALID` 관찰). **실제 UI 흐름에서 발생한 요청**을 우선 신뢰.
-- 민감정보(쿠키/세션/토큰/`mbrId`/이메일/개인식별자)는 문서에 기록하지 않음.
-- 상태 변경 API(신청/취소/저장/제출/로그인)는 실행하지 않았거나 미확인으로 표기.
+## 문서
 
-## 문서 목록
-| 문서 | 내용 | 상태 |
+| 주제 | 문서 | 상태 |
 |---|---|---|
-| [`doc_api_codyssey_peer_review_schedule.md`](./doc_api_codyssey_peer_review_schedule.md) | 초기 캘린더/일정 API 상세 테스트(보존) | 기존/보존 |
-| [`doc_api_codyssey_test_results.md`](./doc_api_codyssey_test_results.md) | 테스트 로그, 미확인/TODO, 인계용 | 진행 중 |
-| [`doc_api_codyssey_schedule.md`](./doc_api_codyssey_schedule.md) | 일정/캘린더/가능 슬롯 | 관찰됨 |
-| [`doc_api_codyssey_evaluation_request.md`](./doc_api_codyssey_evaluation_request.md) | 평가 요청 화면/작성 흐름 조회 API | 관찰됨 |
-| [`doc_api_codyssey_evaluation_participation.md`](./doc_api_codyssey_evaluation_participation.md) | 평가 참여 목록/코드, 상세는 미확인 | 관찰됨(목록) |
-| [`doc_api_codyssey_academic_lecture.md`](./doc_api_codyssey_academic_lecture.md) | 학사일정/전문가 특강(`academicList`) | 관찰됨 |
-| [`doc_api_codyssey_notice.md`](./doc_api_codyssey_notice.md) | 공지 목록 | 관찰됨 |
-| [`doc_api_codyssey_alarm.md`](./doc_api_codyssey_alarm.md) | 알림 옵션/건수/목록 | 관찰됨 |
-| [`doc_api_codyssey_learning.md`](./doc_api_codyssey_learning.md) | 학습 진행 목록 | 관찰됨 |
-| [`doc_api_codyssey_user_common.md`](./doc_api_codyssey_user_common.md) | 공통 사용자/메뉴/포인트/설문 게이트 | 관찰됨 |
-| [`doc_api_codyssey_studygroup.md`](./doc_api_codyssey_studygroup.md) | 소모임 목록 | 관찰됨 |
-| [`doc_api_codyssey_auth.md`](./doc_api_codyssey_auth.md) | 로그인 계약/CSRF/세션 | 관찰됨(계약 확인) |
+| 사용자/공통 | `doc_api_codyssey_user_common.md` | 2026-11-05 관찰(알림/설정/팀원) |
+| 일정/캘린더 | `doc_api_codyssey_schedule.md` | 2026-11-05 관찰(`scheduleAllList` 핵심) |
+| 오픈/동료평가 슬롯 | `doc_api_codyssey_peer_review_schedule.md` | 보조 문서(신규는 schedule 문서 우선) |
+| 학사일정/강의 | `doc_api_codyssey_academic_lecture.md` | 2026-11-05 관찰 |
+| 학습/학습 네이티브·AI 헬퍼 | `doc_api_codyssey_learning.md` | 2026-11-06 갱신(learningProgress/map + 공통 AI 챗봇/헬퍼 `/learning/usr/ai/*`: `learningMap` 패널·`/learning/ai-helper` 공통 확인, history/ask-stream SSE·검증오류·세션 생성·삭제·재생성·중단 관찰; 테스트 세션 정리 완료) |
+| 평가 요청 | `doc_api_codyssey_evaluation_request.md` | 2026-11-05 관찰(작성 화면 연계 포함) |
+| 평가 참여 | `doc_api_codyssey_evaluation_participation.md` | 2026-11-05 관찰 |
+| 공지사항 | `doc_api_codyssey_notice.md` | 2026-11-05 관찰 |
+| 스터디그룹 | `doc_api_codyssey_studygroup.md` | 2026-11-05 관찰 |
+| 알림 | `doc_api_codyssey_alarm.md` | 2026-11-05 관찰 |
+| 인증 | `doc_api_codyssey_auth.md` | 2026-11-05 관찰 |
+| 테스트 결과 | `doc_api_codyssey_test_results.md` | 2026-11-05 관찰 |
+| 평가 폼 메모 | `peer_review_evaluation_form.md` | 평가 항목 메모 |
+| 요구사항 메모 | `requirement_peer_review_schedule_api.md` | 요구사항/추가 캡처 메모 |
 
-## 고유 엔드포인트(관찰)
-```text
-GET  /api/common/menu/my
-GET  /ev/request/evlStusCdList
-GET  /ev/request/lastEvList
-GET  /main/sidebar/new/detail
-GET  /point/exp/total/detail
-GET  /rest/user/info/detail
-GET  /survey/gate/active
-POST /alarm/alarmList/alarmCntList
-POST /alarm/alarmList/list
-POST /alarm/alarmList/optionList
-POST /ev/participation/seachParticipationList
-POST /ev/request/evlTotList
-POST /ev/request/mtlEvlTxnDtoByPkList
-POST /ev/request/searchList
-POST /ev/request/selectLrnCorsNmList
-POST /ev/request/selectLrnUqstnNmList
-POST /ev/request/selectProjectNmList
-POST /learning/learningProgress/allLearningList
-POST /myinfo/usr/list
-POST /notice/noticeDetail
-POST /notice/noticeFileList
-POST /notice/noticeList
-POST /schedule/psblScheduleList/
-POST /schedule/scheduleAllList/
-POST /smallGather/usr/list
-```
+## 공통 메모
+- Host: `https://usr.codyssey.kr` (웹), `https://api.usr.codyssey.kr` (API) 혼재 관찰.
+- 인증: 로그인 세션 + CSRF/XSRF 필요 엔드포인트 존재. 토큰/쿠키/`mbrId`는 문서에 남기지 않는다.
+- 날짜 포맷은 엔드포인트별로 다름(`YYYY.MM.DD`, `YYYY-MM-DD`, `YYYYMMDD` 관찰). 호출 전 기존 JS/실응답 확인.
+- `POST`로 캡처됐어도 `GET/PUT/DELETE` 허용 여부는 미확인일 수 있음. 상태 변경은 별도 검증.
+
+## 추가 캡처 우선순위
+1. 평가 결과/피드백 상세 API (참여 건 클릭 시 XHR).
+2. 평가 요청 생성/수정/취소/재요청 제출 API.
+3. 일정 등록/삭제/수정의 성공 응답과 캘린더 갱신 흐름.
+4. 스터디그룹 상세/가입/게시글/댓글 API.
+5. 학습 문항 제출/답안/피드백/파일업로드/진행 갱신(상태 변경) API — **조회 외 호출은 사용자 확인 후**.
+6. AI 챗봇 잔여: `conversationSummary` 실제 적용 장문 케이스, `history` 페이지네이션 실제 적용 조건, rename/메시지 일부 삭제 서버 API 존재 여부(현 UI·안전 probe 미관찰, 사용자 데이터 파괴적 probe 제외), 학습 컨텍스트(`projectNo/lcorsNo/uqstnNo/pjtTeamSn`)의 ask-stream 주입 여부.
