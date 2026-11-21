@@ -112,6 +112,12 @@ curl -fsSL https://raw.githubusercontent.com/s1len7/silent_sdk/main/devices/imac
 - Setup: [scripts/setup_claude_code.sh](scripts/setup_claude_code.sh) (공식 네이티브 설치 스크립트로 `~/.local/bin/claude`에 설치, 원본 [config/claude-settings.json](config/claude-settings.json)의 키와 저장소 경로(`permissions.additionalDirectories`)를 `~/.claude/settings.json`에 넣음, 다른 키는 그대로 둠)
 - 다시 실행 시: `claude` 명령이 있고 설정이 모두 같으면 건너뜀. 설치만 돼 있으면 설정만 적용
 
+### codex cli
+
+- Setup: [scripts/setup_codex_cli.sh](scripts/setup_codex_cli.sh) ([Codex CLI](https://github.com/openai/codex)를 npm `@openai/codex` 최신으로 설치하고 `~/.local/bin/codex`로 링크)
+- 다시 실행 시: `codex` 명령이 있으면 건너뜀
+- 로그인·API 키는 설정하지 않음. 첫 실행에서 OpenAI 계정으로 로그인
+
 ### codyssey proxy
 
 - Setup: [scripts/setup_codyssey_proxy.sh](scripts/setup_codyssey_proxy.sh) (Codyssey 게이트웨이 앞단의 통합 프록시, `~/.codyssey-proxy/`에 설치)

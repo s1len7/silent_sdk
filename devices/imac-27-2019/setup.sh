@@ -67,6 +67,7 @@ modules=(
 
     # 3. 에이전트/CLI
     setup_claude_code
+    setup_codex_cli
     # setup_codyssey_proxy  # 선택: 사용하려면 주석 해제 (setup_codyssey_claude보다 먼저 실행)
     setup_codyssey_claude
     setup_opencode
